@@ -1,0 +1,15 @@
+__TZ/
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.zip
+*.log
+*.pdf
+*.xls
+
+*/logs/log-*.php
+!*/logs/index.html
+*/cache/*
+!*/cache/index.html
+!*/cache/.htaccess

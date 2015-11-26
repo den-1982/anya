@@ -1,0 +1,129 @@
+<ul class="cart-list" data-cart="items">
+<?php $total = 0; foreach (array_reverse($cart['products']) as $k=>$i):?>
+	<li data-cart-item="">
+		<div class="ci-box">
+			<div class="pp-block-image">
+				<a href="<?=htmlspecialchars($i['_url'])?>">
+					<img src="<?=$i['image']?>" alt="">
+				</a>
+			</div>
+			<div class="pp-block-price">
+				<div class="gd gd-name"><a class="c-pink" href="<?=htmlspecialchars($i['_url'])?>"><?=$i['name']?></a></div>
+				
+				<div class="gd gd-manufacturer">Производитель: <?=isset($i['manufacturer']) ? $i['manufacturer'] : '&mdash;';?></div>
+				
+				<?php if ($i['prices']):?>
+				<div class="gd gd-size">Размер: <?=$i['prices']['code']?> (<?=$i['prices']['size']?>)</div>
+				<div class="gd gd-packing">Упаковка: <?=$i['options']['type'] ? 'опт - '.($i['prices']['count_opt']) : 'розница - '.($i['prices']['count_roz'])?> шт.</div>
+				<?php endif;?>
+
+				<div class="gd gd-price">
+					Цена:
+					<?php if ($i['discount']*1):?>
+					<span class="gd-new-price"><?=number_format(($i['price']-($i['price']*$i['discount']/100)), 2, ',', "'")?> грн.</span>
+					<?php else:?>
+					<span class="gd-new-price"><?=number_format($i['price'], 2, ',', "'")?> грн.</span>
+					<?php endif;?>
+				</div>
+				
+				<div class="gd gd-qty">Количество: <?=$i['qty']?> шт.</div>
+
+				<div class="gd gd-subtotal">
+					Сумма:
+					<?php
+					# скидка User
+					$discount = isset($user->discount) ? $user->discount*1 : 0;
+					# если нет цена + размер
+					if ( ! $i['prices']){
+						# если USER скидка больше чем скидка на товар
+						if ($discount > $i['discount']*1){
+							$summa = $i['qty'] * $i['price'];
+							echo number_format($summa, 2, ',', "'").' грн.';
+						}else{
+							$summa = $i['qty'] * ($i['price'] - round($i['price'] * $i['discount']/ 100, 2));
+							echo number_format($summa, 2, ',', "'").' грн.';
+						}
+					}else{
+						# если USER скидка больше чем скидка на товар
+						if ($discount > $i['discount']){
+							if ($i['options']['type'] == 0){
+								$summa = round($i['qty'] * $i['prices']['price_roz'], 2);
+								echo number_format($summa, 2, ',', "'").' грн.';
+							}else{
+								$summa = round($i['qty'] * $i['prices']['price_opt'], 2);
+								echo number_format($summa, 2, ',', "'").' грн.';
+							}
+						}else{
+							if ($i['options']['type'] == 0){
+								$summa = $i['qty'] * ($i['prices']['price_roz'] - round($i['prices']['price_roz'] * $i['discount']/ 100, 2));
+								echo  number_format($summa, 2, ',', "'").' грн.';
+							}else{
+								$summa = $i['qty'] * ($i['prices']['price_opt'] - round($i['prices']['price_opt'] * $i['discount']/ 100, 2));
+								echo number_format($summa, 2, ',', "'").' грн.';
+							}
+						}
+					}
+					?>
+				</div>
+				
+				
+				<div class="gd-counted">
+					<div class="quant">
+						<button data-quantity-button="minus" class="quant-button minus"><span>?</span></button>
+						<input class="quant-box" type="text" name="quantity[<?=$k?>]" value="<?=$i['qty']?>" data-quantity="box" autocomplete="off">
+						<button data-quantity-button="plus" class="quant-button plus"><span>+</span></button>
+					</div>
+				</div>
+				
+				<div class="gd-counted" data-btn="update" style="display:none;">
+					<button class="btn btn-pink" type="submit">Пересчитать</button>
+				</div>
+				
+				<br>
+				<a class="gd gd-delete uppercase" data-del-rowid="<?=$k?>" href="/cart?del=<?=$k?>">Удалить</a>
+			</div>
+		</div>
+	</li>
+<?php $total += $summa; endforeach;?>
+	<li>
+		<div class="gd-total">
+			<div class="gd-label">
+				<div class="gd-label-name">Всего:</div>
+				<div class="gd-label-box" data-cart="subtotal"><?=number_format($total, 2, ',', "'")?> грн.</div>
+			</div>
+			<div class="gd-label">
+				<div class="gd-label-name">Ваша скидка:</div>
+				<div class="gd-label-box" data-cart="discount"><?=$discount?> %</div>
+			</div>
+			<div class="gd-label">
+				<div class="gd-label-name">Итого:</div>
+				<div class="gd-label-box" data-cart="total">
+				<?php
+				if ($discount){
+					$_all = 0;
+					foreach ($cart['products'] as $k){
+						# какая скидка больше
+						$_discount = $discount > $k['discount']*1 ? $discount : $k['discount']*1;
+						
+						# если нет цена + размер
+						if ( ! $k['prices']){ 
+							$_all += $k['qty'] * ($k['price'] - round($k['price'] * $_discount/ 100, 2));
+						}else{
+							if ($k['options']['type'] == 0){
+								$_all += round($k['qty'] * ($k['prices']['price_roz'] - $k['prices']['price_roz'] * $_discount / 100), 2);
+							}else{
+								$_all += round($k['qty'] * ($k['prices']['price_opt'] - $k['prices']['price_opt'] * $_discount / 100), 2);
+							}
+						}
+					}
+
+					echo number_format($_all, 2, ',', "'").' грн.';
+				}else{
+					echo number_format($total, 2, ',', "'").' грн.';
+				}
+				?>
+				</div>
+			</div>
+		</div>
+	</li>
+</ul>
