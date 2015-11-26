@@ -54,7 +54,7 @@
 				<a class="toggle icon-eye <?=$category->visibility == 1 ? ' activ' : ''?>" data-bind="toggle" data-column="visibility" data-id="<?=$category->id?>" title="<?=$category->visibility == 1 ? 'скрыть' : 'показать ' ?> на сайте"></a>
 			</td>
 			<td>	
-				<a title="редактировать" class="link_edit" href="<?=$path?>?parent=<?=$parent?>&update=<?=$category->id?>"></a>
+				<a class="link_edit" href="<?=$path?>?parent=<?=$parent?>&update=<?=$category->id?>" title="редактировать"></a>
 			</td>
 			<td>
 				<a class="link_del" data-post="<?=$category->id?>" data-delete="<?=htmlspecialchars($category->name)?>" href="<?=$path?>?parent=<?=$parent?>&delete=<?=$category->id?>" title="удалить"></a>

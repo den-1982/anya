@@ -315,13 +315,11 @@ class Admin extends CI_Controller {
 	{
 		$data = &$this->data;
 		
-		$data['parent']		= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
-		$data['path']		= '/admin/filter/';
-		$data['action']   	= 'filter';
-		$data['act']      	= 'all';
-		$data['h1']     	= 'Фильтры';
-		
-		$data['filter_type'] = $this->filterModel->type;
+		$data['parent']	= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
+		$data['path']	= '/admin/filter/';
+		$data['action']	= 'filter';
+		$data['act']	= 'all';
+		$data['h1']		= 'Фильтры';
 
 		if (METHOD == 'POST'){
 			if ( isset($_POST['filter_order']) ){
@@ -336,10 +334,6 @@ class Admin extends CI_Controller {
 					default:exit;
 				}
 			}
-			if (isset($_POST['changeType'])){
-				$this->filterModel->changeType();
-				exit;
-			}
 			if ( isset($_POST['add']) ){
 				$this->filterModel->addFilter(); 
 				redirect($data['path']);
@@ -351,8 +345,9 @@ class Admin extends CI_Controller {
 				exit;
 			}
 			
-			return;
+			exit;
 		}
+		
 		
 		if (isset($_GET['delete'])){
 			$this->filterModel->deleteFilter($_GET['delete']);
@@ -360,10 +355,12 @@ class Admin extends CI_Controller {
 			exit;
 		}
 		
-		
 		if (isset($_GET['update'])){
 			$data['filter'] = $this->filterModel->getFilter((int)$_GET['update']);
-			if ( !$data['filter'] ){redirect($data['path'].'?parent='.$data['parent']);exit;}
+			if ( ! $data['filter'] ){
+				redirect($data['path'].'?parent='.$data['parent']);
+				exit;
+			}
 			
 			$data['act']		= 'update';
 			$data['h1']			= 'Редактирование фильтра: <span style="color:red;">'.$data['filter']->name.'</span>';
@@ -374,6 +371,7 @@ class Admin extends CI_Controller {
 			$this->_view('a_filter', $data);
 			return;
 		}
+		
 		if (isset($_GET['add'])){
 			$data['act']  = 'add';
 			$data['h1']	= 'Создание фильтра';
@@ -563,6 +561,10 @@ class Admin extends CI_Controller {
 			if (isset($_POST['edit'])){
 				$res = $this->manufacturerModel->updateManufacturer();
 				redirect('/admin/manufacturer');
+				exit;
+			}
+			if (isset($_POST['manufacturer_order'])){
+				$this->manufacturerModel->sortOrderManufacturer();
 				exit;
 			}
 			
@@ -1088,4 +1090,5 @@ class Admin extends CI_Controller {
 		
 		//$this->_view('a_test', $data);
 	}
+
 }
