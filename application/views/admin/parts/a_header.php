@@ -9,12 +9,14 @@
 	<link rel="stylesheet" type="text/css" href="/css/admin/fonts/font.awesome/font-awesome.css">
 	
 	<link rel="stylesheet" type="text/css" href="/css/admin/jquery/jquery-ui.1.11.0.css">
+	<link rel="stylesheet" type="text/css" href="/css/admin/lightbox/lightbox.css">
 	<link rel="stylesheet" type="text/css" href="/css/admin/dialog/dialog.css">
 	<link rel="stylesheet" type="text/css" href="/css/admin/fm/fm.css">
 	
 	<script type="text/javascript" src="/js/admin/jquery/jquery.1.10.2.js"></script>
 	<script type="text/javascript" src="/js/admin/jquery/jquery-ui.1.11.0.js"></script>
 	<script type="text/javascript" src="/js/admin/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript" src="/js/admin/lightbox/lightbox.min.js"></script>
 	<script type="text/javascript" src="/js/admin/mask/mask.js"></script>
 	<script type="text/javascript" src="/js/admin/dialog/dialog.js"></script>
 	<script type="text/javascript" src="/js/admin/fm/fm.js"></script>

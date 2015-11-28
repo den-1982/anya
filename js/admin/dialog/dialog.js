@@ -37,18 +37,26 @@
 
 				var dialogBox = $('<div data-dialog-box="'+index+'">'+
 									'<div class="dialog-front-layer" style="z-index:'+index+'"></div>'+
-									'<div class="dialog'+ (settings.resizable ? ' resizable' : '') +'" style="z-index:'+index+'">'+
+									'<div class="dialog" style="z-index:'+index+'">'+
 										'<div class="dialog-title-box">'+
 											'<div class="dialog-title">Test</div>'+
 										'</div>'+
 										'<div class="dialog-content-box">'+
-											'<div class="dialog-content '+(settings.video ? ' dialog-video' : '')+'"></div>'+
+											'<div class="dialog-content"></div>'+
 										'</div>'+
 										'<div class="dialog-buttons"></div>'+
 										'<a class="dialog-close"></a>'+
 									'</div>'+
 								'</div>');
-							
+				
+				// resizable
+				if (settings.resizable)
+				dialogBox.find('.dialog').addClass('resizable');
+				
+				// video
+				if (settings.video)
+					dialogBox.find('.dialog').addClass('dialog-video');
+				
 				_this.data('dialog',{
 					dialog:dialogBox,
 					index:index++

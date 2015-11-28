@@ -48,8 +48,8 @@
 					<input data-sortable="order" type="hidden" name="product_order[]" value="<?=$k->order?>">
 				</td>
 				<td>
-					<a class="image" href="<?=htmlspecialchars($k->image)?>">
-						<img src="<?=htmlspecialchars($k->cache)?>" onerror="this.src='/img/i/loading_mini.gif'" alt="">
+					<a class="image" data-lightbox="product-<?=$k->id?>" href="<?=htmlspecialchars($k->image)?>" title="<?=htmlspecialchars($k->name)?>">
+						<img src="<?=htmlspecialchars($k->cache)?>" onerror="this.src='/img/i/loading_mini.gif'" alt="Product">
 					</a>
 				</td>
 				<td class="left">
@@ -534,7 +534,7 @@
 										<span class="icon-reorder handler" data-sortable="handler"></span>
 									</td>
 									<td>
-										<a class="image">
+										<a class="image" href="<?=htmlspecialchars($k->image)?>" data-lightbox="product-<?=$k->id?>" title="<?=htmlspecialchars($k->name)?>">
 											<img src="<?=htmlspecialchars($k->cache)?>" onerror="this.src='/img/i/loading_mini.gif'" alt="Related">
 										</a>
 									</td>
@@ -614,9 +614,9 @@
 							<input type="hidden" name="product[video][video][]" value="<?=$video->video?>">
 						</td>
 						<td>
-							<div class="image">
+							<a class="image" onclick="$.showVideo('<?=$video->video?>')">
 								<img src="<?=$video->image?>" alt="YouTube">
-							</div>
+							</a>
 						</td>
 						<td class="left">
 							<input class="inf" type="text" name="product[video][name][]" value="<?=$video->name?>">
@@ -810,14 +810,15 @@ $(function(){
 			var id = $(this).data('product'),
 				name = $(this).data('name'),
 				image = $(this).data('image'),
+				cache = $(this).data('cache'),
 				html = $(
 				'<tr data-relation="item" class="new-tr">'+
 					'<td>'+
 						'<span class="icon-reorder handler" data-sortable="handler"></span>'+
 					'</td>'+
 					'<td>'+
-						'<a class="image">'+
-							'<img src="'+image+'" alt="'+name+'">'+
+						'<a class="image" href="'+image+'" data-lightbox="product-'+id+'" title="'+name+'">'+
+							'<img src="'+cache+'" alt="'+name+'">'+
 						'</a>'+
 					'</td>'+
 					'<td class="left">'+name+'</td>'+
@@ -875,7 +876,7 @@ $(function(){
 								'</td>'+
 								'<td class="left">'+ this.name +'</td>'+
 								'<td class="small">'+
-									'<a class="button green" data-product="'+ this.id +'" data-image="'+ this.image +'" data-name="'+ this.name +'">add</a>'+
+									'<a class="button green" data-product="'+ this.id +'" data-cache="'+ this.cache +'" data-image="'+ this.image +'" data-name="'+ this.name +'">add</a>'+
 								'</td>'+
 							'</tr>';
 						});
@@ -964,9 +965,9 @@ $(function(){
 					'<input type="hidden" name="product[video][video][]" value="'+code_video+'">'+
 				'</td>'+
 				'<td>'+
-					'<div class="image">'+
+					'<a class="image" onclick="$.showVideo(\''+code_video+'\')">'+
 						'<img src="'+image+'" alt="YouTube">'+
-					'</div>'+
+					'</a>'+
 				'</td>'+
 				'<td class="left">'+
 					'<input class="inf" type="text" name="product[video][name][]" value="">'+

@@ -10,6 +10,25 @@ $(function(){
 	});
 });
 
+/* SHOW VIDEO
+---------------------------------------------------------------------------*/
+;(function($){
+	$.showVideo = function(video, title){
+		if ( ! video) return;
+		title = title || 'Video';
+		
+		$('<iframe width="420" height="315" src="https://www.youtube.com/embed/'+video+'" frameborder="0" allowfullscreen></iframe>').dialog({
+			maxWidth:'auto',
+			maxHeight:'auto',
+			width:'500px',
+			height:'auto',
+			title:title,
+			video:true,
+			drag:true
+		});
+	}
+})(jQuery);
+
 /* MASK
 ---------------------------------------------------------------------------*/
 ;$(function(){

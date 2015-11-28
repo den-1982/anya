@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Ноя 28 2015 г., 16:48
+-- Время создания: Ноя 28 2015 г., 17:56
 -- Версия сервера: 5.5.23
 -- Версия PHP: 5.3.10
 
@@ -6038,7 +6038,9 @@ CREATE TABLE IF NOT EXISTS `product_filter_item` (
 INSERT INTO `product_filter_item` (`product_id`, `filter_item_id`) VALUES
 (844, 115),
 (844, 119),
-(845, 117),
+(845, 113),
+(845, 114),
+(845, 115),
 (845, 119),
 (845, 110),
 (845, 111);
@@ -6141,8 +6143,7 @@ CREATE TABLE IF NOT EXISTS `product_video` (
 INSERT INTO `product_video` (`product_id`, `video`, `image`, `name`, `text`, `url`, `order`) VALUES
 (844, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '222222222', '222', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0),
 (844, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '11111111111', '11111111111111', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0),
-(845, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '111111', '111111 кцйкйцу', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0),
-(845, 'ecfGt5b9Zh0', '//i.ytimg.com/vi/ecfGt5b9Zh0/sddefault.jpg', 'выа', '', 'https://www.youtube.com/watch?v=ecfGt5b9Zh0', 0);
+(845, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '111111', '111111 кцйкйцу', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0);
 
 -- --------------------------------------------------------
 
