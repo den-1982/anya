@@ -42,11 +42,15 @@ class productModel extends CI_Model
 		$product->video = $this->db->query('SELECT * FROM product_video WHERE product_id = "'.$product->id.'"')->result();
 		
 		# RELATED
-		$product->related = $this->db->query('SELECT p.id, pd.name 
+		$product->related = $this->db->query('SELECT p.id, pd.name, p.image
 													FROM product_related pr 
 													LEFT JOIN product p ON pr.related_id = p.id 
 													LEFT JOIN product_description pd ON pd.product_id = p.id 
 												WHERE p.id <> "'.$product->id.'" AND pr.product_id = "'.$product->id.'"')->result();
+		foreach ($product->related as $k){
+			$k->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $k->image);
+		}
+		
 		
 		# MANUFACTURER
 		$product->manufacturer = $this->db->query('SELECT * FROM manufacturer WHERE id = "'.$product->manufacturer_id.'"')->row();
@@ -62,7 +66,7 @@ class productModel extends CI_Model
 		# PRICES
 		$product->prices = $this->db->query('SELECT * FROM product_prices WHERE product_id = "'.$product->id.'"')->result();
 		
-
+		
 		return $product;
 	}
 	
@@ -233,10 +237,6 @@ class productModel extends CI_Model
 	
 	public function updateProduct()
 	{
-		echo '<pre>';
-		print_r($_POST);
-		exit;
-		
 		$id				= isset($_POST['id'])				? abs((int)$_POST['id']) : 0;
 		$category_id	= isset($_POST['category_id'])		? abs((int)$_POST['category_id']) : 0;
 		$manufacturer_id= isset($_POST['manufacturer_id'])	? abs((int)$_POST['manufacturer_id']) : 0;
@@ -257,20 +257,16 @@ class productModel extends CI_Model
 		# если есть цена в $ создаем цену в ua
 		$price = ( ! $price) ? $price_usa * $course : $price;
 		
-		$this->db->query('INSERT INTO product (category_id, image, url, price, price_usa, discount, end_discount, manufacturer_id) 
-							   VALUES (
-								"'.$category_id.'",
-								"'.$image.'", 
-								"'.$url.'", 
-								"'.$price.'", 
-								"'.$price_usa.'", 
-								"'.$discount.'", 
-								"'.$end_discount.'",
-								"'.$manufacturer_id.'"
-							)');
-		
-		# ID PRODUCT
-		$id = $this->db->query('SELECT MAX(id) AS id FROM product LIMIT 1')->row()->id;
+		$this->db->query('UPDATE product SET
+								category_id = "'.$category_id.'",
+								image = "'.$image.'", 
+								url = "'.$url.'", 
+								price = "'.$price.'", 
+								price_usa = "'.$price_usa.'", 
+								discount = "'.$discount.'", 
+								end_discount = "'.$end_discount.'",
+								manufacturer_id = "'.$manufacturer_id.'"
+							WHERE id = "'.$id.'"');
 		
 		# DESCRIPTION
 		$h1			= isset($_POST['h1'])		? clean($_POST['h1'], true, true) : '';
@@ -281,6 +277,7 @@ class productModel extends CI_Model
 		$text		= isset($_POST['text'])		? clean($_POST['text'], false, true) : '';
 		$spam       = isset($_POST['spam'])		? clean($_POST['spam'], false, true) : '';
 		
+		$this->db->query('DELETE FROM product_description WHERE product_id = "'.$id.'"');
 		$this->db->query('INSERT INTO product_description (product_id, h1, name, title, metadesc, metakey, text, spam) 
 							   VALUES (
 								"'.$id.'", 
@@ -295,10 +292,11 @@ class productModel extends CI_Model
 		
 		
 		# FILTER_ITEM (id_filter_item) значения фильтров
+		$this->db->query('DELETE FROM product_filter_item WHERE product_id = "'.$id.'"');
 		if (isset($_POST['product']['filter_item']['id'])) foreach ($_POST['product']['filter_item']['id'] as $k=>$v){
 				$p['filter_item_id'] = isset($_POST['product']['filter_item']['id'][$k]) ? abs((int)$_POST['product']['filter_item']['id'][$k]) : 0; 
 				
-				$this->db->query('INSERT INTO product_filter_item (product_id, filter_item_id) 
+				$this->db->query('INSERT IGNORE INTO product_filter_item (product_id, filter_item_id) 
 									VALUES(
 										"'.$id.'", 
 										"'.$p['filter_item_id'].'"
@@ -306,11 +304,12 @@ class productModel extends CI_Model
 		}
 		
 		# PRICES добавляем список цен
+		$this->db->query('DELETE FROM product_prices WHERE product_id = "'.$id.'"');
 		if (isset($_POST['product']['prices']['filter_item_id'])) foreach ($_POST['product']['prices']['filter_item_id'] as $k=>$v){
 			$p['filter_item_id'] = isset($_POST['product']['prices']['filter_item_id'][$k]) ? abs((int)$_POST['product']['prices']['filter_item_id'][$k]) : 0; 
 			
 			# добавляем в product_filter_item т.к. это значение фильтра
-			$this->db->query('INSERT INTO product_filter_item (product_id, filter_item_id) 
+			$this->db->query('INSERT IGNORE INTO product_filter_item (product_id, filter_item_id) 
 								VALUES(
 									"'.$id.'", 
 									"'.$p['filter_item_id'].'"
@@ -349,13 +348,14 @@ class productModel extends CI_Model
 		}
 		
 		# RELATED
+		$this->db->query('DELETE FROM product_related WHERE product_id = "'.$id.'"');
 		if (isset($_POST['product']['related']['id'])) foreach ($_POST['product']['related']['id'] as $k=>$v){
 				$p['related_id'] = isset($_POST['product']['related']['id'][$k]) ? abs((int)$_POST['product']['related']['id'][$k]): 0;
 				
 				# если это тот же товар
 				if ($p['related_id'] == $id) continue;
 				
-				$this->db->query('INSERT INTO product_related (product_id, related_id) 
+				$this->db->query('INSERT IGNORE INTO product_related (product_id, related_id) 
 									VALUES(
 										"'.$id.'",
 										"'.$p['related_id'].'"
@@ -363,6 +363,7 @@ class productModel extends CI_Model
 		}
 
 		# IMAGES
+		$this->db->query('DELETE FROM product_images WHERE product_id = "'.$id.'"');
 		if (isset($_POST['product']['images']['image'])) foreach ($_POST['product']['images']['image'] as $k=>$v){
 			$p['image'] = isset($_POST['product']['images']['image'][$k]) ? clean($_POST['product']['images']['image'][$k], false, true): '';
 			$p['alt']	= isset($_POST['product']['images']['alt'][$k]) ? clean($_POST['product']['images']['alt'][$k], true, true): '';
@@ -378,6 +379,7 @@ class productModel extends CI_Model
 		}
 		
 		# VIDEO
+		$this->db->query('DELETE FROM product_video WHERE product_id = "'.$id.'"');
 		if (isset($_POST['product']['video']['image'])) foreach ($_POST['product']['video']['image'] as $k=>$v){
 			$p['image'] = isset($_POST['product']['video']['image'][$k])	? clean($_POST['product']['video']['image'][$k], true, true): '';
 			$p['url']	= isset($_POST['product']['video']['url'][$k])		? clean($_POST['product']['video']['url'][$k], true, true): '';
@@ -398,142 +400,8 @@ class productModel extends CI_Model
 								)');
 		}
 
+		
 		return;
-
-		
-		/*
-		$id			= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$parent		= isset($_POST['parent']) ? abs((int)$_POST['parent']) : 0;
-		$h1			= isset($_POST['h1']) ? clean($_POST['h1'], true, true) : '';
-		$name		= isset($_POST['name']) ? clean($_POST['name'], true, true) : '';
-		$title		= isset($_POST['title']) ? clean($_POST['title'], true, true) : '';
-		$metadesc	= isset($_POST['metadesc']) ? clean($_POST['metadesc'], true, true) : '';
-		$metakey	= isset($_POST['metakey']) ? clean($_POST['metakey'], true, true) : '';
-		$text		= isset($_POST['text']) ? clean($_POST['text'], false, true) : '';
-		$spam       = isset($_POST['spam']) ? clean($_POST['spam'], false, true) : '';
-		$manufacturer = isset($_POST['manufacturer']) ? abs((int)$_POST['manufacturer']) : 0;
-		
-		$url		= translit(mb_strtolower($_POST['url']));
-		$url		= mb_strlen($url) ? $url : time();
-		
-		$price 		= isset($_POST['price']) ? abs((float) str_replace(',', '.', $_POST['price'])) : 0;
-		$price_usa	= isset($_POST['price_usa']) ? abs((float) str_replace(',', '.', $_POST['price_usa'])) : 0;
-		$discount	= isset($_POST['price-discount']) ? abs((float) str_replace(',', '.', $_POST['price-discount'])) : 0;
-		$end_discount = isset($_POST['end-discount']) ? strtotime($_POST['end-discount']) : 0;
-		$end_discount = $end_discount ? $end_discount : 0;
-		
-		# COURSE курс доллара данной категории
-		$course = $this->db->query('SELECT course FROM category WHERE id = '.$parent)->row();
-		$course = isset($course->course) ? $course->course : 0;
-		$price = !$price ? $price_usa * $course : $price;
-		
-		$res = $this->db->query('UPDATE products 
-									SET 
-										parent	= "'.$parent.'",
-										h1		= "'.$h1.'",
-										name	= "'.$name.'", 
-										title	= "'.$title.'", 
-										metadesc= "'.$metadesc.'", 
-										metakey	= "'.$metakey.'", 
-										text	= "'.$text.'",
-										spam	= "'.$spam.'",
-										url		= "'.$url.'",
-										price	= "'.$price.'",
-										price_usa = "'.$price_usa.'",
-										discount = "'.$discount.'",
-										end_discount = "'.$end_discount.'",
-										manufacturer = "'.$manufacturer.'"
-									WHERE id = '.$id);
-		
-		# FILTER_ITEM (id_filter_item) значения фильтров
-		$this->db->query('DELETE FROM product_filter_item WHERE id_product = '.$id);
-		if (isset($_POST['id_filter_item'])){
-			foreach ($_POST['id_filter_item'] as $k){
-				$id_filter_item = abs((int)$k);
-				
-				$this->db->query('INSERT INTO product_filter_item (id_product, id_filter_item) 
-									VALUES(
-										"'.$id.'", 
-										"'.$id_filter_item.'"
-									)');
-			}
-		}
-		
-		# PRICES добавляем список цен
-		$this->db->query('DELETE FROM product_prices WHERE id_product = '. $id);
-		if (isset($_POST['id_filter_item_price'])){
-			foreach ($_POST['id_filter_item_price'] as $k=>$v){
-				$id_filter_item	= isset($_POST['id_filter_item_price'][$k]) ? abs((int)$_POST['id_filter_item_price'][$k]) : 0;
-				
-				# добавляем в product_filter_item т.к. это значение фильтра
-				$this->db->query('INSERT INTO product_filter_item (id_product, id_filter_item) 
-									VALUES(
-										"'.$id.'", 
-										"'.$id_filter_item.'"
-									)');
-				
-				$cnt_opt  = isset($_POST['cnt_opt'][$k]) ? clean($_POST['cnt_opt'][$k], true, true) : 0;
-				$cnt_roz  = isset($_POST['cnt_roz'][$k]) ? clean($_POST['cnt_roz'][$k], true, true) : 0;
-				
-				$usa_opt  = isset($_POST['usa_opt'][$k]) ? abs((float)$_POST['usa_opt'][$k]) : 0;
-				$usa_roz  = isset($_POST['usa_roz'][$k]) ? abs((float)$_POST['usa_roz'][$k]) : 0;
-				
-				$opt  = isset($_POST['opt'][$k]) ? abs((float)$_POST['opt'][$k]) : 0;
-				$roz  = isset($_POST['roz'][$k]) ? abs((float)$_POST['roz'][$k]) : 0;
-				
-				# если цены в грн. не указаны
-				$opt = !$opt ? $usa_opt * $course : $opt;
-				$roz = !$roz ? $usa_roz * $course : $roz;
-
-				$discount = isset($_POST['discount'][$k]) ? abs((float)$_POST['discount'][$k]) : 0;
-				
-				//if ( ! $id_filter_item) continue;
-
-				$this->db->query('INSERT INTO product_prices (id_product, id_filter_item, cnt_opt, cnt_roz, opt, roz, usa_opt, usa_roz, discount) 
-									VALUES (
-										"'.$id.'", 
-										"'.$id_filter_item.'", 
-										"'.$cnt_opt.'", 
-										"'.$cnt_roz.'", 
-										"'.$opt.'", 
-										"'.$roz.'", 
-										"'.$usa_opt.'", 
-										"'.$usa_roz.'", 
-										"'.$discount.'"
-									)');
-			}
-		}
-		
-		# RELATED сопутствующие товары
-		$this->db->query('DELETE FROM product_related WHERE parent_product = '.$id);
-		if (isset($_POST['related'])){
-			foreach ($_POST['related'] as $k=>$v){
-				$v = abs((int)trim($v));
-				# если это тот же товар
-				if ($v == $id) continue;
-				
-				$this->db->query('INSERT INTO product_related (parent_product, child_product) 
-									VALUES(
-										"'.$id.'",
-										"'.$v.'"
-									)');
-			}
-		}
-		
-		# IMAGES перезаписываем адреса изображений
-		$this->db->query('DELETE FROM product_images WHERE id_product = '.$id);
-		foreach ($_POST['product_image'] as &$k){
-			$url = clean($k, true, true);
-			if ( ! $url) continue;
-			$this->db->query('INSERT INTO product_images (id_product, url) 
-									VALUES(
-										"'.$id.'", 
-										"'.$url.'"
-									)');
-		}							
-
-		return;
-		*/
 	}
 	
 	public function setNewProduct()

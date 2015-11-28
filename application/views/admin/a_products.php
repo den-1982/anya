@@ -56,10 +56,10 @@
 					<a href="<?=$path?>?update=<?=$k->id?>"><?=$k->name?></a>
 				</td>
 				<td>
-					<a class="toggle <?=$k->hit == 1 ? ' activ' : '' ?>" data-column="hit" data-id="<?=$k->id?>"></a>
+					<a class="toggle icon-star <?=$k->hit == 1 ? ' activ' : '' ?>" data-bind="toggle" data-column="hit" data-id="<?=$k->id?>"></a>
 				</td>
 				<td>
-					<a class="toggle <?=$k->new == 1 ? ' activ' : '' ?>" data-column="new" data-id="<?=$k->id?>"></a>
+					<a class="toggle icon-star <?=$k->new == 1 ? ' activ' : '' ?>" data-bind="toggle" data-column="new" data-id="<?=$k->id?>"></a>
 				</td>
 				<td class="left nowrap"><?=$k->url?></td>
 				<td>
@@ -437,7 +437,7 @@
 										<span data-sortable="handler" class="icon-reorder handler"></span>
 									</td>
 									<td class="right">
-										<select data-select="new" name="id_filter_item_price[]">
+										<select data-select="new" name="product[prices][filter_item_id][]">
 											<option value="0" selected> - Выбрать - </option>
 											<?php foreach($filter_item_pricing as $item):?>
 											<option value="<?=$item->id?>" <?=$item->id == $price->filter_item_id ? 'selected' : '';?>><?=$item->name?> <?=$item->prefix?></option>
@@ -445,25 +445,25 @@
 										</select>
 									</td>
 									<td>
-										<input class="inf min" type="text" name="cnt_opt[]" value="<?=$price->cnt_opt?>">
+										<input class="inf min" type="text" name="product[prices][cnt_opt][]" value="<?=$price->cnt_opt?>">
 									</td>
 									<td>
-										<input class="inf min" type="text" name="cnt_roz[]" value="<?=$price->cnt_roz?>">
+										<input class="inf min" type="text" name="product[prices][cnt_roz][]" value="<?=$price->cnt_roz?>">
 									</td>
 									<td>
-										<input data-mask="price" class="inf min" type="text" name="opt[]" value="<?=$price->opt?>">
+										<input data-mask="price" class="inf min" type="text" name="product[prices][opt][]" value="<?=$price->opt?>">
 									</td>
 									<td>
-										<input data-mask="price" class="inf min" type="text" name="roz[]" value="<?=$price->roz?>">
+										<input data-mask="price" class="inf min" type="text" name="product[prices][roz][]" value="<?=$price->roz?>">
 									</td>
 									<td>
-										<input data-mask="price" class="inf min" type="text" name="usa_opt[]" value="<?=$price->usa_opt?>">
+										<input data-mask="price" class="inf min" type="text" name="product[prices][usa_opt][]" value="<?=$price->usa_opt?>">
 									</td>
 									<td>
-										<input data-mask="price" class="inf min" type="text" name="usa_roz[]" value="<?=$price->usa_roz?>">
+										<input data-mask="price" class="inf min" type="text" name="product[prices][usa_roz][]" value="<?=$price->usa_roz?>">
 									</td>
 									<td>
-										<input data-mask="price" class="inf min" type="text" name="discount[]" value="<?=$price->discount?>">
+										<input data-mask="price" class="inf min" type="text" name="product[prices][discount][]" value="<?=$price->discount?>">
 									</td>
 									<td>
 										<a class="link_del" data-price="delete" title="удалить"></a>
@@ -540,7 +540,7 @@
 									</td>
 									<td class="left"><?=$k->name?></td>
 									<td>
-										<input type="hidden" name="product[related][id][]" value="<?=$k->id?>">
+										<input type="hidden" name="product[related][id][<?=$k->id?>]" value="<?=$k->id?>">
 										<a class="link_del" data-relation="delete"></a>
 									</td>
 								</tr>
@@ -822,7 +822,7 @@ $(function(){
 					'</td>'+
 					'<td class="left">'+name+'</td>'+
 					'<td>'+
-						'<input type="hidden" name="product[related][id][]" value="'+id+'">'+
+						'<input type="hidden" name="product[related][id]['+id+']" value="'+id+'">'+
 						'<a class="link_del" data-relation="delete"></a>'+
 					'</td>'+
 				'</tr>');
