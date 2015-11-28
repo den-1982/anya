@@ -36,7 +36,7 @@
 				</td>
 				<td>
 					<a class="image" href="<?=htmlspecialchars($k->image)?>">
-						<img onerror="this.src = '/img/i/loading_mini.gif'" src="<?=htmlspecialchars($k->cache)?>" alt="<?=htmlspecialchars($k->name)?>">
+						<img src="<?=htmlspecialchars($k->cache)?>" alt="<?=htmlspecialchars($k->name)?>" alt="Image">
 					</a>
 				</td>
 				<td class="left">

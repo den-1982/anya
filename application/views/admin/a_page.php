@@ -1,13 +1,25 @@
 <div class="body">
 
 <!--ALL-->
-	<?php if($act == 'all'):?>
+	<?php if ($act == 'all'):?>
 	<h1 class="title"><?=$h1?></h1>
 	
-	<div class="nav clearfix">
-		<div class="fleft"></div>
+	<div class="nav">
+		<div class="fleft">
+			<?php if ($crumbs):?>
+			<div class="crumbs">
+				<a href="<?=$path?>">Страницы</a>
+				<?php $last = array_pop($crumbs);?>
+				<?php foreach($crumbs as $k):?>
+					::
+					<a href="<?=$path?>?parent=<?=$k['id']?>"><?=$k['name']?></a>
+				<?php endforeach;?>
+					:: <span><?=$last['name']?></span>
+			</div>
+			<?php endif;?>
+		</div>
 		<div class="fright">
-			<a class="button green" style="margin-left:5px;" title="добавить" href="<?=$path?>?add&parent=<?=$parent?>">добавить</a>
+			<a class="button green" href="<?=$path?>?add&parent=<?=$parent?>" title="добавить">Добавить</a>
 		</div>
 	</div>
 	
@@ -16,10 +28,9 @@
 			<tr>
 				<td class="small">№</td>
 				<td class="small">
-					<a data-sortable="send-order" class="sendOrder" title="применить сортировку"></a>
+					<a class="icon-save send-order" data-sortable="send-order" title="применить сортировку"></a>
 				</td>
 				<td>Название</td>
-				<td class="small">Тип</td>
 				<td class="small">URL</td>
 				<td class="small">visible</td>
 				<td class="small"></td>
@@ -27,23 +38,27 @@
 			</tr>
 		</thead>
 		<tbody data-sortable="body">
-			<?php $i=1; foreach($pages as $k):?>
+			<?php $i=1; if (isset($pages[$parent])) foreach ($pages[$parent] as $k):?>
 			<tr>
 				<td><?=$i++?></td>
 				<td>
-					<span class="handler" data-sortable="handler"></span>
+					<span class="icon-reorder handler" data-sortable="handler"></span>
 					<input data-sortable="id" type="hidden" name="page_id[]" value="<?=$k->id?>">
 					<input data-sortable="order" type="hidden" name="page_order[]" value="<?=$k->order?>">
 				</td>
-				<td class="left"><a href="<?=$path?>?update=<?=$k->id?>"><?=$k->name?></a></td>
-				<td class="left"><?=$k->type ? $k->type : ''?></td>
+				<td class="left">
+					<a href="<?=$path?>?parent=<?=$k->id?>"><?=$k->name?></a>
+					<?=$k->cnt_childs ? '<span class="c-grey">&rarr; ('.$k->cnt_childs.')</span>' : '';?>
+				</td>
 				<td class="left nowrap"><?=$k->url?></td>
 				<td>
-					<a class="toggle <?=$k->visibility == 1 ? ' activ' : '' ?>" data-column="visibility" data-id="<?=$k->id?>"></a>
+					<a class="toggle icon-eye <?=$k->visibility == 1 ? ' activ' : ''?>" data-bind="toggle" data-column="visibility" data-id="<?=$k->id?>" title="<?=$k->visibility == 1 ? 'скрыть' : 'показать ' ?> на сайте"></a>
 				</td>
-				<td><a title="редактировать" class="link_edit" href="<?=$path?>?update=<?=$k->id?>"></a></td>
+				<td>	
+					<a class="link_edit" href="<?=$path?>?parent=<?=$parent?>&update=<?=$k->id?>" title="редактировать"></a>
+				</td>
 				<td>
-					<a title="удалить" class="link_del" data-delete="<?=htmlspecialchars($k->name)?>" href="<?=$path?>?parent=<?=$parent?>&delete=<?=$k->id?>"></a>
+					<a class="link_del" data-post="<?=$k->id?>" data-delete="<?=htmlspecialchars($k->name)?>" href="<?=$path?>?parent=<?=$parent?>&delete=<?=$k->id?>" title="удалить"></a>
 				</td>
 			</tr>
 			<?php endforeach;?>
@@ -53,17 +68,15 @@
 	
 	
 	
-	
-	
 <!--ADD-->	
-	<?php if($act == 'add'):?>
+	<?php if ($act == 'add'):?>
 	<h1 class="title"><?=$h1?></h1>
 	
-	<div class="nav clearfix">
+	<div class="nav">
 		<div class="fleft"></div>
 		<div class="fright">
-			<a style="margin-left:5px;" class="button blue" onclick="$('#form').submit()" >Сохранить</a>
-			<a style="margin-left:5px;" class="button black" href="<?=$path?>?parent=<?=$parent?>">Отмена</a>
+			<a class="button blue" onclick="$('#form').submit()" >Сохранить</a>
+			<a class="button black" href="<?=$path?>?parent=<?=$parent?>">Отмена</a>
 		</div>
 	</div>
 	
@@ -92,12 +105,15 @@
 		<div class="bookmark activ" data-id="data">
 			<table class="table-1">
 				<tr>
-					<td class="small right"><b class="c-red">Тип:</b></td>
+					<td class="right small">
+						<b class="c-red">Связь:</b>
+					</td>
 					<td class="left">
-						<select data-select="" name="type">
-							<option value="0" selected> - Выбрать (новость \ стсатья) - </option>
-							<option value="news">новость</option>
-							<option value="articles">статья</option>
+						<select data-select="" name="parent">
+							<option value="0"> - Выбрать - </option>
+							<?php foreach($parents as $k):?>
+							<option <?=$parent == $k['id'] ? 'selected' : ''?>  value="<?=$k['id']?>"><?=$k['name']?></option>
+							<?php endforeach;?>
 						</select>
 					</td>
 				</tr>
@@ -132,21 +148,13 @@
 				<tr>
 					<td class="right"><b>Изображение:</b></td>
 					<td class="left">
-						<table class="table-1">
-							<tr data-preload="box">
-								<td class="small">
-									<div class="image">
-										<img data-preload="image" src="/">
-									</div>
-								</td>
-								<td class="left">
-									<a class="button green" href="javascript:void(0)">
-										загрузить
-										<input class="upload" data-button-file="image" type="file" name="image" value="">
-									</a>
-								</td>
-							</tr>
-						</table>
+						<div class="FM-image-box">
+							<div class="i">
+								<img class="FM-image" src="/img/i/loading_mini.gif">
+							</div>
+							<input type="hidden" name="image" value="">
+							<br><a href="javascript:void(0)" class="FM-overview">обзор</a> | <a href="javascript:void(0)" class="FM-clear">очистить</a>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -162,18 +170,16 @@
 	
 	
 	
-	
-	
 <!--UPDATE-->
-	<?php if($act == 'update'):?>
+	<?php if ($act == 'update'):?>
 	<h1 class="title"><?=$h1?></h1>
 	
-	<div class="nav clearfix">
+	<div class="nav">
 		<div class="fleft"></div>
 		<div class="fright">
-			<a style="margin-left:5px;" class="button orange" data-form-apply="" >Применить</a>
-			<a style="margin-left:5px;" class="button blue" onclick="$('#form').submit()" >Сохранить</a>
-			<a style="margin-left:5px;" class="button black" href="<?=$path?>?parent=<?=$parent?>">Отмена</a>
+			<a class="button orange" data-form-apply="" >Применить</a>
+			<a class="button blue" onclick="$('#form').submit()" >Сохранить</a>
+			<a class="button black" href="<?=$path?>?parent=<?=$parent?>">Отмена</a>
 		</div>
 	</div>
 	
@@ -199,20 +205,20 @@
 				<?php foreach($page->slider as $k):?>
 					<tr data-slider="item">
 						<td>
-							<span class="handler" data-sortable="handler"></span>
-							<input data-sortable="order" type="hidden" name="slider_order[]" value="<?=$k->order?>">
+							<span class="icon-reorder handler" data-sortable="handler"></span>
+							<input data-sortable="order" type="hidden" name="slider[order][]" value="<?=$k->order?>">
 						</td>
 						<td>
 							<div class="FM-image-box">
 								<div class="i">
 									<img class="FM-image" src="<?=$k->cache?>">
 								</div>
-								<input type="hidden" name="slider_image[]" value="<?=$k->img?>">
+								<input type="hidden" name="slider[image][]" value="<?=$k->image?>">
 								<br><a href="/" class="FM-overview">обзор</a> | <a href="/" class="FM-clear">очистить</a>
 							</div>
 						</td>
 						<td class="left">
-							<input class="inf" type="text" name="slider_link[]" value="<?=htmlspecialchars($k->link)?>">
+							<input class="inf" type="text" name="slider[link][]" value="<?=htmlspecialchars($k->link)?>">
 						</td>
 						<td>
 							<a class="link_del" data-slider="delete" title="удалить"></a>
@@ -226,12 +232,13 @@
 		<div class="bookmark activ" data-id="data">
 			<table class="table-1">
 				<tr>
-					<td class="small right"><b class="c-red">Тип:</b></td>
+					<td class="small right"><b class="c-red">Связь:</b></td>
 					<td class="left">
-						<select data-select="" name="type">
-							<option value="0" selected> - Выбрать (новость \ стсатья) - </option>
-							<option value="news" <?=$page->type == 'news' ? 'selected' : '';?>>Новость</option>
-							<option value="articles" <?=$page->type == 'articles' ? 'selected' : '';?>>Статья</option>
+						<select data-select="" name="parent">
+							<option value="0"> - Выбрать - </option>
+							<?php foreach($parents as $k):?>
+							<option <?=$page->parent == $k['id'] ? 'selected' : ''?>  value="<?=$k['id']?>"><?=$k['name']?></option>
+							<?php endforeach;?>
 						</select>
 					</td>
 				</tr>
@@ -263,25 +270,16 @@
 					<td class="right"><b>URL:</b></td>
 					<td class="left"><input class="inf" id="add_url" type="text" name="url" value="<?=htmlspecialchars($page->url)?>"></td>
 				</tr>
-				
 				<tr>
 					<td class="right"><b>Изображение:</b></td>
 					<td class="left">
-						<table class="table-1">
-							<tr data-preload="box">
-								<td class="small">
-									<div class="image">
-										<img data-preload="image" src="/img/news-articles/<?=$page->id?>/<?=$page->id?>_82_82.jpg">
-									</div>
-								</td>
-								<td class="left">
-									<a class="button green" href="javascript:void(0)">
-										загрузить
-										<input class="upload" data-button-file="image" type="file" name="image" value="">
-									</a>
-								</td>
-							</tr>
-						</table>
+						<div class="FM-image-box">
+							<div class="i">
+								<img class="FM-image" src="<?=htmlspecialchars($page->cache)?>" alt="Image">
+							</div>
+							<input type="hidden" name="image" value="<?=htmlspecialchars($page->image)?>">
+							<br><a href="javascript:void(0)" class="FM-overview">обзор</a> | <a href="javascript:void(0)" class="FM-clear">очистить</a>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -300,63 +298,59 @@
 
 
 <script>// APPLY
-$(function(){
-	$(document).on('click', '[data-form-apply]', function(e){
-		$(document.body).append($('<div>').addClass('_load'));
-		
-		if (tinyMCE && tinyMCE.editors){
-			$(tinyMCE.editors).each(function(){
-				$(this.getElement()).html(this.getContent());
-			});
-		}
-		
-		AP.init('', $('#form')[0], function(){	
-			location.reload(true);
+$(document).on('click', '[data-form-apply]', function(e){
+	$(document.body).append('<div class="load"></div>');
+	
+	if (tinyMCE && tinyMCE.editors){
+		$(tinyMCE.editors).each(function(){
+			$(this.getElement()).html(this.getContent());
 		});
-		return false;	
+	}
+	
+	AP.init('', $('#form')[0], function(){	
+		location.reload(true);
 	});
+	return false;	
 });
 </script>
 
-<script>// SLIDER
+<script> // SLIDER
 $(function(){
 	var A = {
 		create:function(){
-			var html = $('<tr data-slider="item" class="new-tr">'+
-							'<td>'+
-								'<span class="handler" data-sortable="handler"></span>'+
-								'<input data-sortable="order" type="hidden" name="slider_order[]" value="">'+
-							'</td>'+
-							'<td>'+
-								'<div class="FM-image-box">'+
-									'<div class="i">'+
-										'<img class="FM-image" src="/img/i_admin/loading_mini.gif">'+
-									'</div>'+
-									'<input type="hidden" name="slider_image[]" value="">'+
-									'<br><a href="/" class="FM-overview">обзор</a> | <a href="/" class="FM-clear">очистить</a>'+
-								'</div>'+
-							'</td>'+
-							'<td class="left">'+
-								'<input class="inf" type="text" name="slider_link[]" value="">'+
-							'</td>'+
-							'<td>'+
-								'<a class="link_del" data-slider="delete" title="удалить"></a>'+
-							'</td>'+
-						'</tr>');
+			var html = $(
+			'<tr data-slider="item" class="new-tr">'+
+				'<td>'+
+					'<span class="icon-reorder handler" data-sortable="handler"></span>'+
+					'<input data-sortable="order" type="hidden" name="slider[order][]" value="">'+
+				'</td>'+
+				'<td>'+
+					'<div class="FM-image-box">'+
+						'<div class="i">'+
+							'<img class="FM-image" src="/img/i/loading_mini.gif">'+
+						'</div>'+
+						'<input type="hidden" name="slider[image][]" value="">'+
+						'<br><a href="/" class="FM-overview">обзор</a> | <a href="/" class="FM-clear">очистить</a>'+
+					'</div>'+
+				'</td>'+
+				'<td class="left">'+
+					'<input class="inf" type="text" name="slider[link][]" value="">'+
+				'</td>'+
+				'<td>'+
+					'<a class="link_del" data-slider="delete" title="удалить"></a>'+
+				'</td>'+
+			'</tr>');
 						
 			$('[data-slider="box"]').prepend(html);
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
+			setTimeout(function(){html.removeClass('new-tr')},20);
 		},
 		init:function(){
-			$(document).on('click','[data-slider="add"]', A.create);
-			$(document).on('click','[data-slider="delete"]',function(){
+			$(document).on('click','[data-slider="add"]', A.create)
+			.on('click','[data-slider="delete"]',function(){
 				$(this).parents('[data-slider="item"]').hide(200,function(){
 					$(this).remove();
-					if ( ! $('[data-slider="item"]').length){A.create();}
 				});
 			});
-			
-			if ( ! $('[data-slider="item"]').length) {A.create();}
 		}
 	}
 	A.init();

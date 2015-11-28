@@ -67,7 +67,7 @@
 							<a class="<?=$action == 'partnerships'?'activ':'';?>" href="/admin/partnerships">Партнеры</a>
 						</li>
 						<li>
-							<a class="<?=$action == 'pages'?'activ':'';?>" href="/admin/pages">Новостм \ Статьи</a>
+							<a class="<?=$action == 'page'?'activ':'';?>" href="/admin/page">Новостм \ Статьи</a>
 						</li>
 					</ul>
 				</li>

@@ -205,23 +205,47 @@ class pageModel extends CI_Model
 		return;
 	}
 	
+
+////////////////////////////////////////////////////////////// PAGE
+	public function sortPages($pages = array())
+	{
+		$data = array();
+		foreach ($pages as $page) {
+			$data[$page->parent][$page->id] = $page;
+		}
+		
+		return $data;
+	}
 	
 	public function getPages()
 	{
-		return $this->db->query('SELECT * FROM pages ORDER BY `order` ASC')->result();
+		return $this->db->query('SELECT p.*, 
+										pd.name,
+										(SELECT COUNT(*) FROM page WHERE parent = p.id) AS cnt_childs 
+									FROM page p
+									LEFT JOIN page_description pd ON pd.page_id = p.id 
+									GROUP BY p.id
+									ORDER BY p.order ASC')->result();
 	}
 	
 	public function getPage($id = 0)
 	{
 		$id = abs((int)$id);
 		
-		$page = $this->db->query('SELECT * FROM pages WHERE id = '.$id)->row();
+		$page = $this->db->query('SELECT *
+									FROM page p
+									LEFT JOIN page_description pd ON pd.page_id = p.id
+								WHERE p.id = "'.$id.'"')->row();
 		
 		if ( ! $page) return array();
 		
-		$page->slider = $this->db->query('SELECT * FROM slider_pages WHERE parent = '.$page->id.' ORDER BY `order` ASC')->result();
+		# IMAGE
+		$page->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $page->image);
+		
+		# SLIDER
+		$page->slider = $this->db->query('SELECT * FROM page_slider WHERE page_id = "'.$page->id.'" ORDER BY `order` ASC')->result();
 		foreach ($page->slider as $k){
-			$k->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $k->img);
+			$k->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $k->image);
 		}
 		
 		return $page; 
@@ -229,127 +253,136 @@ class pageModel extends CI_Model
 	
 	public function addPage()
 	{	
-		$h1			= mysql_real_escape_string(trim($_POST['h1']));
-		$name       = mysql_real_escape_string(trim($_POST['name']));
-		$title      = mysql_real_escape_string(trim($_POST['title']));
-		$metadesc   = mysql_real_escape_string(trim($_POST['metadesc']));
-		$metakey    = mysql_real_escape_string(trim($_POST['metakey']));
-		$text       = mysql_real_escape_string(trim($_POST['text']));
-		$spam       = mysql_real_escape_string(trim($_POST['spam']));
-		
-		$date		= time();
-		$type		= trim($_POST['type']);
-		
-		$url		= translit(mb_strtolower($_POST['url']));
+		$parent		= isset($_POST['parent'])	? abs((int)$_POST['parent']) : 0;
+		$image		= isset($_POST['image'])	? clean($_POST['image'], true, true) : '';
+		$url		= isset($_POST['url'])		? translit(mb_strtolower($_POST['url'])) : '';
 		$url		= mb_strlen($url) ? $url : time();
-		$name		= mb_strlen($name) ? $name : 'empty';
 		
-		$this->db->query('INSERT INTO pages (h1, name, title, metadesc, metakey, text, spam, `date`, url, type) 
-							   VALUES ("'.$h1.'", "'.$name.'", "'.$title.'", "'.$metadesc.'", "'.$metakey.'", "'.$text.'", "'.$spam.'", '.$date.', "'.$url.'", "'.$type.'")');
+		$this->db->query('INSERT INTO page (parent, image, url) 
+							   VALUES (
+								"'.$parent.'",
+								"'.$image.'",
+								"'.$url.'"
+							)');
 		
-		$id = $this->db->query('SELECT MAX(id) AS id FROM pages LIMIT 1')->row()->id;
+		# ID PAGE
+		$id = $this->db->query('SELECT MAX(id) AS id FROM page LIMIT 1')->row()->id;
 		
-		# SLIDER
-		if (isset($_POST['slider_image'])){
-			for ($i = 0; $i < count($_POST['slider_image']); $i++){
-				$img	= isset($_POST['slider_image'][$i]) ? mysql_real_escape_string(trim($_POST['slider_image'][$i])) : '';
-				$link	= isset($_POST['slider_link'][$i]) ? mysql_real_escape_string(trim($_POST['slider_link'][$i])) : '';
-				$order	= isset($_POST['slider_order'][$i]) ? (int)$_POST['slider_order'][$i] : 0;
-				if ( ! $img) continue;
-				$this->db->query('INSERT INTO slider_pages (parent, img, link, `order`) VALUES('.$id.', "'.$img.'", "'.$link.'", '.$order.')');
-			}
-		}
+		# DESCRIPTION
+		$h1			= isset($_POST['h1'])		? clean($_POST['h1'], false, true)		: '';
+		$name       = isset($_POST['name'])		? clean($_POST['name'], true, true)		: 'empty';
+		$title      = isset($_POST['title'])	? clean($_POST['title'], true, true)	: '';
+		$metadesc   = isset($_POST['metadesc'])	? clean($_POST['metadesc'], true, true)	: '';
+		$metakey    = isset($_POST['metakey'])	? clean($_POST['metakey'], true, true)	: '';
+		$text       = isset($_POST['text'])		? clean($_POST['text'], false, true)	: '';
+		$spam       = isset($_POST['spam'])		? clean($_POST['spam'], true, true)		: '';
 		
-		# IMAGE
-		$dir = ROOT.'/img/news-articles/'.$id.'/';
-		if ( ! is_dir($dir)){ mkdir($dir, 0755, true);}
-		
-		if (isset($_FILES['image'])){
-			$img = $_FILES['image'];
-			if ($img['error'] == 0){
-				$i		= $dir.$id.'.jpg';
-				$i82	= $dir.$id.'_82_82.jpg';
+		$this->db->query('INSERT INTO page_description (page_id, h1, name, title, metadesc, metakey, text, spam) 
+							   VALUES (
+								"'.$id.'", 
+								"'.$h1.'", 
+								"'.$name.'", 
+								"'.$title.'", 
+								"'.$metadesc.'", 
+								"'.$metakey.'", 
+								"'.$text.'", 
+								"'.$spam.'"
+							)');
 
-				$this->my_imagemagic->upload($img['tmp_name'], $i);
-				$this->my_imagemagic->resize_square($img['tmp_name'], $i82, 82);
-			}
+		# SLIDER
+		if (isset($_POST['slider']['image'])) foreach ($_POST['slider']['image'] as $k=>$v){
+			$image	= isset($_POST['slider']['image'][$k])	? clean($_POST['slider']['image'][$k], true, true)	: '';
+			$link	= isset($_POST['slider']['link'][$k])	? clean($_POST['slider']['link'][$k], true, true)	: '';
+			$h1		= isset($_POST['slider']['h1'][$k])		? clean($_POST['slider']['h1'][$k], true, true)		: '';
+			$text	= isset($_POST['slider']['text'][$k])	? clean($_POST['slider']['text'][$k], true, true)	: '';
+			$order	= isset($_POST['slider']['order'][$k])	? abs((int)$_POST['slider']['order'][$k])			: 0;
+			
+			if ( ! $image) continue;
+			
+			$this->db->query('INSERT INTO page_slider (page_id, image, link, h1, text, `order`) 
+								VALUES(
+									"'.$id.'", 
+									"'.$image.'", 
+									"'.$link.'", 
+									"'.$h1.'", 
+									"'.$text.'", 
+									"'.$order.'"
+								)');
 		}
+		
 		
 		return;
 	}
 	
 	public function updatePage()
 	{
-		$id			= abs((int)$_POST['id']);
-		$h1			= mysql_real_escape_string(trim($_POST['h1']));
-		$name		= mysql_real_escape_string(trim($_POST['name']));
-		$title		= mysql_real_escape_string(trim($_POST['title']));
-		$metadesc	= mysql_real_escape_string(trim($_POST['metadesc']));
-		$metakey	= mysql_real_escape_string(trim($_POST['metakey']));
-		$text		= mysql_real_escape_string(trim($_POST['text']));
-		$spam       = mysql_real_escape_string(trim($_POST['spam']));
-		
-		$type		= trim($_POST['type']);
-		
-		$url		= translit(mb_strtolower($_POST['url']));
+		$id			= isset($_POST['id'])		? abs((int)$_POST['id']) : 0;
+		$parent		= isset($_POST['parent'])	? abs((int)$_POST['parent']) : 0;
+		$image		= isset($_POST['image'])	? clean($_POST['image'], true, true) : '';
+		$url		= isset($_POST['url'])		? translit(mb_strtolower($_POST['url'])) : '';
 		$url		= mb_strlen($url) ? $url : time();
-		$name		= mb_strlen($name) ? $name : 'empty';
 		
-		$res = $this->db->query('UPDATE pages SET 
-												h1		= "'.$h1.'",
-												name	= "'.$name.'", 
-												title	= "'.$title.'", 
-												metadesc= "'.$metadesc.'", 
-												metakey	= "'.$metakey.'", 
-												text	= "'.$text.'", 
-												spam	= "'.$spam.'", 
-												url		= "'.$url.'",
-												type    = "'.$type.'"
-											WHERE id = '.$id);
+		$this->db->query('UPDATE page SET
+								parent = "'.$parent.'",
+								image = "'.$image.'",
+								url = "'.$url.'"
+							WHERE id = "'.$id.'"');
+
+		# DESCRIPTION
+		$h1			= isset($_POST['h1'])		? clean($_POST['h1'], false, true)		: '';
+		$name       = isset($_POST['name'])		? clean($_POST['name'], true, true)		: 'empty';
+		$title      = isset($_POST['title'])	? clean($_POST['title'], true, true)	: '';
+		$metadesc   = isset($_POST['metadesc'])	? clean($_POST['metadesc'], true, true)	: '';
+		$metakey    = isset($_POST['metakey'])	? clean($_POST['metakey'], true, true)	: '';
+		$text       = isset($_POST['text'])		? clean($_POST['text'], false, true)	: '';
+		$spam       = isset($_POST['spam'])		? clean($_POST['spam'], true, true)		: '';
 		
-		
+		$this->db->query('DELETE FROM page_description WHERE page_id = "'.$id.'"');
+		$this->db->query('INSERT INTO page_description (page_id, h1, name, title, metadesc, metakey, text, spam) 
+							   VALUES (
+								"'.$id.'", 
+								"'.$h1.'", 
+								"'.$name.'", 
+								"'.$title.'", 
+								"'.$metadesc.'", 
+								"'.$metakey.'", 
+								"'.$text.'", 
+								"'.$spam.'"
+							)');
+
 		# SLIDER
-		# удаляем старые значения
-		$this->db->query('DELETE FROM slider_pages WHERE parent = '.$id);
-
-		if (isset($_POST['slider_image'])){
-			for ($i = 0; $i < count($_POST['slider_image']); $i++){
-				$img	= isset($_POST['slider_image'][$i]) ? mysql_real_escape_string(trim($_POST['slider_image'][$i])) : '';
-				$link	= isset($_POST['slider_link'][$i]) ? mysql_real_escape_string(trim($_POST['slider_link'][$i])) : '';
-				$order	= isset($_POST['slider_order'][$i]) ? (int)$_POST['slider_order'][$i] : 0;
-				if ( ! $img) continue;
-				$this->db->query('INSERT INTO slider_pages (parent, img, link, `order`) VALUES('.$id.', "'.$img.'", "'.$link.'", '.$order.')');
-			}
+		$this->db->query('DELETE FROM page_slider WHERE page_id = "'.$id.'"');
+		if (isset($_POST['slider']['image'])) foreach ($_POST['slider']['image'] as $k=>$v){
+			$image	= isset($_POST['slider']['image'][$k])	? clean($_POST['slider']['image'][$k], true, true)	: '';
+			$link	= isset($_POST['slider']['link'][$k])	? clean($_POST['slider']['link'][$k], true, true)	: '';
+			$h1		= isset($_POST['slider']['h1'][$k])		? clean($_POST['slider']['h1'][$k], true, true)		: '';
+			$text	= isset($_POST['slider']['text'][$k])	? clean($_POST['slider']['text'][$k], true, true)	: '';
+			$order	= isset($_POST['slider']['order'][$k])	? abs((int)$_POST['slider']['order'][$k])			: 0;
+			
+			if ( ! $image) continue;
+			
+			$this->db->query('INSERT INTO page_slider (page_id, image, link, h1, text, `order`) 
+								VALUES(
+									"'.$id.'", 
+									"'.$image.'", 
+									"'.$link.'", 
+									"'.$h1.'", 
+									"'.$text.'", 
+									"'.$order.'"
+								)');
 		}
 		
-		
-		# IMAGE
-		$dir = ROOT.'/img/news-articles/'.$id.'/';
-		if ( ! is_dir($dir)){ mkdir($dir, 0755, true);}
-		
-		if (isset($_FILES['image'])){
-			$img = $_FILES['image'];
-			if ($img['error'] == 0){
-				$i		= $dir.$id.'.jpg';
-				$i82	= $dir.$id.'_82_82.jpg';
-
-				$this->my_imagemagic->upload($img['tmp_name'], $i);
-				$this->my_imagemagic->resize_square($img['tmp_name'], $i82, 82);
-			}
-		}
 		
 		return;
 	}
 	
 	public function sortOrderPages()
 	{
-		if (isset($_POST['page_order'])){
-			for ($i = 0, $cnt = count($_POST['page_order']); $i < $cnt; $i++){
-				$page_id = isset($_POST['page_id'][$i]) ? abs((int)$_POST['page_id'][$i]) : 0;
-				$page_order = isset($_POST['page_order'][$i]) ? abs((int)$_POST['page_order'][$i]) : 0;
-				
-				$this->db->query('UPDATE pages SET `order` = '.$page_order.' WHERE id = '.$page_id);
-			}
+		if (isset($_POST['page_order'])) for ($i = 0, $cnt = count($_POST['page_order']); $i < $cnt; $i++){
+			$page_id	= isset($_POST['page_id'][$i])		? abs((int)$_POST['page_id'][$i]) : 0;
+			$page_order	= isset($_POST['page_order'][$i])	? abs((int)$_POST['page_order'][$i]) : 0;
+			
+			$this->db->query('UPDATE page SET `order` = "'.$page_order.'" WHERE id = "'.$page_id.'"');
 		}
 		
 		return;
@@ -360,21 +393,34 @@ class pageModel extends CI_Model
 		$id		= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
 		$activ	= (int)$_POST['activ'] ? 0 : 1;
 		
-		$this->db->query('UPDATE pages SET visibility = '.$activ.' WHERE id = '.$id);
+		$this->db->query('UPDATE page SET visibility = "'.$activ.'" WHERE id = "'.$id.'"');
 		
 		return $activ;
 	}
 	
 	public function delPage($id = 0)
 	{
-		$id = abs((int) $id);
-		$this->db->query('DELETE FROM pages WHERE id = '.$id);
+		$id = abs((int)$id);
+
+		$childs	= $this->db->query('SELECT COUNT(*) AS cnt FROM page WHERE parent = "'.$id.'"')->row()->cnt;
 		
-		$dir = ROOT.'/img/news-articles/'.$id;
-		
-		if (is_dir($dir)){
-			delDir($dir);
+		# Запрет на удалени
+		if ($childs){
+			$html = 
+			'<div>
+				<p><b>Страница не может быть удалена!</b></p>
+				<p>
+					Страница имеет - '.$childs.' вложеных страниц.
+				</p>
+			</div>';
+			
+			return $response = array(
+				'error' => preg_replace('/\s+/', ' ', $html)
+			);
 		}
+		
+		# Удаление
+		$this->db->query('DELETE FROM page WHERE id = "'.$id.'"');
 		
 		return 0;
 	}

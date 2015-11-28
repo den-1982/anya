@@ -177,14 +177,6 @@ class Admin extends CI_Controller {
 			exit;
 		}
 		
-		/*
-		if (isset($_GET['delete'])){
-			$this->categoryModel->delCategory($_GET['delete']);
-			redirect('/admin/category/?parent='.$data['parent']);
-			exit;
-		}
-		*/
-		
 		if (isset($_GET['update'])){
 			$data['category'] = $this->categoryModel->getCategory((int)$_GET['update']);
 			if ( !$data['category']){redirect('/admin/category/?parent='.$data['parent']);exit;}
@@ -388,20 +380,25 @@ class Admin extends CI_Controller {
 		$this->_view('a_filter', $data);
 		return;
 	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PAGES
-	public function Pages()
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PAGE
+	public function Page()
 	{
 		$data = &$this->data;
 		
-		$data['path']		= '/admin/pages/';
-		$data['action']   	= 'pages';
+		$data['path']		= '/admin/page/';
+		$data['action']   	= 'page';
 		$data['act']      	= 'all';
 		$data['h1']     	= 'Редактирование страниц';
 		
-		$data['parent']		= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
+		$data['parent']	= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
 
 		if(METHOD == 'POST'){
-			
+			if (isset($_POST['delete'])){
+				$res = $this->pageModel->delPage($_POST['delete']);
+				echo json_encode($res);
+				exit;
+			}
 			if (isset($_POST['page_order']) ){
 				echo json_encode($this->pageModel->sortOrderPages()); 
 				exit;
@@ -412,12 +409,12 @@ class Admin extends CI_Controller {
 			}
 			if (isset($_POST['add'])){
 				$this->pageModel->addPage(); 
-				redirect('/admin/pages/?parent='.$data['parent']);
+				redirect('/admin/page/?parent='. (isset($_POST['parent']) ? $_POST['parent'] : 0));
 				exit;
 			}
 			if (isset($_POST['edit'])){
 				$res = $this->pageModel->updatePage();
-				redirect('/admin/pages/?parent='.$data['parent']);
+				redirect('/admin/page/?parent='. (isset($_POST['parent']) ? $_POST['parent'] : 0));
 				exit;
 			}
 			
@@ -425,34 +422,36 @@ class Admin extends CI_Controller {
 		}
 		
 		
-		if (isset($_GET['delete'])){
-			$this->pageModel->delPage($_GET['delete']);
-			redirect('/admin/pages/?parent='.$data['parent']);
-			exit;
-		}
-		
 		if (isset($_GET['update'])){
 			$data['page'] = $this->pageModel->getPage($_GET['update']);
-			if ($data['page']){
-				$data['act']	= 'update';
-				$data['h1']		= 'Редактирование страницы: <span class="c-red">'.$data['page']->name.'</span>';
-
-				$this->_view('a_pages', $data);
-				return;
-			}
+			
+			if ( ! $data['page']){redirect('/admin/page/?parent='.$data['parent']);exit;}
+			
+			$data['act']	= 'update';
+			$data['h1']		= 'Редактирование страницы: <span class="c-red">'.$data['page']->name.'</span>';
+			
+			$data['pages'] = $this->pageModel->sortPages($this->pageModel->getPages());
+			$data['parents']= $this->_getParents($data['pages']);
+			
+			$this->_view('a_page', $data);
+			return;
 		}
 		
 		if (isset($_GET['add'])){
 			$data['act']	= 'add';
 			$data['h1']		= 'Создание страницы';
 			
-			$this->_view('a_pages', $data);
+			$data['pages'] = $this->pageModel->sortPages($this->pageModel->getPages());
+			$data['parents']= $this->_getParents($data['pages']);
+			
+			$this->_view('a_page', $data);
 			return;
 		}
 		
-		$data['pages']		= $this->pageModel->getPages();
+		$data['pages'] = $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['crumbs']= $this->_crumbs($data['pages'], $data['parent']);
 		
-		$this->_view('a_pages', $data);
+		$this->_view('a_page', $data);
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// HOME
 	public function Home()

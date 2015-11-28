@@ -86,7 +86,6 @@ class categoryModel extends CI_Model
 							)');
 
 		# SLIDER
-		$this->db->query('DELETE FROM category_slider WHERE category_id = "'.$id.'"');
 		if (isset($_POST['slider']['image'])) foreach ($_POST['slider']['image'] as $k=>$v){
 			$image	= isset($_POST['slider']['image'][$k])	? clean($_POST['slider']['image'][$k], true, true)	: '';
 			$link	= isset($_POST['slider']['link'][$k])	? clean($_POST['slider']['link'][$k], true, true)	: '';
