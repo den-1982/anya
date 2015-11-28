@@ -3,9 +3,9 @@ class waitlistModel extends CI_Model
 {	
 	public function getCountWaitList()
 	{
-		$cnt = $this->db->query('SELECT products_id, id_size
-									FROM waitlist 
-								GROUP BY products_id, id_size')->result();
+		$cnt = $this->db->query('SELECT product_id, id_size
+									FROM product_waitlist 
+								GROUP BY product_id, id_size')->result();
 		
 		return count($cnt);
 	}
@@ -19,11 +19,11 @@ class waitlistModel extends CI_Model
 											CONCAT("/img/products/", p.id, "/", p.id, "_82_82.jpg") AS image,
 											fi.name AS sizeName,
 											fi.prefix AS sizePrefix
-									FROM waitlist wl 
-									LEFT JOIN products p ON p.id = wl.products_id
+									FROM product_waitlist wl 
+									LEFT JOIN product p ON p.id = wl.product_id
 									LEFT JOIN filter_item fi ON fi.id = wl.id_size
-								GROUP BY products_id, id_size
-									ORDER BY products_id ASC')->result();
+								GROUP BY product_id, id_size
+									ORDER BY product_id ASC')->result();
 		
 		return $products;
 	}

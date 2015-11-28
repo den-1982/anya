@@ -219,7 +219,7 @@ class Admin extends CI_Controller {
 		$data['act']	= 'all';
 		$data['h1']		= 'Продукты';
 		
-		$data['parent']	= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
+		$data['category_id'] = isset($_GET['category_id']) ? abs((int)$_GET['category_id']) : 0;
 
 
 		if (isset($_POST['getProductOfCategory'])){
@@ -256,20 +256,20 @@ class Admin extends CI_Controller {
 		if (isset($_POST['add'])){
 			error_reporting(E_ALL);
 			$this->productModel->addProduct(); 
-			redirect($data['path'].'?parent='.$data['parent']);
+			redirect($data['path'].'?category_id='.$data['category_id']);
 			exit;
 		}
 		
 		if (isset($_POST['edit'])){
 			error_reporting(E_ALL);
 			$res = $this->productModel->updateProduct();
-			redirect($data['path'].'?parent='.$data['parent']);
+			redirect($data['path'].'?category_id='.$data['category_id']);
 			exit;
 		}
 
 		if (isset($_GET['delete'])){
 			$this->productModel->delProduct($_GET['delete']);
-			redirect($data['path'].'?parent='.$data['parent']);
+			redirect($data['path'].'?category_id='.$data['category_id']);
 			exit;
 		}
 		
@@ -283,7 +283,7 @@ class Admin extends CI_Controller {
 				
 				$data['parents']		= $this->_getParents($data['categories']);
 				$data['manufacturer'] 	= $this->manufacturerModel->getManufacturers();
-				$data['filters']			= $this->filterModel->getFiltersOfCategory($data['parent']);
+				$data['filters']			= $this->filterModel->getFiltersOfCategory($data['category_id']);
 				$data['filter_item_pricing']= $this->filterModel->getFilterItemPricing();
 				
 				$this->_view('a_products', $data);
@@ -297,7 +297,7 @@ class Admin extends CI_Controller {
 			
 			$data['parents']		= $this->_getParents($data['categories']);
 			$data['manufacturer'] 	= $this->manufacturerModel->getManufacturers();
-			$data['filters']			= $this->filterModel->getFiltersOfCategory($data['parent']);
+			$data['filters']			= $this->filterModel->getFiltersOfCategory($data['category_id']);
 			$data['filter_item_pricing']= $this->filterModel->getFilterItemPricing();
 				
 			$this->_view('a_products', $data);
@@ -305,7 +305,7 @@ class Admin extends CI_Controller {
 		}
 		
 		$data['parents']		= $this->_getParents($data['categories']);
-		$data['products']		= $this->productModel->getProducts($data['parent']);
+		$data['products']		= $this->productModel->getProducts($data['category_id']);
 		$data['manufacturer'] 	= $this->manufacturerModel->getManufacturers();
 		
 		$this->_view('a_products', $data);
