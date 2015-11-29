@@ -36,8 +36,7 @@
 			<td class="small"></td>
 		</thead>
 		<tbody data-sortable="body">
-		<?php if (isset($categories[$parent])):?>
-		<?php $i=1; foreach($categories[$parent] as $category):?>
+		<?php $i=1; if (isset($categories[$parent])) foreach ($categories[$parent] as $category):?>
 		<tr>
 			<td><?=$i++?></td>
 			<td>
@@ -61,7 +60,6 @@
 			</td>
 		</tr>
 		<?php endforeach;?>
-		<?php endif;?>
 		</tbody>
 	</table>
 	<?php endif;?>
@@ -120,39 +118,57 @@
 				</tr>
 				<tr>
 					<td class="right"><b>Название:</b></td>
-					<td class="left"><input class="inf" type="text" name="name" value=""></td>
+					<td class="left">
+						<input class="inf" type="text" name="name" value="">
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>H1:</b></td>
-					<td class="left"><input class="inf" type="text" name="h1" value=""></td>
+					<td class="left">
+						<input class="inf" type="text" name="h1" value="">
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>Title:</b></td>
-					<td class="left"><input class="inf" type="text" name="title" value=""></td>
+					<td class="left">
+						<input class="inf" type="text" name="title" value="">
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>Description:</b></td>
-					<td class="left"><textarea class="inf" style="height:70px;" name="metadesc"></textarea></td>
+					<td class="left">
+						<textarea class="inf" style="height:70px;" name="metadesc"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>Keywords:</b></td>
-					<td class="left"><textarea class="inf" style="height:70px;" name="metakey"></textarea></td>
+					<td class="left">
+						<textarea class="inf" style="height:70px;" name="metakey"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>СПАМ:</b></td>
-					<td class="left"><textarea class="inf" style="height:70px;" name="spam"></textarea></td>
+					<td class="left">
+						<textarea class="inf" style="height:70px;" name="spam"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>Ссылка:</b></td>
-					<td class="left"><input class="inf" type="text" name="url" value=""></td>
+					<td class="left">
+						<input class="inf" type="text" name="url" value="">
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b style="color:green;">Курс($):</b></td>
-					<td class="left"><input class="inf min" data-mask="price" type="text" name="course" value="0"></td>
+					<td class="left">
+						<input class="inf min" data-mask="price" type="text" name="course" value="0">
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b style="color:red;">Скидка:</b></td>
-					<td class="left"><input class="inf min" data-mask="price" type="text" name="discount" value="0"></td>
+					<td class="left">
+						<input class="inf min" data-mask="price" type="text" name="discount" value="0">
+					</td>
 				</tr>
 				<tr>
 					<td class="right"><b>Изображение:</b></td>

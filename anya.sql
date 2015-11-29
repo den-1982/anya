@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Ноя 29 2015 г., 01:45
+-- Время создания: Ноя 29 2015 г., 14:41
 -- Версия сервера: 5.5.23
 -- Версия PHP: 5.3.10
 
@@ -5824,58 +5824,6 @@ INSERT INTO `page` (`id`, `parent`, `image`, `url`, `visibility`, `order`) VALUE
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `pages_system`
---
-
-CREATE TABLE IF NOT EXISTS `pages_system` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `type` text,
-  `h1` text,
-  `title` text,
-  `metadesc` text,
-  `metakey` text,
-  `text` text,
-  `spam` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
---
--- Дамп данных таблицы `pages_system`
---
-
-INSERT INTO `pages_system` (`id`, `type`, `h1`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
-(1, 'home', 'Интернет - магазин страз и хрустального декора Crystalline', 'Интернет - магазин страз Crystalline: Стразы Сваровски, пришивные стразы, хрустальные бусины, полужемчуг, стразовая цепь, стразовая ткань, пайетки, инструменты и упаковка', 'Стразы Сваровски. Оптовая и розничная продажа страз Swarovski, страз DMC, пришивные стразы, полужемчуг, пайетки, хрустальные бусины, инкрустация стразами Суперцена! в интернет-магазине Crystalline Тел: (067)5446150 Доставка, гарантия, лучшие цены! Купить Стразы, полужемчуг, пришивные стразы, хрустальные бусины, стразовая цепь по лучшим ценам!', 'купить стразы сваровски, стразы swarovski, камни сваровски, кристаллы сваровски, стразы dmc, стразы дсц, корейские стразы, пришивные стразы, хрустальные бусины, полужемчуг, пайетки, стразы Crystalline, стразы crystal stone, купить стразы Днепропетровск, купить стразы Украина, купить стразы дешево', '', 'стразы сваровски купить днепропетровск, стразы сваровски купить киев, стразы сваровски купить украина, стразы swarovski купить украина, стразы swarovski купить киев, стразы сваровски купить, стразы сваровски купить в украине, стразы dmc купить, стразы dmc Украина, стразы dmc купить Украина, стразы dmc купить в Украине, стразы dmc hotfix купить украина. стразы дмс холодной фиксации. стразы dmc холодной фиксации, стразы dmc холодной фиксации купить украина, стразы дмс холодной фиксации купить украина, стразы Днепропетровск , стразы сваровски, стразы купить, стразы купить в Украине, стразы купить в Днепропетровске, стразы купить Украина, стразы купить киев, пришивные стразы, пришивные стразы в цапах, пришивные стразы купить, пришивные стразы купить Украина, пришивные стразы купить киев, пришивные стразы сваровски купить киев, пришивные стразы сваровски купить, стразы сваровски пришивные купить Украина, пайетки купить Днепропетровск, пайетки купить Украина. пайетки купить оптом Украина, пайеточная лента, пайеточная лента купить в Украина, пайеточная тесьма купить Украина, стразовая лента купить Украина, тесьма со стразами купить Украина, стразовое полотно купить Украина, стразовая ткань, полужемчуг купить Украина, полужемчуг купить киев, полужемчужены, искусственный жемчуг, оригинальные стразы Сваровски(Австрия), пришивные камни, стразы Preciosa(Чехия), купить стразы Прициоза, стразы имитирующие Сваровски ДМС+, ДМС стразы купить ,стразы эконом класса, стразы в цапах, Стразовые полотна, Стеклярус, Бисер, сваровского стразы,кристаллы сваровски цена, как приклеить стразы утюгом, как приклеить стразы, бусины, стразы имитация SWAROVSKI,Интернет-магазин страз, стразі купить, стразики, стразы сваровских купить, копия сваровски, стразы аналог сваровски, имитация swarovski, стразы горячей фиксации, купить стразы горячей фиксации в украине, купить стразы горячей фиксации в киеве, купить стразы горячей фиксации в днепропетровске, термоклеевые стразы, стразы прициоза, стразы preciosa'),
-(2, 'about', 'О нас', 'Интернет-магазин страз и хрустального декора Crystalline.in.ua', 'Купить Стразы в Днепропетровске - цены, товары и услуги компании Crystalline: тел 067 544 61 50. Скидки, Новинки. Доставка по всей Украине.', 'Стразы сваровски, стразы Swarovski, кристаллы сваровски, камни сваровски, сваровски дешево, стразы купить, стразы оптом, стразы цена, как приклеить стразы, стразы сваровски, стразы имитация сваровски, стразы аналог сваровски, стразы копия Swarovski, купить стразы украина, купить стразы днепропетровск, купить стразы киев, купить стразы харьков, купить стразы дешево, Стразы, стразы сваровски, стразы Swarovski, стразы DMS, стразы украина, стразы киев, стразы днепропетровск, стразы купить оптом, аппликатор для страз, аппликации из страз, стразы кристаллайн, стразы crystalline, купить стразы холодной фиксации, стразы горячей фиксации, стразы dmc, стразы дмс, стразы дмц, имитация swarovski, купить стразы горячей фиксации в украине, купить стразы горячей фиксации в киеве, купить стразы горячей фиксации в днепропетровске, термоклеевые стразы, купить стразы холодной фиксации, купить стразы холодной фиксации в украине, купить стразы холодной фиксации в украине, купить стразы холодной фиксации в киеве, купить стразы холодной фиксации в днепропетровске, купить стразы пришивные в украине, купить пришивные стразы в украине, стразы для вечернего платья, стразы для вечернего платья купить, стразы для вечернего платья купить Украина, стразы для вечернего платья купить в Украине, стразы для вечернего платья купить киев, стразы для вечернего платья купить в Киеве, стразы для вечернего платья купить Днепропетровск, стразы для вечернего платья купить в Днепропетровске.', '<p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-size: 12pt; font-family: Verdana;">Интернет-магазин «Crystalline.in.ua» - это специализированный магазин страз и фурнитуры для танцевального спорта, фигурного катания, спортивной гимнастики, творчества и декора.</span></p> <p class="MsoNormal" style="text-align: center; text-indent: 18pt; line-height: 150%;"><strong><span lang="RU" style="font-size: 14pt; line-height: 150%;">Миссия «Crystalline.</span></strong><strong><span lang="EN-US" style="font-size: 14pt; line-height: 150%;">in</span></strong><strong><span lang="RU" style="font-size: 14pt; line-height: 150%;">.</span></strong><strong><span lang="EN-US" style="font-size: 14pt; line-height: 150%;">ua</span></strong><strong><span lang="RU" style="font-size: 14pt; line-height: 150%;">» это предложению качественного оригинального товара по доступной цене любому Клиенту. </span></strong><span lang="RU" style="text-indent: 18pt; font-family: Verdana;"><br></span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt; line-height: 150%;"> <span lang="RU" style="font-family: Verdana;"><span lang="RU" style="font-size: 12pt;">В нашей товарной линейке мы предлагаем исключительно оригинальные бренды такие как: <a href="../strazy-swarovski/c44/">стразы Swarovski (пр-во Австрия)</a>,<a href="../strazy-preciosa-chehiya/c78/"> стразы Pre</a></span><a href="../strazy-preciosa-chehiya/c78/"><span lang="EN-US" style="font-size: 12pt;">c</span></a><span lang="RU" style="font-size: 12pt;"><a href="../strazy-preciosa-chehiya/c78/">iosa (пр-во Чехия)</a>, <a href="../strazy-dmc-koreya/c46/">стразы DMC+ (пр-во Корея)</a>, <a href="../strazy-dmc-kitay/c47/">стразы DMC (пр-во Китай)</a>, <a href="../strazy-crystalline-imitatsiya-swarovski/c45/">стразы </a></span><a href="../strazy-crystalline-imitatsiya-swarovski/c45/"><span class="apple-converted-space" style="text-indent: 18pt;"><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"><span lang="EN-US" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">Crystalline</span><span class="apple-converted-space" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px;"><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"> </span></span></span></span></a><span class="apple-converted-space" style="text-indent: 18pt;"><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"><span lang="RU" style="font-size: 12pt;"><a href="../strazy-crystalline-imitatsiya-swarovski/c45/">(пр-во Гонконг)</a> и </span></span></span><a href="../strazyi-crystal-stone-kitay/c93/"><span lang="RU" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">ТМ </span><span lang="EN-US" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">Crystal Stone </span><span lang="RU" style="font-size: 12pt;">(пр-во Иу).</span></a><br></span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt; line-height: 150%;"> </p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt; line-height: 150%;"><a href="../news/httpcrystallineinuanewshttpcrystallineinuanews1423586788"><span lang="RU" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">ТМ<span class="apple-converted-space"> </span></span><span class="apple-converted-space"><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"><span style="font-family: Arial, sans-serif; font-size: 13pt;">Crystalline® - </span></span></span><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">это стразы горячей (</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">hot fix) </span><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">и холодной (</span></a><span lang="EN-US" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"><a href="../news/httpcrystallineinuanewshttpcrystallineinuanews1423586788">flat back</a>) фиксации </span><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">сегмента премиум. </span><span style="font-family: Verdana; font-size: 13pt;">Родина этих страз - Гонконг. Стразы Crystalline производятся на монофактурном заводе AOKE International Trade Co Hong Kong. Завод специализируется на выпуске страз и фурнитуры из высококачественного стекла.</span><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">  Бренд </span><span class="apple-converted-space" style="line-height: 150%; text-indent: 18pt;"><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"><span style="font-family: Arial, sans-serif; font-size: 13pt;">Crystalline</span></span></span><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;"> </span><span lang="RU" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">являются высококачественной имитацией страз </span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">Swarovski, т.к. </span><span style="font-family: Verdana; font-size: 13pt;">изготавливается по аналогичным технологическим характеристикам</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">. </span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">Crystalline это стразы из высококачественного стекла с 35% содержанием свинца.  Машинная шлифовка боковых граней (special digital machine chaton) создает 14 ровных граней.  Для гранения внутреннего основания используют технологию розы, аналогичную Swarovski 2058 xilion rose. Стразы </span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">Crystalline</span><span lang="RU" style="font-size: 13pt; font-family: Verdana;"> (</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">flat</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">back</span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">) холодной фиксации имеют специальную серебристую подложку (</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">silver</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">support</span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">), которая добавляет яркость и блеск кристаллам. Серебристая подложка (</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">silver</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">support</span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">) не отслаивается от страз, что обеспечивает долгую эксплуатации инкрустированного изделия. На стразах </span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">Crystalline</span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">(</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">hot</span><span lang="EN-US" style="font-size: 13pt; font-family: Verdana;">fix</span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">) горячей фиксации нанесен высококачественный легкоплавкий термоклей серого цвета, который обеспечивает крепкую надежную фиксации с изделием. </span><span lang="RU" style="font-size: 13pt; font-family: Verdana;">Бренд Crystalline разработан для украинского рынка в 2012 году и зарегистрирован на территории Украины. Бренд Crystalline является коммерческой собственностью интернет магазина Crystalline.in.ua</span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt; line-height: 150%;"><span lang="RU" style="font-size: 12pt; font-family: Verdana;">Интернет магазин Crystalline пополнил товарную линейку <a href="%20http:/crystalline.in.ua/strazyi-crystal-stone-kitay/c93/"><span lang="RU" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">новым брендом – ТМ </span><span lang="EN-US" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">Crystal Stone</span><sup><span lang="RU" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">® </span></sup></a><span lang="RU" style="font-size: 12pt;"><a href="%20http:/crystalline.in.ua/strazyi-crystal-stone-kitay/c93/">(пр-во Иу)</a>. Э</span><span lang="RU" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">то стразы холодной и горячей фиксации среднего ценового сегмента с хорошо зарекомендовавшим себя качеством</span><span lang="RU" style="font-size: 13pt; background-image: initial; background-attachment: initial; background-size: initial; background-origin: initial; background-clip: initial; background-position: initial; background-repeat: initial;">.</span></span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-family: Verdana;">   </span><span style="font-family: Verdana; font-size: 12pt;">Современная и высококачественная фурнитура: пришивные стразы, хрустальные пуговицы, полужемчуг, стразовая цепь, стразовая ткань (полотно), пайетки, бисер, стеклярус, хрустальные  бусины, позволит нашим клиентам реализовать самые смелые дизайнерские решения.</span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-size: 12pt; font-family: Verdana;">В нашем Интернет магазине «Crystalline» вы всегда получите помощь и консультацию по инкрустации страз и полужемчугом любых материалов и поверхностей. В разделе Изделия инкрустированные стразами находятся готовые изделия, которые можно заказать прямо на сайте, а так же посмотреть идеи для самостоятельного творчества</span><span style="font-family: Verdana; text-indent: 18pt;">. </span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-family: Verdana;">   <span lang="RU" style="font-size: 12pt;">Всю нашу продукцию вы можете посмотреть и оценить придя к нам в "<span lang="EN-US" style="font-size: 13pt;">show</span><span lang="RU" style="font-size: 13pt;">-</span><span lang="EN-US" style="font-size: 13pt;">room</span><span lang="RU" style="font-size: 13pt;">Crystalline"</span> по адресу: г. Днепропетровск, ул. Ленина, 21а</span>. </span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-family: Verdana;">   <span lang="RU" style="font-size: 12pt;">Ежедневные отправки товара по Украине, обеспечат получение вашего заказа на следующий день в зависимости от вашего региона</span>.</span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-family: Verdana;"><span lang="RU" style="font-size: 12pt;">Профессиональные менеджеры ответят на все ваши вопросы по телефону или в офисе. Проведут консультацию </span><span lang="EN-US" style="font-size: 12pt;">online</span><span lang="RU" style="font-size: 12pt;">, подберут нужные размеры и формы страз или фурнитуры для различных изделий и подсказать инструменты, клей и упаковку</span>. <o:p></o:p></span></p> <p class="MsoNormal" style="mso-margin-top-alt: auto; mso-margin-bottom-alt: auto; text-align: justify; text-indent: 18.0pt;"><span lang="RU" style="font-family: Verdana;"><span style="font-size: 12pt;">   Интернет магазин «Crystalline.in.ua» стремится быть полезным любому клиенту. Для Вас мы разработали «Бонусную программу» и систему продаж</span><span style="font-size: 12pt;"> как в розницу так и оптом нашим клиентам и дилерами по Украине, Молдове, Беларуси, Армении, России</span>. <o:p></o:p></span></p> <p class="MsoNormal" style="text-indent: 18pt; text-align: center;"><span lang="RU" style="font-size: 13.0pt; font-family: Arial;">Только оригинальный качественный товар по доступной цене - вот наш девиз!<o:p></o:p></span></p> <p class="MsoNormal"><span style="font-family: Verdana, sans-serif; font-size: small;">                                                 <img style="display: block; margin-left: auto; margin-right: auto;" src="../img/root/all/0001.gif" alt="" width="562" height="60"></span></p> <p class="MsoNormal" style="text-align: center;"><span style="font-family: Verdana, sans-serif; font-size: small;"><span style="color: #ff0000; font-family: Arial; font-size: 17.3333339691162px; text-align: justify; text-indent: 24px;">Блестящий выбор "Crystalline"!</span> </span></p>', 'Стразы сваровски, стразы Swarovski, кристаллы сваровски, камни сваровски, сваровски дешево, стразы купить, стразы оптом, стразы цена, как приклеить стразы, стразы сваровски, стразы имитация сваровски, стразы аналог сваровски, стразы копия Swarovski, купить стразы украина, купить стразы днепропетровск, купить стразы киев, купить стразы харьков, купить стразы дешево, Стразы, стразы сваровски, стразы Swarovski, стразы DMS, стразы украина, стразы киев, стразы днепропетровск, стразы купить оптом, аппликатор для страз, аппликации из страз, стразы кристаллайн, стразы crystalline, купить стразы холодной фиксации, стразы горячей фиксации, стразы dmc, стразы дмс, стразы дмц, имитация swarovski, купить стразы горячей фиксации в украине, купить стразы горячей фиксации в киеве, купить стразы горячей фиксации в днепропетровске, термоклеевые стразы, купить стразы холодной фиксации, купить стразы холодной фиксации в украине, купить стразы холодной фиксации в украине, купить стразы холодной фиксации в киеве, купить стразы холодной фиксации в днепропетровске, купить стразы пришивные в украине, купить пришивные стразы в украине, стразы для вечернего платья, стразы для вечернего платья купить, стразы для вечернего платья купить Украина, стразы для вечернего платья купить в Украине, стразы для вечернего платья купить киев, стразы для вечернего платья купить в Киеве, стразы для вечернего платья купить Днепропетровск, стразы для вечернего платья купить в Днепропетровске.'),
-(3, 'oplata', 'Оплата и доставка', 'Оплата и доставка', 'Оплата и доставка', 'Оплата и доставка', '<div class="page" style="font-family: Open Sans Condensed, sans-serif, arial; font-size: 20px;"> <h2><strong>Способы оформления заказа в интернет-магазине «Crystalline»</strong></h2> <p>- на сайте через Корзину сайта <a href="../">www.crystalline.in.ua</a> круглосуточно</p> <p>- по телефону:</p> <ul style="margin: 0 0 0 40px;"> <li>(067) 536-70-07</li> <li>(099) 633-66-38</li> <li>(063) 877-36-57</li> <li>(067) 544-61-50</li> <li>в будние дни с 10.00 до 19.00, выходные с 10.00 до 18.00</li> </ul> <h3><strong>Как сделать заказ в интернет-магазине «Crystalline.in.ua»</strong></h3> <p>Для осуществления покупки в интернет-магазине «Crystalline» необходимо выбрать товар по каталогу (перемещаясь по категориям товаров) и нажать кнопку «В корзину». Список выбранных товаров Вы можете увидеть в папке «Корзина». Вы можете добавлять или удалять отдельные позиции в Вашей корзине или изменить количество экземпляров. Для оформления заказа вам необходимо заполнить ваши контактные данные, город и № отделения Новой почты, если в списке нет вашего города укажите его ниже в поле "Комментарий". После заполнения всех полей нажмите "Оформить заказ" в разделе "Корзина". После того как Вы сделали заказ, в течении 24 часов с Вами свяжется наш менеджер (по рабочим дням с 10:00 до 19:00, выходные с 10:00 до 18:00) для уточнения заказа и условий доставки заказа. Заказ считается принятым только после подтверждения его нашим специалистом.</p> <h3><strong>Условия доставки и оплаты:</strong></h3> <p>Отправка заказов осуществляется ежедневно. При оплате до 16.00, ваш заказ отправляется вечерней отправкой в тот день, в который Вы осуществили заказ. При оплате после 16.00, отправка вашего заказа осуществляется на следующий день.</p> <div class="row"> <div class="col-2"> <h4><strong>Способы доставки:</strong></h4> <ul style="list-style: circle; margin: 0 0 0 40px;"> <li>Самовывоз: Днепропетровск, ул. Короленко, 3. оф. 920 (9 этаж) здание Дом Быта. </li> <li>Доставка "Новой Почтой" по Украине и регионам</li> <li>Услуги Новой почтой составляют по Украине от 25 грн.</li> </ul> <p><img style="vertical-align: middle;" src="../img/root/all/dostavka i oplata3.jpg" alt="" width="126" height="110"> <img style="vertical-align: middle;" src="../img/root/all/dostavka i oplata2.jpg" alt="" width="122" height="110"> <img style="vertical-align: middle;" src="../img/root/all/dostavka i oplata1.jpg" alt="" width="128" height="119"> <img style="vertical-align: middle;" src="../img/root/all/dostavka i oplata.jpg" alt="" width="135" height="124"></p> </div> <div class="col-2"> <h4><strong>Способы оплаты:</strong></h4> <ul style="list-style: circle; margin: 0 0 0 40px;"> <li>Наличными непосредственно в офисе<a href="../">crystalline.in.ua</a></li> <li>Наложенный платеж на Новой почте (при заказе на сумму свыше 2500 грн)</li> <li>Оплата на карточку Приватбанка</li> <li>Оплата для Крыма через перевод Золотая Корона, Western Union Сумма заказа от 1500 грн.</li> <li>Оплата для стран СНГ через перевод Золотая Корона, Western union</li> </ul> <p><img src="../img/root/all/oplata_sposobi.jpg" alt="" width="373" height="291"></p> </div> </div> <div class="row"> </div> <h3><strong>Регионы доставки:</strong></h3> <ul type="disc"> <li>Украина: Все регионы,</li> <li>Доставка в Крым осуществляется службой Интайм</li> </ul> <h4><strong>Страны СНГ</strong></h4> <p>Доставка осуществляется через УкрПочту. Срок доставки от 10 рабочих дней.</p> <ul style="margin: 0 0 0 40px; list-style: circle;"> <li>Молдова, все регионы</li> <li>Беларусь, все регионы</li> <li>Грузия, все регионы</li> <li>Казахстан, все регионы</li> <li>Россия, все регионы</li> <li>Армения, все регионы</li> <li>Таджикистан, все регионы</li> <li>Узбекистан, все регионы</li> <li>Азербайджан, все регионы</li> <li>Туркменистан, все регионы</li> </ul> <p style="text-align: center;"><img src="../img/root/all/img_08.gif" alt="" width="253" height="237"></p> <p style="text-align: center;">Приятных покупок в нашем Интернет-магазине Crystalline.in.ua</p> </div>', 'Стразы купить, купит сваровски днепропетровск,сваровского стразы,кристаллы сваровски,стразовая ткань,стразовое полотно,стразы приклеить утюгом,как приклеить стразы,бусины,стеклярус,стразы имитация SWAROVSKI, стразы сваровски купить Днепропетровск. стразы сваровски купить киев. стразы сваровски купить украина. стразы swarovski купить украина,Интернет-магазин страз,стразі купить,стразики,. стразы swarovski купить киев. стразы сваровски купить. стразы сваровски купить в украине,стразы копия сваровски, стразы аналог сваровски, имитация swarovski, стразы горячей фиксации, купить стразы горячей фиксации в украине, купить стразы горячей фиксации в киеве, купить стразы горячей фиксации в днепропетровске, термоклеевые стразы, купить стразы холодной фиксации, купить стразы холодной фиксации в украине, купить стразы холодной фиксации в украине, купить стразы холодной фиксации в киеве, купить стразы холодной фиксации в днепропетровске, купить стразы пришивные в украине, купить пришивные стразы в украине,стразы прициоза, стразы preciosa'),
-(4, 'biznes', 'Бизнес предложение', 'Бизнес предложение', 'Бизнес предложение', 'Бизнес предложение', '<h4><strong>Интернет-магазин «Crystalline» предлагает своим клиентом принять участие в ПРОГРАММЕ ЛОЯЛЬНОСТИ</strong></h4> <p>Программа лояльности – это программа скидок на товар интернет - магазина Crystalline, размеры скидок увеличиваются с каждым вашим заказом.</p> <p>Заказывай больше – плати меньше!</p> <p>Для участие в программе лояльности необходимо зарегистрироваться на нашем сайте <a class="inline-block" href="../user/add">http://my-crystalline.in.ua/user/add</a> и произвести заказ!.</p> <p><strong>При регистрации вы получаете скидку 3% и все ваши последующие заказы будут суммироваться для увеличения скидки!</strong></p> <p> </p> <p><strong>БОНУСНАЯ ПРОГРАММА для постоянных клиентов интернет-магазина Crystalline.in.ua</strong></p> <p>Если ваша первичная сумма покупки более <strong style="display: inline-block; border-bottom: 2px solid #333;">2500грн.</strong>, вы получаете скидку в размере <strong style="display: inline-block; border-bottom: 2px solid #333;">5%</strong></p> <p>Все последующие ваши покупки накапливаются на вашем персональном счету в вашем Личном Кабинете при регистрации.</p> <p>При накоплении более <strong style="display: inline-block; border-bottom: 2px solid #333;">4500,00грн.</strong> – вы получаете скидку – <strong style="display: inline-block; border-bottom: 2px solid #333;">7%</strong></p> <p>При накоплении более <strong style="display: inline-block; border-bottom: 2px solid #333;">7500,00грн</strong> – вы получаете скидку – <strong style="display: inline-block; border-bottom: 2px solid #333;">10%</strong></p> <p>Срок накопления не ограничен!</p> <p><strong>БОНУСНАЯ ПРОГРАММА для швейных мастерских и индивидуальных мастеров, а также дилерских покупок рассматривается индивидуально!</strong></p>', NULL);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `pages_system_slider`
---
-
-CREATE TABLE IF NOT EXISTS `pages_system_slider` (
-  `pages_system_id` int(11) unsigned NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `h1` text,
-  `text` text,
-  `link` varchar(255) DEFAULT NULL,
-  `order` int(11) unsigned NOT NULL DEFAULT '0',
-  KEY `fk_pages_system_slider_pages_system1_idx` (`pages_system_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Дамп данных таблицы `pages_system_slider`
---
-
-INSERT INTO `pages_system_slider` (`pages_system_id`, `image`, `h1`, `text`, `link`, `order`) VALUES
-(1, '/img/root/slider/3.jpg', '', '', '', 0),
-(1, '/img/root/all/banner_FD_fin.jpg', 'Полный ассортимент готовых украшений >>>>', '', 'http://crystalline.in.ua/bijuteriya-dlya-balnyih-tantsev/c123/', 0);
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `page_description`
 --
 
@@ -5940,38 +5888,34 @@ INSERT INTO `page_slider` (`page_id`, `image`, `h1`, `text`, `link`, `order`) VA
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `partnerships`
+-- Структура таблицы `partner`
 --
 
-CREATE TABLE IF NOT EXISTS `partnerships` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `url` varchar(100) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `text` text,
-  `image` varchar(100) NOT NULL,
+CREATE TABLE IF NOT EXISTS `partner` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `url` text,
+  `image` text,
   `visibility` int(1) unsigned NOT NULL DEFAULT '1',
-  `order` int(11) unsigned DEFAULT '0',
+  `order` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='партнеры' AUTO_INCREMENT=4 ;
-
---
--- Дамп данных таблицы `partnerships`
---
-
-INSERT INTO `partnerships` (`id`, `url`, `name`, `text`, `image`, `visibility`, `order`) VALUES
-(1, 'http://elite-shop.prom.ua/', 'Интернет-магазин Elite-Shop', '<table class="b-info-table b-info-table_style_border-top" data-premium_service_id="9">\n<tbody>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_type_subheader" colspan="2"><strong>Контактная информация</strong></td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Контактное лицо:</td>\n<td class="b-info-table__cell">Анна</td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Сайт компании:</td>\n<td class="b-info-table__cell"><a href="http://elite-shop.prom.ua/" target="_blank"> http://elite-shop.prom.ua </a></td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_type_subheader" colspan="2"><strong>Общая информация</strong></td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Название:</td>\n<td class="b-info-table__cell">Интернет-магазин Elite-Shop</td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Тип компании:</td>\n<td class="b-info-table__cell">\n<div>Торговая компания</div>\n</td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Адрес:</td>\n<td class="b-info-table__cell">пр. Карла Маркса, Днепропетровск, 49000, Украина</td>\n<td>&nbsp;</td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Телефон:</td>\n<td class="b-info-table__cell">\n<div>+380 (67) 544-61-50, Анна</div>\n<div>+380 (63) 220-58-01, Ирина</div>\n<div>+380 (99) 633-66-38, Анна</div>\n</td>\n</tr>\n<tr class="b-info-table__row">\n<td class="b-info-table__cell b-info-table__cell_width_200">Email:</td>\n<td class="b-info-table__cell">elite-shop@bk.ru</td>\n</tr>\n</tbody>\n</table>', '/img/root/26224993_w0_h120_logofin.jpg', 0, 0),
-(2, 'http://artigiano.prom.ua/', 'Ювелирная студия ARTIGIANO', '<p><strong><a href="http://artigiano.prom.ua/" target="_self">Ювелирная студия &laquo;Artigiano&raquo;</a>&nbsp;осуществляет дизайн и изготовление ювелирных изделий.</strong></p>\n<p><strong style="border-color: #7e5827; color: #ffffff; font-family: Arial, sans-serif; font-size: 13px; line-height: 18.016080856323242px; background-color: rgba(102, 88, 57, 0.952941);">&nbsp;</strong></p>', '/img/root/27972617_w0_h120_bezymyannyj.png', 0, 0),
-(3, 'http://fashiondance.in.ua/', 'Студия-ателье "Fashion dance"', '<p class="MsoListParagraphCxSpFirst">Первая в Днепропетровске специализированная студия-ателье по пошиву сценических и танцевальных костюмов "Fashion Dance".<br> <br> Наши специалисты готовы предложить вам эксклюзивный дизайн и профессиональный, качественный пошив костюмов.</p>\n<p class="MsoListParagraphCxSpFirst">www.fashiondance.in.ua</p>\n<p class="MsoListParagraphCxSpFirst">тел. 0675446150</p>\n<p class="MsoListParagraphCxSpFirst">тел. 0996336638</p>\n<p>&nbsp;</p>\n<p class="MsoListParagraphCxSpLast"><o:p>&nbsp;e-mail elite-shop@bk.ru</o:p></p>', '/img/root/all/banner_FD.jpg', 1, 0);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `pricelist`
+-- Структура таблицы `partner_description`
 --
 
-CREATE TABLE IF NOT EXISTS `pricelist` (
-  `pricelist` longblob,
-  `mime` varchar(255) DEFAULT NULL
+CREATE TABLE IF NOT EXISTS `partner_description` (
+  `partner_id` int(11) unsigned NOT NULL,
+  `h1` text,
+  `name` text,
+  `title` text,
+  `metadesc` text,
+  `metakey` text,
+  `text` text,
+  `spam` text,
+  KEY `fk_partner_description_partner1_idx` (`partner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -6369,6 +6313,71 @@ INSERT INTO `social` (`id`, `name`, `code`) VALUES
 (4, 'facebook', 'fb'),
 (5, 'twitter', 'tw'),
 (6, 'google', 'go');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `system_page`
+--
+
+CREATE TABLE IF NOT EXISTS `system_page` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` text,
+  `image` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Дамп данных таблицы `system_page`
+--
+
+INSERT INTO `system_page` (`id`, `type`, `image`) VALUES
+(1, 'home', ''),
+(2, 'about', NULL),
+(3, 'oplata', ''),
+(4, 'biznes', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `system_page_description`
+--
+
+CREATE TABLE IF NOT EXISTS `system_page_description` (
+  `system_page_id` int(11) unsigned NOT NULL,
+  `h1` text,
+  `name` text,
+  `title` text,
+  `metadesc` text,
+  `metakey` text,
+  `text` text,
+  `spam` text,
+  KEY `fk_system_page_description_system_page1_idx` (`system_page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `system_page_description`
+--
+
+INSERT INTO `system_page_description` (`system_page_id`, `h1`, `name`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
+(1, 'Главная страница', 'Главная страница', 'Главная страница', '', '', '', ''),
+(3, '', '', '', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `system_page_slider`
+--
+
+CREATE TABLE IF NOT EXISTS `system_page_slider` (
+  `system_page_id` int(11) unsigned NOT NULL,
+  `image` text,
+  `h1` text,
+  `text` text,
+  `link` text,
+  `order` int(11) unsigned NOT NULL DEFAULT '0',
+  KEY `fk_system_page_slider_system_page1_idx` (`system_page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7007,12 +7016,6 @@ ALTER TABLE `order_items`
   ADD CONSTRAINT `fxIDORDER` FOREIGN KEY (`id_order`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `pages_system_slider`
---
-ALTER TABLE `pages_system_slider`
-  ADD CONSTRAINT `fk_pages_system_slider_pages_system1` FOREIGN KEY (`pages_system_id`) REFERENCES `pages_system` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Ограничения внешнего ключа таблицы `page_description`
 --
 ALTER TABLE `page_description`
@@ -7023,6 +7026,12 @@ ALTER TABLE `page_description`
 --
 ALTER TABLE `page_slider`
   ADD CONSTRAINT `fk_page_slider_page1` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `partner_description`
+--
+ALTER TABLE `partner_description`
+  ADD CONSTRAINT `fk_partner_description_partner1` FOREIGN KEY (`partner_id`) REFERENCES `partner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `product_description`
@@ -7072,6 +7081,18 @@ ALTER TABLE `product_waitlist`
 --
 ALTER TABLE `reviews_answer`
   ADD CONSTRAINT `fk_reviews_answer_reviews1` FOREIGN KEY (`reviews_id`) REFERENCES `reviews` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `system_page_description`
+--
+ALTER TABLE `system_page_description`
+  ADD CONSTRAINT `fk_system_page_description_system_page1` FOREIGN KEY (`system_page_id`) REFERENCES `system_page` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `system_page_slider`
+--
+ALTER TABLE `system_page_slider`
+  ADD CONSTRAINT `fk_system_page_slider_system_page1` FOREIGN KEY (`system_page_id`) REFERENCES `system_page` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -1,207 +1,82 @@
 <?php
 class pageModel extends CI_Model
 {
-	public function getPageSystem($type = '')
+	public function getSystemPage($type = '')
 	{
-		$type = mysql_real_escape_string($type);
+		$type = clean($type, true, true);
 		
-		$page = $this->db->query('SELECT * FROM pages_system WHERE type = "'.$type.'"')->row();
-		
+		$page = $this->db->query('SELECT * 
+										FROM system_page sp
+										LEFT JOIN system_page_description spd ON spd.system_page_id = sp.id
+									WHERE sp.type = "'.$type.'"')->row();
+
 		if ( ! $page) return array();
 		
-		$page->slider = $this->db->query('SELECT * FROM pages_system_slider WHERE pages_system_id = "'.$page->id.'"')->result();
+		# IMAGE
+		$page->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $page->image);
+		
+		# SLIDER
+		$page->slider = $this->db->query('SELECT * FROM system_page_slider WHERE system_page_id = "'.$page->id.'"')->result();
 		foreach ($page->slider as $k){
 			$k->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $k->image);
 		}
-
+		
 		return $page; 
 	}
 	
-	public function updateHomePage()
+	public function editSystemPage()
 	{
-		$id			= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$h1			= isset($_POST['h1']) ? clean($_POST['h1'], true, true) : '';
-		$name		= isset($_POST['name']) ? clean($_POST['name'], true, true) : '';
-		$title		= isset($_POST['title']) ? clean($_POST['title'], true, true) : '';
-		$metadesc	= isset($_POST['metadesc']) ? clean($_POST['metadesc'], true, true) : '';
-		$metakey	= isset($_POST['metakey']) ? clean($_POST['metakey'], true, true) : '';
-		$text		= isset($_POST['text']) ? clean($_POST['text'], false, true) : '';
-		$spam       = isset($_POST['spam']) ? clean($_POST['spam'], true, true) : '';
+		$id		= isset($_POST['id'])		? abs((int)$_POST['id']) : 0;
+		$image	= isset($_POST['image'])	? clean($_POST['image'], true, true) : '';
 		
-		$this->db->query('UPDATE pages_system SET 
-											h1 = "'.$h1.'",
-											title = "'.$title.'",
-											metadesc = "'.$metadesc.'",
-											metakey = "'.$metakey.'",
-											text = "'.$text.'",
-											spam = "'.$spam.'"
+		$this->db->query('UPDATE system_page SET 
+											image = "'.$image.'"
 										WHERE id = "'.$id.'"');
 		
-		# SLIDER
-		$this->db->query('DELETE FROM pages_system_slider WHERE pages_system_id = '.$id);
-		if (isset($_POST['slider_image'])){
-			foreach ($_POST['slider_image'] as $k=>$v){
-				
-				$order = $k;
-				$image	= isset($_POST['slider_image'][$k])	? clean($_POST['slider_image'][$k], true, true) : '';
-				$link	= isset($_POST['slider_link'][$k])	? clean($_POST['slider_link'][$k], true, true) : '';
-				$h1		= isset($_POST['slider_h1'][$k])	? clean($_POST['slider_h1'][$k], true, true) : '';
-				$text	= isset($_POST['slider_text'][$k])	? clean($_POST['slider_text'][$k], false, true) : '';
-
-				if ( ! $image) continue;
-				
-				$this->db->query('INSERT INTO pages_system_slider (pages_system_id, image, h1, text, link) 
-									VALUES(
-										"'.$id.'",
-										"'.$image.'", 
-										"'.$h1.'", 
-										"'.$text.'", 
-										"'.$link.'"
-									)');
-			}
-		}
-
-		return;
-	}
-	
-	public function updateAboutPage()
-	{
-		$id			= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$h1			= isset($_POST['h1']) ? clean($_POST['h1'], true, true) : '';
-		$name		= isset($_POST['name']) ? clean($_POST['name'], true, true) : '';
-		$title		= isset($_POST['title']) ? clean($_POST['title'], true, true) : '';
-		$metadesc	= isset($_POST['metadesc']) ? clean($_POST['metadesc'], true, true) : '';
-		$metakey	= isset($_POST['metakey']) ? clean($_POST['metakey'], true, true) : '';
-		$text		= isset($_POST['text']) ? clean($_POST['text'], false, true) : '';
-		$spam       = isset($_POST['spam']) ? clean($_POST['spam'], true, true) : '';
 		
-		$this->db->query('UPDATE pages_system SET 
-											h1 = "'.$h1.'",
-											title = "'.$title.'",
-											metadesc = "'.$metadesc.'",
-											metakey = "'.$metakey.'",
-											text = "'.$text.'",
-											spam = "'.$spam.'"
-										WHERE id = "'.$id.'"');
+		# DESCRIPTION
+		$h1			= isset($_POST['h1'])		? clean($_POST['h1'], true, true) : '';
+		$name		= isset($_POST['name']) 	? clean($_POST['name'], true, true) : '';
+		$title		= isset($_POST['title'])	? clean($_POST['title'], true, true) : '';
+		$metadesc	= isset($_POST['metadesc'])	? clean($_POST['metadesc'], true, true) : '';
+		$metakey	= isset($_POST['metakey'])	? clean($_POST['metakey'], true, true) : '';
+		$text		= isset($_POST['text'])		? clean($_POST['text'], false, true) : '';
+		$spam       = isset($_POST['spam'])		? clean($_POST['spam'], true, true) : '';
+		
+		$this->db->query('DELETE FROM system_page_description WHERE system_page_id = "'.$id.'"');
+		$this->db->query('INSERT INTO system_page_description (system_page_id, h1, name, title, metadesc, metakey, text, spam) 
+							VALUES(
+								"'.$id.'",
+								"'.$h1.'",
+								"'.$name.'",
+								"'.$title.'",
+								"'.$metadesc.'",
+								"'.$metakey.'",
+								"'.$text.'",
+								"'.$spam.'"
+							)');
 		
 		# SLIDER
-		$this->db->query('DELETE FROM pages_system_slider WHERE pages_system_id = '.$id);
-		if (isset($_POST['slider_image'])){
-			foreach ($_POST['slider_image'] as $k=>$v){
-				
-				$order = $k;
-				$image	= isset($_POST['slider_image'][$k])	? clean($_POST['slider_image'][$k], true, true) : '';
-				$link	= isset($_POST['slider_link'][$k])	? clean($_POST['slider_link'][$k], true, true) : '';
-				$h1		= isset($_POST['slider_h1'][$k])	? clean($_POST['slider_h1'][$k], true, true) : '';
-				$text	= isset($_POST['slider_text'][$k])	? clean($_POST['slider_text'][$k], false, true) : '';
+		$this->db->query('DELETE FROM system_page_slider WHERE system_page_id = "'.$id.'"');
+		if (isset($_POST['slider']['image'])) foreach ($_POST['slider']['image'] as $k=>$v){
+			$p['image']	= isset($_POST['slider']['image'][$k])	? clean($_POST['slider']['image'][$k], true, true) : '';
+			$p['link']	= isset($_POST['slider']['link'][$k])	? clean($_POST['slider']['link'][$k], true, true) : '';
+			$p['h1']	= isset($_POST['slider']['h1'][$k])		? clean($_POST['slider']['h1'][$k], true, true) : '';
+			$p['text']	= isset($_POST['slider']['text'][$k])	? clean($_POST['slider']['text'][$k], false, true) : '';
 
-				if ( ! $image) continue;
-				
-				$this->db->query('INSERT INTO pages_system_slider (pages_system_id, image, h1, text, link) 
-									VALUES(
-										"'.$id.'",
-										"'.$image.'", 
-										"'.$h1.'", 
-										"'.$text.'", 
-										"'.$link.'"
-									)');
-			}
+			if ( ! $p['image']) continue;
+			
+			$this->db->query('INSERT INTO system_page_slider (system_page_id, image, h1, text, link) 
+								VALUES(
+									"'.$id.'",
+									"'.$p['image'].'", 
+									"'.$p['h1'].'", 
+									"'.$p['text'].'", 
+									"'.$p['link'].'"
+								)');
+			
 		}
 
-		return;
-	}
-	
-	public function updateOplataPage()
-	{
-		$id			= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$h1			= isset($_POST['h1']) ? clean($_POST['h1'], true, true) : '';
-		$name		= isset($_POST['name']) ? clean($_POST['name'], true, true) : '';
-		$title		= isset($_POST['title']) ? clean($_POST['title'], true, true) : '';
-		$metadesc	= isset($_POST['metadesc']) ? clean($_POST['metadesc'], true, true) : '';
-		$metakey	= isset($_POST['metakey']) ? clean($_POST['metakey'], true, true) : '';
-		$text		= isset($_POST['text']) ? clean($_POST['text'], false, true) : '';
-		$spam       = isset($_POST['spam']) ? clean($_POST['spam'], true, true) : '';
-		
-		$this->db->query('UPDATE pages_system SET 
-											h1 = "'.$h1.'",
-											title = "'.$title.'",
-											metadesc = "'.$metadesc.'",
-											metakey = "'.$metakey.'",
-											text = "'.$text.'",
-											spam = "'.$spam.'"
-										WHERE id = "'.$id.'"');
-		
-		# SLIDER
-		$this->db->query('DELETE FROM pages_system_slider WHERE pages_system_id = '.$id);
-		if (isset($_POST['slider_image'])){
-			foreach ($_POST['slider_image'] as $k=>$v){
-				
-				$order = $k;
-				$image	= isset($_POST['slider_image'][$k])	? clean($_POST['slider_image'][$k], true, true) : '';
-				$link	= isset($_POST['slider_link'][$k])	? clean($_POST['slider_link'][$k], true, true) : '';
-				$h1		= isset($_POST['slider_h1'][$k])	? clean($_POST['slider_h1'][$k], true, true) : '';
-				$text	= isset($_POST['slider_text'][$k])	? clean($_POST['slider_text'][$k], false, true) : '';
-
-				if ( ! $image) continue;
-				
-				$this->db->query('INSERT INTO pages_system_slider (pages_system_id, image, h1, text, link) 
-									VALUES(
-										"'.$id.'",
-										"'.$image.'", 
-										"'.$h1.'", 
-										"'.$text.'", 
-										"'.$link.'"
-									)');
-			}
-		}
-		
-		return;
-	}
-	
-	public function updateBiznesPage()
-	{
-		$id			= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$h1			= isset($_POST['h1']) ? clean($_POST['h1'], true, true) : '';
-		$name		= isset($_POST['name']) ? clean($_POST['name'], true, true) : '';
-		$title		= isset($_POST['title']) ? clean($_POST['title'], true, true) : '';
-		$metadesc	= isset($_POST['metadesc']) ? clean($_POST['metadesc'], true, true) : '';
-		$metakey	= isset($_POST['metakey']) ? clean($_POST['metakey'], true, true) : '';
-		$text		= isset($_POST['text']) ? clean($_POST['text'], false, true) : '';
-		$spam       = isset($_POST['spam']) ? clean($_POST['spam'], true, true) : '';
-		
-		$this->db->query('UPDATE pages_system SET 
-											h1 = "'.$h1.'",
-											title = "'.$title.'",
-											metadesc = "'.$metadesc.'",
-											metakey = "'.$metakey.'",
-											text = "'.$text.'",
-											spam = "'.$spam.'"
-										WHERE id = "'.$id.'"');
-		
-		# SLIDER
-		$this->db->query('DELETE FROM pages_system_slider WHERE pages_system_id = '.$id);
-		if (isset($_POST['slider_image'])){
-			foreach ($_POST['slider_image'] as $k=>$v){
-				
-				$order = $k;
-				$image	= isset($_POST['slider_image'][$k])	? clean($_POST['slider_image'][$k], true, true) : '';
-				$link	= isset($_POST['slider_link'][$k])	? clean($_POST['slider_link'][$k], true, true) : '';
-				$h1		= isset($_POST['slider_h1'][$k])	? clean($_POST['slider_h1'][$k], true, true) : '';
-				$text	= isset($_POST['slider_text'][$k])	? clean($_POST['slider_text'][$k], false, true) : '';
-
-				if ( ! $image) continue;
-				
-				$this->db->query('INSERT INTO pages_system_slider (pages_system_id, image, h1, text, link) 
-									VALUES(
-										"'.$id.'",
-										"'.$image.'", 
-										"'.$h1.'", 
-										"'.$text.'", 
-										"'.$link.'"
-									)');
-			}
-		}
-		
 		return;
 	}
 	

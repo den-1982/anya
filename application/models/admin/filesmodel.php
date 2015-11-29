@@ -1,6 +1,6 @@
 <?php 
-/*	crystalline.in.ua
-*	настрайка главной папки определяется вручную  define("FM_FOLDER", ROOT.'/img/root');
+/*	
+*	FILE MANAGER (настрайка главной папки определяется вручную  define("FM_FOLDER", ROOT.'/img/root'))
 */
 Class filesmodel extends CI_Model{
 	private static $settings = array();

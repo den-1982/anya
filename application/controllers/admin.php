@@ -24,7 +24,7 @@ class Admin extends CI_Controller {
 				'admin/productModel',
 				'admin/filterModel',
 				'admin/manufacturerModel',
-				'admin/partnershipsModel',
+				'admin/partnerModel',
 				'admin/reviewsModel',
 				'admin/userModel',
 				'admin/ordersModel',
@@ -118,6 +118,8 @@ class Admin extends CI_Controller {
 		}
 		return $output;
 	}
+
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// LOGOUT	
 	public function Logout()
 	{
@@ -136,6 +138,8 @@ class Admin extends CI_Controller {
 
 		$this->_view('a_index', $data);
 	}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CATEGORY
 	public function Category()
 	{
@@ -380,7 +384,70 @@ class Admin extends CI_Controller {
 		$this->_view('a_filter', $data);
 		return;
 	}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// MANUFACTURER
+	public function Manufacturer()
+	{
+		$data = &$this->data;
 
+		$data['path']	= '/admin/manufacturer/';
+		$data['action'] = 'manufacturer';
+		$data['act']	= 'all';
+		$data['h1']		= 'Производители';
+		
+		if(METHOD == 'POST'){
+			if (isset($_POST['toggle']) ){
+				echo json_encode($this->manufacturerModel->setVisibilityManufacturer()); 
+				exit;
+			}
+			if (isset($_POST['add'])){
+				$this->manufacturerModel->addManufacturer(); 
+				redirect('/admin/manufacturer');
+				exit;
+			}
+			if (isset($_POST['edit'])){
+				$res = $this->manufacturerModel->updateManufacturer();
+				redirect('/admin/manufacturer');
+				exit;
+			}
+			if (isset($_POST['manufacturer_order'])){
+				$this->manufacturerModel->sortOrderManufacturer();
+				exit;
+			}
+			
+			exit;
+		}
+		
+		
+		if (isset($_GET['delete'])){
+			$this->manufacturerModel->delManufacturer($_GET['delete']);
+			redirect('/admin/manufacturer/?parent='.$data['parent']);
+			exit;
+		}
+		
+		if (isset($_GET['update'])){
+			$data['manufacturer'] = $this->manufacturerModel->getManufacturer($_GET['update']);
+			if ($data['manufacturer']){
+				$data['act']= 'update';
+				$data['h1']	= 'Редактирование производителя: <span class="c-red">'.$data['manufacturer']->name.'</span>';
+				
+				$this->_view('a_manufacturer', $data);
+				return;
+			}	
+		}
+		if (isset($_GET['add'])){
+			$data['act']= 'add';
+			$data['h1']	= 'Создание производителя';
+			
+			$this->_view('a_manufacturer', $data);
+			return;
+		}	
+		
+		$data['manufacturer'] = $this->manufacturerModel->getManufacturers();
+		
+		$this->_view('a_manufacturer', $data);
+	}
+
+	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PAGE
 	public function Page()
 	{
@@ -462,17 +529,15 @@ class Admin extends CI_Controller {
 		$data['action']   	= 'home';
 		$data['act']      	= 'all';
 		$data['h1']     	= 'Главная страница';
-		
-		$data['parent']		= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
 
 		if (isset($_POST['edit'])){
-			$this->pageModel->updateHomePage();
+			$this->pageModel->editSystemPage();
 			exit;
 		}
 		
-		$data['home'] = $this->pageModel->getPageSystem('home');
+		$data['system'] = $this->pageModel->getSystemPage('home');
 		
-		$this->_view('a_home', $data);
+		$this->_view('a_system', $data);
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ABOUT
 	public function About()
@@ -484,16 +549,14 @@ class Admin extends CI_Controller {
 		$data['act']      	= 'all';
 		$data['h1']     	= 'О Нас';
 		
-		$data['parent']		= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
-
 		if (isset($_POST['edit'])){
-			$this->pageModel->updateAboutPage();
+			$this->pageModel->editSystemPage();
 			exit;
 		}
 		
-		$data['about'] = $this->pageModel->getPageSystem('about');
+		$data['system'] = $this->pageModel->getSystemPage('about');
 		
-		$this->_view('a_about', $data);
+		$this->_view('a_system', $data);
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// OPLATA
 	public function Oplata()
@@ -505,16 +568,14 @@ class Admin extends CI_Controller {
 		$data['act']      	= 'all';
 		$data['h1']     	= 'Оплата и доставка';
 		
-		$data['parent']		= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
-
 		if (isset($_POST['edit'])){
-			$this->pageModel->updateOplataPage();
+			$this->pageModel->editSystemPage();
 			exit;
 		}
 		
-		$data['oplata'] = $this->pageModel->getPageSystem('oplata');
+		$data['system'] = $this->pageModel->getSystemPage('oplata');
 		
-		$this->_view('a_oplata', $data);
+		$this->_view('a_system', $data);
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// BIZNES
 	public function Biznes()
@@ -526,102 +587,42 @@ class Admin extends CI_Controller {
 		$data['act']      	= 'all';
 		$data['h1']     	= 'Бизнес предложение';
 		
-		$data['parent']		= isset($_GET['parent']) ? abs((int)$_GET['parent']) : 0;
-
 		if (isset($_POST['edit'])){
-			$this->pageModel->updateBiznesPage();
+			$this->pageModel->editSystemPage();
 			exit;
 		}
 		
-		$data['biznes'] = $this->pageModel->getPageSystem('biznes');
+		$data['system'] = $this->pageModel->getSystemPage('biznes');
 		
-		$this->_view('a_biznes', $data);
+		$this->_view('a_system', $data);
 	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// MANUFACTURER
-	public function Manufacturer()
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PARTNER
+	public function Partner()
 	{
 		$data = &$this->data;
 
-		$data['path']	= '/admin/manufacturer/';
-		$data['action'] = 'manufacturer';
-		$data['act']	= 'all';
-		$data['h1']		= 'Производители';
-		
-		if(METHOD == 'POST'){
-			if (isset($_POST['toggle']) ){
-				echo json_encode($this->manufacturerModel->setVisibilityManufacturer()); 
-				exit;
-			}
-			if (isset($_POST['add'])){
-				$this->manufacturerModel->addManufacturer(); 
-				redirect('/admin/manufacturer');
-				exit;
-			}
-			if (isset($_POST['edit'])){
-				$res = $this->manufacturerModel->updateManufacturer();
-				redirect('/admin/manufacturer');
-				exit;
-			}
-			if (isset($_POST['manufacturer_order'])){
-				$this->manufacturerModel->sortOrderManufacturer();
-				exit;
-			}
-			
-			exit;
-		}
-		
-		
-		if (isset($_GET['delete'])){
-			$this->manufacturerModel->delManufacturer($_GET['delete']);
-			redirect('/admin/manufacturer/?parent='.$data['parent']);
-			exit;
-		}
-		
-		if (isset($_GET['update'])){
-			$data['manufacturer'] = $this->manufacturerModel->getManufacturer($_GET['update']);
-			if ($data['manufacturer']){
-				$data['act']= 'update';
-				$data['h1']	= 'Редактирование производителя: <span class="c-red">'.$data['manufacturer']->name.'</span>';
-				
-				$this->_view('a_manufacturer', $data);
-				return;
-			}	
-		}
-		if (isset($_GET['add'])){
-			$data['act']= 'add';
-			$data['h1']	= 'Создание производителя';
-			
-			$this->_view('a_manufacturer', $data);
-			return;
-		}	
-		
-		$data['manufacturer'] = $this->manufacturerModel->getManufacturers();
-		
-		$this->_view('a_manufacturer', $data);
-	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PARTNERSHIPS
-	public function Partnerships()
-	{
-		$data = &$this->data;
-
-		$data['path']	= '/admin/partnerships/';
-		$data['action'] = 'partnerships';
+		$data['path']	= '/admin/partner/';
+		$data['action'] = 'partner';
 		$data['act']	= 'all';
 		$data['h1']		= 'Партнеры';
 		
 		if (METHOD == 'POST'){
 			if (isset($_POST['toggle']) ){
-				echo json_encode($this->partnershipsModel->setVisibilityPartnership()); 
+				echo json_encode($this->partnerModel->setVisibilityPartner()); 
 				exit;
 			}
 			if (isset($_POST['add'])){
-				$this->partnershipsModel->addPartnerships(); 
-				redirect('/admin/partnerships');
+				$this->partnerModel->addPartner(); 
+				redirect($data['path']);
 				exit;
 			}
 			if (isset($_POST['edit'])){
-				$this->partnershipsModel->updatePartnerships();
-				redirect('/admin/partnerships');
+				$this->partnerModel->updatePartner();
+				redirect($data['path']);
+				exit;
+			}
+			if (isset($_POST['partner_order'])){
+				$this->partnerModel->sortOrderPartner();
 				exit;
 			}
 			
@@ -630,73 +631,35 @@ class Admin extends CI_Controller {
 		
 		
 		if (isset($_GET['delete'])){
-			$this->partnershipsModel->delPartnership($_GET['delete']);
-			redirect('/admin/partnerships');
+			$this->partnerModel->delPartner($_GET['delete']);
+			redirect($data['path']);
 			exit;
 		}
 		if (isset($_GET['update'])){
-			$data['partnership'] = $this->partnershipsModel->getPartnership($_GET['update']);
-			if ($data['partnership']){
-				$data['act']= 'update';
-				$data['h1'] = 'Редактирование: <span class="c-red">'.$data['partnership']->name.'</span>';
-				
-				$this->_view('a_partnerships', $data);
-				return;
-			}
+			$data['partner'] = $this->partnerModel->getPartner($_GET['update']);
+			if ( ! $data['partner']){redirect($data['path']); exit;}
+			
+			$data['act']= 'update';
+			$data['h1'] = 'Редактирование: <span class="c-red">'.$data['partner']->name.'</span>';
+			
+			$this->_view('a_partner', $data);
+			return;
+			
 		}
 		if (isset($_GET['add'])){
 			$data['act']= 'add';
 			$data['h1']	= 'Добавить партнера';
 			
-			$this->_view('a_partnerships', $data);
+			$this->_view('a_partner', $data);
 			return;
 		}
 		
-		$data['partnerships'] = $this->partnershipsModel->getPartnerships();
+		$data['partners'] = $this->partnerModel->getPartners();
 		
-		$this->_view('a_partnerships', $data);
+		$this->_view('a_partner', $data);
 	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETTINGS
-	public function Settings()
-	{
-		$data = &$this->data;
 
-		$data['path']		= '/admin/settings/';
-		$data['action']   	= 'settings';
-		$data['act']      	= 'all';
-		$data['h1']     	= 'Настройки';
-		
-		# обновление данных
-		if (isset($_POST['edit'])){
-			$this->settingsModel->editSettings();
-			exit;
-		}
 
-		$data['socials']	= $this->settingsModel->getSocial();
-		$data['admin']		= $this->adminModel->getAdmin();
-
-		$this->output->set_header("Cache-Control: no-store");
-		$this->_view('a_settings', $data);
-	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PRICE-LIST (NEW)
-	public function Pricelist()
-	{
-		# загрузка PRICE-LIST
-		if (isset($_FILES['pricelist'])){
-			$pricelist = $_FILES['pricelist'];
-			if ($pricelist['error'] == 0){
-				$info = @pathinfo($pricelist['name']);
-				$mime = isset($info['extension']) ? $info['extension'] : '';
-				
-				$this->db->query('DELETE FROM pricelist');
-				
-				$f = file_get_contents($pricelist['tmp_name']);
-				
-				$this->db->query('INSERT INTO pricelist (pricelist, mime) VALUES ("'.mysql_real_escape_string($f).'", "'.$mime.'")');
-			}
-		}
-		exit;
-	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// USER
 	public function User()
 	{
@@ -945,7 +908,29 @@ class Admin extends CI_Controller {
 		$this->_view('a_reviews', $data);
 	}	
 	
-	
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SETTINGS
+	public function Settings()
+	{
+		$data = &$this->data;
+
+		$data['path']		= '/admin/settings/';
+		$data['action']   	= 'settings';
+		$data['act']      	= 'all';
+		$data['h1']     	= 'Настройки';
+		
+		# обновление данных
+		if (isset($_POST['edit'])){
+			$this->settingsModel->editSettings();
+			exit;
+		}
+
+		$data['socials']	= $this->settingsModel->getSocial();
+		$data['admin']		= $this->adminModel->getAdmin();
+
+		$this->output->set_header("Cache-Control: no-store");
+		$this->_view('a_settings', $data);
+	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// NOVA-POSHTA	
 	public function Novaposhta()
 	{
@@ -1025,69 +1010,30 @@ class Admin extends CI_Controller {
 		# Подключение самой модели
 		$this->load->model('admin/filesModel');
 		
-		# Подключение стилей
-		if (isset($_GET['css'])){$this->filesModel->getCss();}
-		
-		if (METHOD == 'POST'){
-			# если нет $_POST['action']
-			if(!isset($_POST['action'])){show_404();exit;}
-			
-			# если нет метода в $this->filesModel
-			if(!in_array($_POST['action'], get_class_methods($this->filesModel))){show_404();exit;}
-			
-			$res = $this->filesModel->$_POST['action']();
-			
-			echo json_encode($res);
-			exit;
-			
-		}else{
+		if (METHOD != 'POST'){
+			log_message('error', 'Ошибка Filesmanager():  METHOD != POST '.__LINE__);
 			show_404();
 			exit;
 		}
-	}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// TEST
-	public function Test()
-	{
-		
-		// $to			= 'hamet@ua.fm';
-		// $to			= 'vladexsite@gmail.com';
-		// $tema		= 'Обратная связь';	
-		// $headers	= "From: ".strtoupper($_SERVER['SERVER_NAME'])." <webmaster@".strtoupper($_SERVER['SERVER_NAME']).">\r\n";
-		// $headers	.= "Content-type: text/html; charset=\"utf-8\"";
-		// $msg = 'den den den den den den den den den den den';
-		
-		// $res = mail($to, $tema, $msg, $headers);
-		// var_dump($res);
-		// exit;
-		
-		// $res2 = mail('hamet@ua.fm', 'TEST', "den den den den den den den den den den den ");
-		// $res = mail('vladexsite@gmail.com', 'TEST', "den den den den den den den den den den den ");
-		// echo '<pre>';
-		// var_dump($res);
-		// var_dump($res2);
-		// exit;
-		
-		// $this->load->library('email');
-		// $config['protocol'] = 'sendmail';
-		// $config['mailpath'] = '/usr/sbin/sendmail';
-		// $this->email->initialize($config);
-		
-		/*
-		// $config['protocol'] = 'mail'; # mail, sendmail, или smtp
-		// $this->email->initialize($config);
-		
-		$this->email->from('webmaster@crystalline.in.ua', 'DEN');
-		// $this->email->to('vladexsite@gmail.com');
-		$this->email->to('hamet@ua.fm');
-		$this->email->subject('ТEST');
-		$this->email->message('Тестирование класса отправки сообщений');
-		$this->email->send();
 
-		echo $this->email->print_debugger();
-		# fdAIEmOT
-		*/
+		# если нет $_POST['action']
+		if ( ! isset($_POST['action'])){
+			log_message('error', 'Ошибка Filesmanager(): нет параметра $_POST["action"] '.__LINE__);
+			show_404();
+			exit;
+		}
 		
-		//$this->_view('a_test', $data);
+		# если нет метода в $this->filesModel
+		if ( ! in_array($_POST['action'], get_class_methods($this->filesModel))){
+			log_message('error', 'Ошибка Filesmanager->'.$_POST['action'].' - нет метода в Filesmanager '.__LINE__);
+			show_404();
+			exit;
+		}
+		
+		$res = $this->filesModel->$_POST['action']();
+		
+		echo json_encode($res);
+		exit;
 	}
 
 }

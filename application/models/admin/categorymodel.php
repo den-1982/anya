@@ -18,7 +18,7 @@ class categoryModel extends CI_Model
 		$category =  $this->db->query('SELECT * 
 											FROM category c
 											LEFT JOIN category_description cd ON cd.category_id = c.id
-										WHERE c.id = '.$id)->row();
+										WHERE c.id = "'.$id.'"')->row();
 		
 		if ( ! $category) return array();
 		

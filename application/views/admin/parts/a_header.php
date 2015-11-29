@@ -64,7 +64,7 @@
 							<a class="<?=$action == 'biznes'?'activ':'';?>" href="/admin/biznes">Бизнес предложение</a>
 						</li>
 						<li>
-							<a class="<?=$action == 'partnerships'?'activ':'';?>" href="/admin/partnerships">Партнеры</a>
+							<a class="<?=$action == 'partner'?'activ':'';?>" href="/admin/partner">Партнеры</a>
 						</li>
 						<li>
 							<a class="<?=$action == 'page'?'activ':'';?>" href="/admin/page">Новостм \ Статьи</a>
