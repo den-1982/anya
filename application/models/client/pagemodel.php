@@ -1,8 +1,8 @@
 <?php
 class pageModel extends CI_Model
 {
-	
-	public function getPageSystem($type = '')
+////////////////////////////////////////////////////////// SYSTEM PAGE
+	public function getSystemPage($type = '')
 	{
 		$type = clean($type, true, true);
 		$page = $this->db->query('SELECT * 
@@ -16,10 +16,13 @@ class pageModel extends CI_Model
 		return $page; 
 	}	
 		
-		
+////////////////////////////////////////////////////////// PAGE	
 	public function getPages()
 	{
-		return $this->db->query('SELECT *,
+		return $this->db->query('SELECT p.*,
+										pd.name,
+										pd.h1,
+										pd.metadesc,
 										CONCAT("/", p.url, "/a", p.id) AS _url
 										FROM page p
 										LEFT JOIN page_description pd ON pd.page_id = p.id 
@@ -40,6 +43,15 @@ class pageModel extends CI_Model
 		$page->slider = $this->db->query('SELECT * FROM page_slider WHERE page_id = "'.$page->id.'"')->result();
 		
 		return $page;
+	}
+	
+	public function sortPages($pages = array()) 
+	{
+		$data = array();
+		foreach ($pages as $page) {
+			$data[$page->parent][$page->id] = $page;
+		}
+		return $data;
 	}
 	
 	public function getPageById($id = 0)

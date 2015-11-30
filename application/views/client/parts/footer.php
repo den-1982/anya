@@ -32,36 +32,27 @@
 		<footer class="footer">
 			<div class="row">
 				<ul class="navbar-footer">
+					<?php if (isset($pages[0])) foreach ($pages[0] as $k):?>
 					<li>
-						<a class="has-child" href="/news">Новости</a>
+						<a class="has-child" href="<?=htmlspecialchars($k->_url)?>"><?=$k->name?></a>
+						<?php if (isset($pages[$k->id])):?>
 						<ul class="navbar-child">
-							<?php foreach($pages as $page):?>
-							<?php if($page->type == 'news'):?>
+							<?php foreach ($pages[$k->id] as $i):?>
 							<li>
-								<a class="" href="/news/<?=$page->url?>"><?=$page->name?></a>
+								<a class="" href="<?=htmlspecialchars($i->_url)?>"><?=$i->name?></a>
 							</li>
-							<?php endif;?>
 							<?php endforeach;?>
 						</ul>
+						<?php endif;?>
 					</li>
+					<?php endforeach;?>	
+
 					<li>
-						<a class="has-child" href="/articles">Статьи</a>
+						<a class="has-child" href="/partners/">Наши партнеры</a>
 						<ul class="navbar-child">
-							<?php foreach($pages as $page):?>
-							<?php if($page->type == 'articles'):?>
+							<?php foreach($partners as $k):?>
 							<li>
-								<a class="" href="/articles/<?=$page->url?>"><?=$page->name?></a>
-							</li>
-							<?php endif;?>
-							<?php endforeach;?>
-						</ul>
-					</li>
-					<li>
-						<a class="has-child" href="/partnerships">Наши партнеры</a>
-						<ul class="navbar-child">
-							<?php foreach($partnerships as $k):?>
-							<li>
-								<a class="" href="/partnerships#part_<?=$k->id?>"><?=$k->name?></a>
+								<a class="" href="<?=htmlspecialchars($k->_url)?>"><?=$k->name?></a>
 							</li>
 							<?php endforeach;?>
 						</ul>
@@ -70,8 +61,8 @@
 						<span class="has-child">Ищите нас</span>
 						<ul class="navbar-child">
 							<li>
-							<?php foreach($settings->social as $k):?>
-								<a class="soc soc-<?=$k['name']?>" href="<?=$k['url']?>" target="_blank"></a>
+							<?php foreach($settings->social as $k=>$v):?>
+								<a class="soc soc-<?=$k?>" href="<?=$v?>" target="_blank"></a>
 							<?php endforeach;?>
 							</li>
 						</ul>

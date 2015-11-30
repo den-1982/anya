@@ -119,7 +119,8 @@ class clientModel extends CI_Model
 	public function getDiscounts() # условия скидок (программа лояльности)
 	{
 		$html = '';
-		$res = $this->pageModel->getPageSystem('biznes');
+		//$res = $this->pageModel->getPageSystem('biznes');
+		$res = $this->pageModel->getSystemPage('biznes');
 		if ( ! $res) return $html;
 		
 		$html = $res->text;

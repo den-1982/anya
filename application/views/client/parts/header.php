@@ -17,13 +17,6 @@
 	<link type="text/css" href="/css/client/formstyler/jquery.formstyler.css" rel="stylesheet">
 	<link type="text/css" href="/css/client/carusel/owl.carousel.css" rel="stylesheet">
 	
-	<!--[if lt IE 9]>
-	<script>
-	var e = ("article,aside,figcaption,figure,footer,header,hgroup,nav,section,time").split(',');
-	for (var i = 0; i < e.length; i++) document.createElement(e[i]);
-	</script>
-	<![endif]-->
-	
 	<script src="/js/client/jquery.1.9.1.js" type="text/javascript"></script>
 	<script src="/js/client/slideshow/slideshow.min.js" type="text/javascript"></script>
 	<script src="/js/client/lightbox/lightbox.min.js" type="text/javascript"></script>
@@ -114,7 +107,7 @@
 										<li>
 											<a href="<?=$category->_url?>" title="<?=htmlspecialchars($category->name)?>">
 												<span>
-													<img alt="<?=htmlspecialchars($category->name)?>" src="<?=htmlspecialchars($category->mini_image)?>">
+													<img alt="<?=htmlspecialchars($category->name)?>" src="<?=htmlspecialchars($category->cache)?>">
 												</span>
 												<?php if ($category->discount*1):?>
 												<i title="скидка <?=$category->discount*1?> %">&minus; <?=$category->discount*1?> %</i>
@@ -142,27 +135,6 @@
 							</li>
 							<li>
 								<a href="/contacts/" title="Контакты">Контакты</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)" data-search="novaposhta" title="Отседить заказ НОВАЯ ПОЧТА">Трек КОД</a>
-							</li>
-							
-							<li>
-								<a class="colors" data-dropdown="" href="javascript:void(0)" title="Подбор по цвету">
-									<img src="/img/i/colors.png" alt="">
-								</a>
-								<i class="nib"></i>
-								<div class="child child-colors">
-									<ul>
-									<?php foreach($filter_items_color as $k):?>
-										<li>
-											<a href="<?=$k->_url?>" title="<?=htmlspecialchars($k->name)?>">
-												<img alt="<?=htmlspecialchars($k->name)?>" src="<?=htmlspecialchars($k->image)?>">
-											</a>
-										</li>
-									<?php endforeach;?>
-									</ul>
-								</div>
 							</li>
 						</ul>
 					</nav>
@@ -232,23 +204,6 @@
 						</li>
 						<li>
 							<a href="/contacts/" title="Контакты">Контакты</a>
-						</li>
-						<li>
-							<a href="javascript:void(0)" data-search="novaposhta" title="Отседить заказ НОВАЯ ПОЧТА">Трек КОД</a>
-						</li>
-						<li>
-							<span class="has-child" title="Продукция">Подбор по цвету</span>
-							<?php if (isset($categories[0])):?>
-							<ul class="nav-group-child">
-							<?php foreach($filter_items_color as $k):?>
-								<li>
-									<a href="<?=htmlspecialchars($k->_url)?>" title="<?=htmlspecialchars($k->name)?>">
-										<?=$k->name?>
-									</a>
-								</li>
-							<?php endforeach;?>
-							</ul>
-							<?php endif;?>
 						</li>
 					</ul>
 					<script>

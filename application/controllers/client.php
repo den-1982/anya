@@ -102,15 +102,15 @@ class Client extends CI_Controller
 	{
 		$data = &$this->data;
 		
-		$data['home'] = $this->pageModel->getPageSystem('home');
+		$data['home'] = $this->pageModel->getSystemPage('home');
 		$this->_info($data['home']);
 		
 		# products discount (карусель)
 		$data['products_discount'] = $this->productModel->getProductsDiscount();
 		
 		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 		= $this->pageModel->getPages();
-		$data['partner'] 	= $this->partnerModel->getPartner();
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
 		
 		$this->_view('home', $data);
 	}
@@ -178,15 +178,15 @@ class Client extends CI_Controller
 		$data['products'] = $this->productModel->getProducts($data['category']->id, $data['filter']);	
 		
 		# фильтр размеры (select)
-		$data['filter_items_size'] = $this->filterModel->getFilterItemSize($data['category']->id);
+		//$data['filter_items_size'] = $this->filterModel->getFilterItemSize($data['category']->id);
 		
 		# products discount (карусель)
 		$data['products_discount'] = $this->productModel->getProductsDiscount();
 		
 		
-		$data['categories'] 		= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 		
 		# крошки
 		$data['crumbs'] = $this->_crumbs($this->data['categories'], $data['category']->id);
@@ -383,7 +383,7 @@ class Client extends CI_Controller
 	{
 		$data = &$this->data;
 		
-		$data['oplata'] = $this->pageModel->getPageSystem('oplata');
+		$data['oplata'] = $this->pageModel->getSystemPage('oplata');
 		$this->_info($data['oplata']);
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
@@ -429,7 +429,7 @@ class Client extends CI_Controller
 			exit;
 		}
 		
-		$data['biznes'] = $this->pageModel->getPageSystem('biznes');
+		$data['biznes'] = $this->pageModel->getSystemPage('biznes');
 		$this->_info($data['biznes']);
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
@@ -443,7 +443,7 @@ class Client extends CI_Controller
 	{
 		$data = &$this->data;
 		
-		$data['home'] = $this->pageModel->getPageSystem('about');
+		$data['home'] = $this->pageModel->getSystemPage('about');
 		$this->_info($data['home']);
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
@@ -453,7 +453,7 @@ class Client extends CI_Controller
 		$this->_view('about', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PARTNERSHIPS
-	public function Partnerships()
+	public function Partners()
 	{
 		$data = &$this->data;
 		

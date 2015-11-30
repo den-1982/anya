@@ -92,7 +92,7 @@ class productModel extends CI_Model
 												pd.name,
 												pd.h1,
 												CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
-											FROM products p 
+											FROM product p 
 											LEFT JOIN product_description pd ON pd.product_id = p.id
 											LEFT JOIN product_prices pp ON pp.product_id = p.id 
 										WHERE p.visibility = 1 

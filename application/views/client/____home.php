@@ -81,31 +81,32 @@
 	
 	<!-- NEWS / ARTICLES -->
 	<div class="row">
-		<?php if (isset($pages[0])) foreach ($pages[0] as $k):?>
 		<div class="col-2">
-			<h3 class="h1-style"><span><a href="<?=htmlspecialchars($k->_url)?>"><?=$k->name?></a></span></h3>
-			<div data-camera="articles">
-				<?php if (isset($pages[$k->id])) foreach($pages[$k->id] as $i):?>
-				<div data-src="<?=htmlspecialchars($i->image)?>" data-thumb="<?=htmlspecialchars($i->image)?>" data-link="<?=htmlspecialchars($i->_url)?>">
-					<?php if ($i->h1):?>
+			<h3 class="h1-style"><span><a href="/news">Новости</a></span></h3>
+			<div data-camera="news">
+				<?php 
+				$i = 0; 
+				foreach($pages as $k):?>
+				<?php if($i > 3) break;?>
+				<?php if($k->type != 'news') continue; ?>
+				<div data-src="<?=htmlspecialchars($k->image)?>" data-thumb="<?=htmlspecialchars($k->image)?>" data-link="<?=htmlspecialchars($k->_url)?>">
+					<?php if ($k->h1):?>
 					<div class="camera_caption fadeFromBottom">
-						<h2><?=$i->h1?><br>&bull;</h2>
-						<em><?=$i->metadesc?></em>
+						<h2><?=htmlspecialchars($k->h1)?><br>&bull;</h2>
+						<em><?=htmlspecialchars($k->metadesc)?></em>
 					</div>
 					<?php endif;?>
 				</div>
-				<?php endforeach;?>
-				
-				<?php if (isset($pages[$k->id]) && count($pages[$k->id]) == 1):?>
-				<!--<div data-src="<?=htmlspecialchars($pages[$k->id]->image)?>" data-thumb="<?=htmlspecialchars($pages[$k->id]->image)?>" data-link="<?=htmlspecialchars($pages[$k->id]->_url)?>"></div>-->
+				<?php 
+				$i++;
+				endforeach;?>
+				<?php if (count($pages) == 1):?>
+				<div data-src="<?=htmlspecialchars($k->image)?>" data-thumb="<?=htmlspecialchars($k->image)?>" data-link="<?=htmlspecialchars($k->_url)?>"></div>
 				<?php endif;?>
 			</div>
-		</div>
-		<?php endforeach;?>
-		<script>
-		$(function(){
-			$('[data-camera="articles"]').each(function(){
-				$(this).camera({
+			<script>
+			$(function(){
+				$('[data-camera="news"]').camera({
 					height:"400px",
 					fx:'simpleFade',
 					loader				: 'none',
@@ -114,8 +115,41 @@
 					pagination			: false
 				});
 			});
-		});
-		</script>
+			</script>
+		</div>
+
+		<div class="col-2">
+			<h3 class="h1-style"><span><a href="/articles">Статьи</a></span></h3>
+			<div data-camera="articles">
+				<?php foreach($pages as $k):?>
+				<?php if ($k->type != 'articles') continue; ?>
+				<div data-src="<?=htmlspecialchars($k->image)?>" data-thumb<?=htmlspecialchars($k->image)?>" data-link="<?=htmlspecialchars($k->_url)?>">
+					<?php if ($k->h1):?>
+					<div class="camera_caption fadeFromBottom">
+						<h2><?=htmlspecialchars($k->h1)?><br>&bull;</h2>
+						<em><?=htmlspecialchars($k->metadesc)?></em>
+					</div>
+					<?php endif;?>
+				</div>
+				<?php endforeach;?>
+				<?php if (count($pages) == 1):?>
+				<div data-src="<?=htmlspecialchars($k->image)?>" data-thumb="<?=htmlspecialchars($k->image)?>" data-link="<?=htmlspecialchars($k->_url)?>"></div>
+				<?php endif;?>
+			</div>
+			<script>
+			$(function(){
+				$('[data-camera="articles"]').camera({
+					height:"400px",
+					fx:'simpleFade',
+					loader				: 'none',
+					navigation			: false,
+					navigationHover		: true,
+					pagination			: false
+				});
+			});
+			</script>
+		</div>
+
 	</div>
 
 	<!-- SPAM -->
@@ -126,3 +160,6 @@
 	</div>
 
 </div><!-- END BODY -->
+
+
+

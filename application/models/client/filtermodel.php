@@ -10,7 +10,7 @@ class filterModel extends CI_Model
 										pp.cnt_roz
 									FROM filter_item fi 
 									LEFT JOIN product_prices pp ON fi.id = pp.id_filter_item 
-									LEFT JOIN products p ON pp.id_product = p.id	
+									LEFT JOIN product p ON pp.id_product = p.id	
 								WHERE p.parent = ' . $id_category.'
 									GROUP BY fi.id
 									ORDER BY fi.order

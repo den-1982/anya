@@ -53,7 +53,9 @@ $route['colors/(:any)']						= 'client/colors/$1';
 
 $route['oplata-i-dostavka']					= 'client/oplata';
 $route['biznes-predlojenie']				= 'client/business';
-$route['partnerships']						= 'client/partnerships';
+
+$route['partners']							= 'client/partners';
+$route['partners/(:any)/s(:num)']			= 'client/partners/$1/$2';
 
 $route['contacts']							= 'client/contacts';
 $route['about-us']							= 'client/about';
