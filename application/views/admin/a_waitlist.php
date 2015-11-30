@@ -2,19 +2,19 @@
 
 <!--ALL-->
 	<?php if ($act == 'all'):?>
-	
 	<h1 class="title"><?=$h1?></h1>
 	
-	<div class="nav clearfix">
+	<div class="nav">
 		<div class="fleft"></div>
 		<div class="fright">
 			<form id="form" action="" method="POST" enctype="multipart/form-data">
-				<a class="button blue" style="margin-left:5px;" data-form-apply="">Сделать сверку и сообщить о появлениии товаров</a>
+				<a class="button blue" data-form-apply="">Сделать сверку и сообщить о появлениии товаров</a>
 				<input type="hidden" name="edit" value="">
 			</form>
 		</div>
 	</div>
-
+	
+	
 	<table class="table-1" data-scroll="head">
 		<thead>
 			<tr>
@@ -51,7 +51,7 @@
 
 <script> // APPLY
 $(document).on('click', '[data-form-apply]', function(e){
-	$(document.body).append($('<div>').addClass('_load'));
+	$(document.body).append('<div class="load"></div>');
 	
 	if (tinyMCE && tinyMCE.editors){
 		$(tinyMCE.editors).each(function(){
@@ -60,7 +60,7 @@ $(document).on('click', '[data-form-apply]', function(e){
 	}
 	
 	AP.init('', $('#form')[0], function(){	
-		// location.reload(true);
+		location.reload(true);
 	});
 	return false;	
 });

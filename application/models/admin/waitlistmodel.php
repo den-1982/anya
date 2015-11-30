@@ -12,24 +12,26 @@ class waitlistModel extends CI_Model
 	
 	public function getWaitList()
 	{
-		$products = $this->db->query('SELECT 
-											wl.id_size,
-											p.name,
+		$products = $this->db->query('SELECT pw.id_size,
+											pd.name,
 											p.id,
-											CONCAT("/img/products/", p.id, "/", p.id, "_82_82.jpg") AS image,
 											fi.name AS sizeName,
 											fi.prefix AS sizePrefix
-									FROM product_waitlist wl 
-									LEFT JOIN product p ON p.id = wl.product_id
-									LEFT JOIN filter_item fi ON fi.id = wl.id_size
-								GROUP BY product_id, id_size
-									ORDER BY product_id ASC')->result();
+									FROM product_waitlist pw 
+									LEFT JOIN product p ON p.id = pw.product_id
+									LEFT JOIN product_description pd ON p.id = pd.product_id
+									LEFT JOIN filter_item fi ON fi.id = pw.id_size
+								GROUP BY pw.product_id, pw.id_size
+									ORDER BY pw.product_id ASC')->result();
 		
 		return $products;
 	}
 
 	public function sendEmailWaitList()
 	{
+		
+		exit;
+		
 		# NEWSLATTER (сообщить если появился товар) ****************************************************************
 		//log_message('error', '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ START NEWSLATTER');
 		

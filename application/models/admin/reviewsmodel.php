@@ -2,6 +2,24 @@
 // CLIENT
 class reviewsModel extends CI_Model
 {
+	public $is_rating = array(
+			0 => array('grey',''),
+			1 => array('red','Очень плохо'),
+			2 => array('orange','Плохо'),
+			3 => array('yellow','Нормально'),
+			4 => array('pale-green','Хорошо'),
+			5 => array('green','Отлично')
+		);
+	public $is_price_correct = array(
+			0 => 'Не помню',
+			1 => 'Да (хорошо)',
+			2 => 'Нет (плохо)'
+		);
+	public $is_delivery_in_time = array(
+			0 => 'Не помню',
+			1 => 'Да (хорошо)',
+			2 => 'Нет (плохо)'
+		);
 	
 	public function getCountNewReviews()
 	{
@@ -26,41 +44,34 @@ class reviewsModel extends CI_Model
 	
 	public function addReview()
 	{
-		$data['name'] 				= isset($_POST['name']) ? $_POST['name'] : '';
-		$data['comment']			= isset($_POST['comment']) ? $_POST['comment'] : '';
-		$data['rating'] 			= isset($_POST['rating']) ? abs((int)$_POST['rating']) : 0;
-		$data['is_price_correct'] 	= isset($_POST['is_price_correct']) ? abs((int)$_POST['is_price_correct']) : 0;
-		$data['is_delivery_in_time']= isset($_POST['is_delivery_in_time']) ? abs((int)$_POST['is_delivery_in_time']) : 0;
-		$data['date'] 				= time();
-		
-		$data['name'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($data['name']))), 0, 100);
-		$data['comment'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($data['comment']))), 0, 500);
-		
-		$data['name'] = mysql_real_escape_string($data['name']);
-		$data['comment'] = mysql_real_escape_string($data['comment']);
+		$data['name'] 				= isset($_POST['name'])					? clean( mb_substr($_POST['name'], 0, 100), true, true) : '';
+		$data['comment']			= isset($_POST['comment'])				? clean( mb_substr($_POST['comment'], 0, 1000), true, true) : '';
+		$data['rating'] 			= isset($_POST['rating'])				? abs((int)$_POST['rating']) : 0;
+		$data['is_price_correct'] 	= isset($_POST['is_price_correct'])		? abs((int)$_POST['is_price_correct']) : 0;
+		$data['is_delivery_in_time']= isset($_POST['is_delivery_in_time']) 	? abs((int)$_POST['is_delivery_in_time']) : 0;
+		$data['date']				= isset($_POST['date']) 				? strtotime($_POST['date']) : time();
+		$data['date']				= $data['date'] ? $data['date'] : time();
 		
 		$this->db->query('INSERT INTO reviews (name, comment, rating, is_price_correct, is_delivery_in_time, date) 
 							VALUES(
 								"'.$data['name'].'", 
 								"'.$data['comment'].'", 
-								'.$data['rating'].', 
-								'.$data['is_price_correct'].', 
-								'.$data['is_delivery_in_time'].', 
-								'.$data['date'].'
+								"'.$data['rating'].'", 
+								"'.$data['is_price_correct'].'", 
+								"'.$data['is_delivery_in_time'].'", 
+								"'.$data['date'].'"
 							)');
 		
-		$res = $this->db->query('SELECT MAX(id) AS id FROM reviews')->row();
-		if (isset($res->id)) return;
+		# ID
+		$id = $this->db->query('SELECT MAX(id) AS id FROM reviews')->row()->id;
+		if ( ! $id ) return;
 		
-		# добавляем ответ на вопрос
-		$data['reviews_id']	 = $res->id;
-		$data['answer_name'] = isset($_POST['answer_name']) ? $_POST['answer_name'] : '';
-		$data['answer_text'] = isset($_POST['answer_text']) ? $_POST['answer_text'] : '';
+		# ANSWER добавляем ответ на вопрос
+		$data['reviews_id']	 = $id;
+		$data['answer_name'] = isset($_POST['answer_name']) ? clean( mb_substr($_POST['answer_name'], 0, 100), true, true) : '';
+		$data['answer_text'] = isset($_POST['answer_text']) ? clean( mb_substr($_POST['answer_text'], 0, 1000), false, true) : '';
 		$data['answer_date'] = isset($_POST['answer_date']) ? strtotime($_POST['answer_date']) : time();
 		$data['answer_date'] = $data['answer_date'] ? $data['answer_date'] : time();
-		
-		$data['answer_name'] = mysql_real_escape_string($data['answer_name']);
-		$data['answer_text'] = mysql_real_escape_string($data['answer_text']);
 		
 		$this->db->query('INSERT INTO reviews_answer(reviews_id, name, text, date) 
 							VALUES(
@@ -75,22 +86,14 @@ class reviewsModel extends CI_Model
 	
 	public function updateReview()
 	{
-		$data['id'] 				= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$data['name'] 				= isset($_POST['name']) ? $_POST['name'] : '';
-		$data['comment']			= isset($_POST['comment']) ? $_POST['comment'] : '';
-		$data['rating'] 			= isset($_POST['rating']) ? abs((int)$_POST['rating']) : 0;
-		$data['is_price_correct'] 	= isset($_POST['is_price_correct']) ? abs((int)$_POST['is_price_correct']) : 0;
-		$data['is_delivery_in_time']= isset($_POST['is_delivery_in_time']) ? abs((int)$_POST['is_delivery_in_time']) : 0;
-		
+		$data['id'] 				= isset($_POST['id']) 					? abs((int)$_POST['id']) : 0;
+		$data['name'] 				= isset($_POST['name'])					? clean( mb_substr($_POST['name'], 0, 100), true, true) : '';
+		$data['comment']			= isset($_POST['comment'])				? clean( mb_substr($_POST['comment'], 0, 1000), true, true) : '';
+		$data['rating'] 			= isset($_POST['rating'])				? abs((int)$_POST['rating']) : 0;
+		$data['is_price_correct'] 	= isset($_POST['is_price_correct'])		? abs((int)$_POST['is_price_correct']) : 0;
+		$data['is_delivery_in_time']= isset($_POST['is_delivery_in_time']) 	? abs((int)$_POST['is_delivery_in_time']) : 0;
 		$data['date']				= isset($_POST['date']) ? strtotime($_POST['date']) : time();
 		$data['date']				= $data['date'] ? $data['date'] : time();
-		
-		
-		$data['name'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($data['name']))), 0, 100);
-		$data['comment'] = mb_substr(trim(preg_replace('/\s+/', ' ', strip_tags($data['comment']))), 0, 500);
-		
-		$data['name'] = mysql_real_escape_string($data['name']);
-		$data['comment'] = mysql_real_escape_string($data['comment']);
 		
 		$this->db->query('UPDATE reviews SET 
 								name = "'.$data['name'].'",
@@ -99,24 +102,19 @@ class reviewsModel extends CI_Model
 								is_price_correct = "'.$data['is_price_correct'].'",
 								is_delivery_in_time = "'.$data['is_delivery_in_time'].'",
 								`date` = "'.$data['date'].'"
-							WHERE id = '.$data['id']);
+							WHERE id = "'.$data['id'].'"');
 		
 		
-		# удалить ответы
-		$this->db->query('DELETE FROM reviews_answer WHERE reviews_id = '.$data['id']);
-		# добавляем ответ на вопрос
-		$data['reviews_id']	 = $data['id'];
-		$data['answer_name'] = isset($_POST['answer_name']) ? $_POST['answer_name'] : '';
-		$data['answer_text'] = isset($_POST['answer_text']) ? $_POST['answer_text'] : '';
+		# ANSWER
+		$data['answer_name'] = isset($_POST['answer_name']) ? clean( mb_substr($_POST['answer_name'], 0, 100), true, true) : '';
+		$data['answer_text'] = isset($_POST['answer_text']) ? clean( mb_substr($_POST['answer_text'], 0, 1000), false, true) : '';
 		$data['answer_date'] = isset($_POST['answer_date']) ? strtotime($_POST['answer_date']) : time();
 		$data['answer_date'] = $data['answer_date'] ? $data['answer_date'] : time();
 		
-		$data['answer_name'] = mysql_real_escape_string($data['answer_name']);
-		$data['answer_text'] = mysql_real_escape_string($data['answer_text']);
-		
+		$this->db->query('DELETE FROM reviews_answer WHERE reviews_id = "'.$data['id'].'"');
 		$this->db->query('INSERT INTO reviews_answer(reviews_id, name, text, date) 
 							VALUES(
-								"'.$data['reviews_id'].'",
+								"'.$data['id'].'",
 								"'.$data['answer_name'].'",
 								"'.$data['answer_text'].'",
 								"'.$data['answer_date'].'"
@@ -130,7 +128,7 @@ class reviewsModel extends CI_Model
 		$id		= isset($_POST['id']) ? abs((int)$_POST['id']): 0;
 		$activ	= (int)$_POST['activ'] ? 0 : 1;
 		
-		$this->db->query('UPDATE reviews SET visibility = '.$activ.' WHERE id = '.$id);
+		$this->db->query('UPDATE reviews SET visibility = "'.$activ.'" WHERE id = "'.$id.'"');
 		
 		return $activ;
 	}
@@ -139,7 +137,7 @@ class reviewsModel extends CI_Model
 	{
 		$id = abs((int)$id);
 
-		$this->db->query('DELETE FROM reviews WHERE id = '.$id);
+		$this->db->query('DELETE FROM reviews WHERE id = "'.$id.'"');
 		return;
 	}
 }

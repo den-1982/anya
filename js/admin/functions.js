@@ -321,6 +321,9 @@ var AP = {
 				// проверка checkbox
 				if (data[i].type == "checkbox" && !data[i].checked) continue;
 				
+				// проверка radio
+				if (data[i].type == "radio" && !data[i].checked) continue;
+				
 				// проверка на disabled
 				if (data[i].disabled) continue;
 				

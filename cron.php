@@ -1,6 +1,10 @@
 <?php
 # Сброс скидки по таймеру
 
+
+exit;
+
+
 mysql_connect('localhost', 'host10079', 'AGJLkkFk');
 mysql_select_db('crystalline');
 

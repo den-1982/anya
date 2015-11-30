@@ -861,6 +861,10 @@ class Admin extends CI_Controller {
 		$data['act']      	= 'all';
 		$data['h1']     	= 'Отзывы';
 		
+		$data['is_rating']			= $this->reviewsModel->is_rating;
+		$data['is_price_correct']	= $this->reviewsModel->is_price_correct;
+		$data['is_delivery_in_time']= $this->reviewsModel->is_delivery_in_time;
+		
 		if (METHOD == 'POST'){
 			if( isset($_POST['edit']) ){
 				$this->reviewsModel->updateReview();
