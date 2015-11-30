@@ -13,14 +13,14 @@ class filterModel extends CI_Model
 		$filter->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $filter->image);
 		
 		# ITEMS
-		$filter->items = $this->db->query('SELECT * FROM filter_item WHERE id_filter = "'.$filter->id.'" ORDER BY `order` ASC')->result();
+		$filter->items = $this->db->query('SELECT * FROM filter_item WHERE filter_id = "'.$filter->id.'" ORDER BY `order` ASC')->result();
 		foreach ($filter->items as $k){
 			$k->cache = preg_replace('/(.+)(\/.+)$/', '${1}/_cache_${2}', $k->image);
 		}
 		
 		
 		# CATEGORIES (категории к котрым привязан фильтр)
-		$categories = $this->db->query('SELECT * FROM category_filter WHERE id_filter = '.$filter->id)->result();
+		$categories = $this->db->query('SELECT * FROM category_filter WHERE filter_id = '.$filter->id)->result();
 		
 		$filter->categories = array();
 		foreach ($categories as $category){
@@ -40,7 +40,7 @@ class filterModel extends CI_Model
 			$filter->category = array();
 			$filter->items = $this->db->query('SELECT * 
 													FROM filter_item 
-												WHERE id_filter = "'.$filter->id.'" 
+												WHERE filter_id = "'.$filter->id.'" 
 													ORDER BY `order` ASC')->result();
 		}
 
@@ -53,14 +53,14 @@ class filterModel extends CI_Model
 		
 		$filters = $this->db->query('SELECT * 
 										FROM filter f 
-										LEFT JOIN category_filter cf ON f.id = cf.id_filter
+										LEFT JOIN category_filter cf ON f.id = cf.filter_id
 									WHERE cf.category_id = "'.$category_id.'" AND pricing = 0 
 										ORDER BY f.order ASC')->result();
 		
 		foreach ($filters as $filter){
 			$filter->items = $this->db->query('SELECT * 
 													FROM filter_item 
-												WHERE id_filter = "'.$filter->id.'" 
+												WHERE filter_id = "'.$filter->id.'" 
 													ORDER BY `order` ASC')->result();
 		}
 		
@@ -72,7 +72,7 @@ class filterModel extends CI_Model
 		# значения фильтров которые используются в формировании цены
 		return $this->db->query('SELECT * 
 									FROM filter_item 
-								WHERE id_filter IN(
+								WHERE filter_id IN(
 													SELECT id FROM filter WHERE pricing = 1
 												)
 									ORDER BY `order` ASC')->result();
@@ -90,7 +90,7 @@ class filterModel extends CI_Model
 								"'.$image.'",
 								"'.$pricing.'"
 							)');
-		$id_filter = $this->db->query('SELECT MAX(id) AS id FROM filter')->row()->id;
+		$filter_id = $this->db->query('SELECT MAX(id) AS id FROM filter')->row()->id;
 		
 		# значения фильтра
 		if (isset($_POST['filter_item_name']['insert'])) foreach ($_POST['filter_item_name']['insert'] as $k=>$v){
@@ -101,9 +101,9 @@ class filterModel extends CI_Model
 				
 			if ( ! mb_strlen($_name)) continue;
 			
-			$this->db->query('INSERT INTO filter_item (id_filter, name, image, prefix, `order`) 
+			$this->db->query('INSERT INTO filter_item (filter_id, name, image, prefix, `order`) 
 								VALUES(
-									"'.$id_filter.'", 
+									"'.$filter_id.'", 
 									"'.$_name.'", 
 									"'.$_image.'", 
 									"'.$_prefix.'", 
@@ -114,10 +114,10 @@ class filterModel extends CI_Model
 		# присоединить фильтр к категории
 		if (isset($_POST['category_id'])) foreach ($_POST['category_id'] as $k){
 			$category_id = abs((int)$k);
-			$this->db->query('INSERT INTO category_filter(category_id, id_filter) 
+			$this->db->query('INSERT INTO category_filter(category_id, filter_id) 
 								VALUES(
 									"'.$category_id.'", 
-									"'.$id_filter.'"
+									"'.$filter_id.'"
 								)');
 			
 		}
@@ -125,7 +125,7 @@ class filterModel extends CI_Model
 	
 	public function updateFilter()
 	{
-		$id_filter	= isset($_POST['id'])				? abs((int)$_POST['id']): 0;
+		$filter_id	= isset($_POST['id'])				? abs((int)$_POST['id']): 0;
 		$name		= isset($_POST['name'])				? clean($_POST['name'], true, true)  : 'empty';
 		$image		= isset($_POST['image'])			? clean($_POST['image'], false, true)  : '';
 		$pricing	= isset($_POST['filter_pricing'])	? (int)(boolean)$_POST['filter_pricing'] : 0;
@@ -134,10 +134,10 @@ class filterModel extends CI_Model
 							SET name = "'.$name.'", 
 								image = "'.$image.'",
 								pricing = "'.$pricing.'"
-							WHERE id = "'.$id_filter.'"');
+							WHERE id = "'.$filter_id.'"');
 		
 		# удаляем старые значения
-		$this->db->query('DELETE FROM filter_item WHERE id_filter = "'.$id_filter.'"');
+		$this->db->query('DELETE FROM filter_item WHERE filter_id = "'.$filter_id.'"');
 		# редактируем старые
 		if (isset($_POST['filter_item_name']['update'])) foreach ($_POST['filter_item_name']['update'] as $k=>$v){
 			$_id	= abs((int)$k);
@@ -148,10 +148,10 @@ class filterModel extends CI_Model
 				
 			if ( ! mb_strlen($_name)) continue;
 			
-			$this->db->query('INSERT INTO filter_item (id, id_filter, name, image, prefix, `order`) 
+			$this->db->query('INSERT INTO filter_item (id, filter_id, name, image, prefix, `order`) 
 								VALUES(
 									"'.$_id.'",
-									"'.$id_filter.'", 
+									"'.$filter_id.'", 
 									"'.$_name.'", 
 									"'.$_image.'", 
 									"'.$_prefix.'", 
@@ -168,9 +168,9 @@ class filterModel extends CI_Model
 				
 			if ( ! mb_strlen($_name)) continue;
 			
-			$this->db->query('INSERT INTO filter_item (id_filter, name, image, prefix, `order`) 
+			$this->db->query('INSERT INTO filter_item (filter_id, name, image, prefix, `order`) 
 								VALUES(
-									"'.$id_filter.'", 
+									"'.$filter_id.'", 
 									"'.$_name.'", 
 									"'.$_image.'", 
 									"'.$_prefix.'", 
@@ -180,13 +180,13 @@ class filterModel extends CI_Model
 		}
 		
 		# присоединить фильтр к категории
-		$this->db->query('DELETE FROM category_filter WHERE id_filter = '.$id_filter);
+		$this->db->query('DELETE FROM category_filter WHERE filter_id = '.$filter_id);
 		if (isset($_POST['category_id'])) foreach($_POST['category_id'] as $k){
 			$category_id = abs((int)$k);
-			$this->db->query('INSERT INTO category_filter(category_id, id_filter) 
+			$this->db->query('INSERT INTO category_filter(category_id, filter_id) 
 								VALUES(
 									"'.$category_id.'", 
-									"'.$id_filter.'"
+									"'.$filter_id.'"
 								)');
 		}
 		

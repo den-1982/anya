@@ -1,21 +1,6 @@
 <?php
 class filterModel extends CI_Model
 {
-	# все значения ФИЛЬТРА цвета (id_filter = 2)
-	public function getFilterItemsColor()
-	{
-		$res =  $this->db->query('SELECT *,
-										CONCAT("/colors/", name) AS _url
-									FROM filter_item 
-								WHERE id_filter = 2
-									ORDER BY `order` ASC')->result();
-		$items = array();
-		foreach ($res as $item) $items[$item->name] = $item;
-		unset($res);
-		
-		return $items;
-	}
-	
 	public function getFilterItemSize($id_category = 0)
 	{
 		$id_category = abs((int)$id_category);
@@ -43,6 +28,7 @@ class filterModel extends CI_Model
 		
 		return $filters;
 	}
+	
 	# не используется
 	public function parseUrlFilters($url = '')
 	{
@@ -66,6 +52,7 @@ class filterModel extends CI_Model
 
 		return $data;
 	}
+	
 	# не используется
 	public function getFiltersOfCategory($id_category = 0, $products = array(), $selected = array(), $path = '')
 	{
@@ -176,6 +163,7 @@ class filterModel extends CI_Model
 			
 		return $filters;
 	}
+	
 	# не используется
 	public function getSort($selected = array(), $path = '')
 	{
@@ -221,6 +209,3 @@ class filterModel extends CI_Model
 	}
 		
 }
-
-
-/* Location: ./application/models/client/filtermodel.php */

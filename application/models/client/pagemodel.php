@@ -4,11 +4,14 @@ class pageModel extends CI_Model
 	
 	public function getPageSystem($type = '')
 	{
-		$type = mysql_real_escape_string($type);
-		$page = $this->db->query('SELECT * FROM pages_system WHERE type = "'.$type.'"')->row();
+		$type = clean($type, true, true);
+		$page = $this->db->query('SELECT * 
+									FROM system_page sp
+									LEFT JOIN system_page_description spd ON spd.system_page_id = sp.id
+								WHERE sp.type = "'.$type.'"')->row();
 		
 		if ( ! $page) return array();
-		$page->slider = $this->db->query('SELECT * FROM pages_system_slider WHERE pages_system_id = "'.$page->id.'"')->result();
+		$page->slider = $this->db->query('SELECT * FROM system_page_slider WHERE system_page_id = "'.$page->id.'"')->result();
 
 		return $page; 
 	}	
@@ -17,21 +20,24 @@ class pageModel extends CI_Model
 	public function getPages()
 	{
 		return $this->db->query('SELECT *,
-										CONCAT("/", type, "/", url) AS _url,
-										CONCAT("/img/news-articles/", id, "/", id,  ".jpg") AS image
-										FROM pages 
-									WHERE visibility = 1 
-										ORDER BY `order` ASC')->result();
+										CONCAT("/", p.url, "/a", p.id) AS _url
+										FROM page p
+										LEFT JOIN page_description pd ON pd.page_id = p.id 
+									WHERE p.visibility = 1 
+										ORDER BY p.order ASC')->result();
 	}
 	
 	public function getPage($url = '')
 	{
-		$url = mysql_real_escape_string($url);
-		$page = $this->db->query('SELECT * FROM pages WHERE type = "0" AND url = "'.$url.'" AND visibility = 1')->row(); 
+		$url = clean($url, true, true);
+		$page = $this->db->query('SELECT * 
+										FROM page p
+										LEFT JOIN page_description pd ON pd.page_id = p.id
+									WHERE p.url = "'.$url.'" AND p.visibility = 1')->row(); 
 		
 		if ( ! $page) return array();
 		
-		$page->slider = $this->db->query('SELECT * FROM slider_pages WHERE parent = "'.$page->id.'"')->result();
+		$page->slider = $this->db->query('SELECT * FROM page_slider WHERE page_id = "'.$page->id.'"')->result();
 		
 		return $page;
 	}
@@ -39,67 +45,15 @@ class pageModel extends CI_Model
 	public function getPageById($id = 0)
 	{
 		$id = abs((int)$id);
-		$page = $this->db->query('SELECT * FROM pages WHERE id = "'.$id.'" AND visibility = 1')->row();
-		
+		$page = $this->db->query('SELECT * 
+										FROM page p
+										LEFT JOIN page_description pd ON pd.page_id = p.id
+									WHERE p.id = "'.$id.'" AND p.visibility = 1')->row(); 
 		if ( ! $page) return array();
 		
-		$page->slider = $this->db->query('SELECT * FROM slider_pages WHERE parent = "'.$page->id.'"')->result();
+		$page->slider = $this->db->query('SELECT * FROM page_slider WHERE page_id = "'.$page->id.'"')->result();
 		
 		return $page;
 	}
 	
-	
-	public function getNews($url = '')
-	{
-		$url = mysql_real_escape_string($url);
-		$news =  $this->db->query('SELECT * 
-										FROM pages 
-									WHERE type = "news" AND url = "'.$url.'" AND visibility = 1')->row();
-		
-		if ( ! $news) return array();
-		
-		$news->slider = $this->db->query('SELECT * FROM slider_pages WHERE parent = "'.$news->id.'"')->result();
-		
-		return $news;
-	}
-	
-	public function getArticles($url = '')
-	{
-		$url = mysql_real_escape_string($url);
-		$articles = $this->db->query('SELECT * 
-										FROM pages 
-									WHERE type = "articles" AND url = "'.$url.'" AND visibility = 1')->row();
-		
-		if ( ! $articles) return array();
-		
-		$articles->slider = $this->db->query('SELECT * FROM slider_pages WHERE parent = "'.$articles->id.'"')->result();
-		
-		return $articles;
-	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

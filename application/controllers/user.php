@@ -3,12 +3,11 @@
 class User extends CI_Controller {
 
 	public $data = array(
-		'canonical'=>'',
 		'h1'=>'',
 		'name'=>'',
+		'title'=>'',
 		'metadesc'=>'',
 		'metakey'=>'',
-		'title'=>'',
 		'text'=>'',
 		'spam'=>'',
 		
@@ -36,8 +35,7 @@ class User extends CI_Controller {
 				'client/productModel',
 				'client/filterModel',
 				'client/cartModel',
-				'client/partnershipModel',
-				'client/partnershipModel',
+				'client/partnerModel',
 				'client/novaposhtaModel'
 			)
 		);
@@ -47,9 +45,6 @@ class User extends CI_Controller {
 		
 		# USER - данные о клиенте (если он авторизовался)
 		$this->data['user'] = $this->userModel->getUser();
-		
-		# COLOR фильтр цветов
-		$this->data['filter_items_color'] = $this->filterModel->getFilterItemsColor();
 		
 		# CART - корзина покупок
 		$this->data['cart'] = $this->cartModel->getCartHtml();
@@ -66,13 +61,13 @@ class User extends CI_Controller {
 	{
 		if ( ! $obj) $obj = new stdClass();
 
-		$this->data['h1']		= isset($obj->h1) ? $obj->h1 : $default;
-		$this->data['name']		= isset($obj->name) ? $obj->name : $default;
-		$this->data['title']	= isset($obj->title) ? $obj->title : $default;
+		$this->data['h1']		= isset($obj->h1)		? $obj->h1 : $default;
+		$this->data['name']		= isset($obj->name)		? $obj->name : $default;
+		$this->data['title']	= isset($obj->title)	? $obj->title : $default;
 		$this->data['metadesc']	= isset($obj->metadesc) ? $obj->metadesc : $default;
-		$this->data['metakey']	= isset($obj->metakey) ? $obj->metakey : $default;
-		$this->data['text']		= isset($obj->text) ? $obj->text : '';
-		$this->data['spam']		= isset($obj->spam) ? $obj->spam : '';
+		$this->data['metakey']	= isset($obj->metakey)	? $obj->metakey : $default;
+		$this->data['text']		= isset($obj->text)		? $obj->text : '';
+		$this->data['spam']		= isset($obj->spam)		? $obj->spam : '';
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// __CRUMBS
 	private function _crumbs($data = array(), $parent = 0)

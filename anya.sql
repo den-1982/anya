@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Ноя 29 2015 г., 14:41
+-- Время создания: Ноя 30 2015 г., 20:40
 -- Версия сервера: 5.5.23
 -- Версия PHP: 5.3.10
 
@@ -112,8 +112,8 @@ INSERT INTO `category_description` (`category_id`, `name`, `h1`, `title`, `metad
 
 CREATE TABLE IF NOT EXISTS `category_filter` (
   `category_id` int(11) unsigned NOT NULL,
-  `id_filter` int(11) unsigned NOT NULL,
-  KEY `ixID_FILTER` (`id_filter`),
+  `filter_id` int(11) unsigned NOT NULL,
+  KEY `ixID_FILTER` (`filter_id`),
   KEY `fk_category_filter_category1_idx` (`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `category_filter` (
 -- Дамп данных таблицы `category_filter`
 --
 
-INSERT INTO `category_filter` (`category_id`, `id_filter`) VALUES
+INSERT INTO `category_filter` (`category_id`, `filter_id`) VALUES
 (128, 5),
 (132, 5),
 (133, 5),
@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `filter` (
 INSERT INTO `filter` (`id`, `name`, `image`, `pricing`, `order`, `visibility`) VALUES
 (1, 'Размер', '', 1, 0, 1),
 (2, 'Цвет', '', 0, 1, 1),
-(3, 'sss', '', 0, 2, 0),
+(3, 'sss', '', 0, 2, 1),
 (4, 'tttt', '', 0, 3, 1);
 
 -- --------------------------------------------------------
@@ -264,20 +264,20 @@ INSERT INTO `filter` (`id`, `name`, `image`, `pricing`, `order`, `visibility`) V
 
 CREATE TABLE IF NOT EXISTS `filter_item` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_filter` int(11) unsigned NOT NULL,
+  `filter_id` int(11) unsigned NOT NULL,
   `name` text,
   `prefix` text,
   `image` text,
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `ixID_FILTER` (`id_filter`)
+  KEY `ixID_FILTER` (`filter_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=120 ;
 
 --
 -- Дамп данных таблицы `filter_item`
 --
 
-INSERT INTO `filter_item` (`id`, `id_filter`, `name`, `prefix`, `image`, `order`) VALUES
+INSERT INTO `filter_item` (`id`, `filter_id`, `name`, `prefix`, `image`, `order`) VALUES
 (1, 1, 'SS4', '1.5-1.6 мм', '', 38),
 (2, 1, 'SS6', '1.9-2.0 мм', '', 39),
 (3, 1, 'SS8', '2.3-2.4 мм', '', 40),
@@ -5898,7 +5898,7 @@ CREATE TABLE IF NOT EXISTS `partner` (
   `visibility` int(1) unsigned NOT NULL DEFAULT '1',
   `order` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5974,8 +5974,8 @@ CREATE TABLE IF NOT EXISTS `product_description` (
 --
 
 INSERT INTO `product_description` (`product_id`, `name`, `h1`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
-(844, 'тест 1', 'ячсм', 'ячсм', 'ячсм', 'ячсм', '<p>мсчя мямчямчс мяч</p>', 'ячсм'),
-(845, 'Тест 2 213', 'H1: 123', 'Title: 123', 'Description: 123', 'Keywords: 123', '<p>мвм ясмчям ячм ячм ячсм ясм 123 ывф фывафы ваыфва фывафыва</p>', 'СПАМ: 123');
+(845, 'Тест 2 213', 'H1: 123', 'Title: 123', 'Description: 123', 'Keywords: 123', '<p>мвм ясмчям ячм ячм ячсм ясм 123 ывф фывафы ваыфва фывафыва</p>', 'СПАМ: 123'),
+(844, 'тест 1', 'ячсм', 'ячсм', 'ячсм', 'ячсм', '<p>мсчя мямчямчс мяч</p>', 'ячсм');
 
 -- --------------------------------------------------------
 
@@ -5994,14 +5994,18 @@ CREATE TABLE IF NOT EXISTS `product_filter_item` (
 --
 
 INSERT INTO `product_filter_item` (`product_id`, `filter_item_id`) VALUES
-(844, 115),
-(844, 119),
 (845, 113),
 (845, 114),
 (845, 115),
 (845, 119),
 (845, 110),
-(845, 111);
+(845, 111),
+(844, 113),
+(844, 114),
+(844, 115),
+(844, 117),
+(844, 118),
+(844, 119);
 
 -- --------------------------------------------------------
 
@@ -6022,10 +6026,10 @@ CREATE TABLE IF NOT EXISTS `product_images` (
 --
 
 INSERT INTO `product_images` (`product_id`, `image`, `alt`, `order`) VALUES
-(844, '/img/root/1272828931_2.jpg', '111111111111', 0),
-(844, '/img/root/00000127.jpg', '222222222222', 0),
 (845, '/img/root/00000127.jpg', 'ывааыва', 0),
-(845, '/img/root/1272828931_2.jpg', 'Машина 111', 0);
+(845, '/img/root/1272828931_2.jpg', 'Машина 111', 0),
+(844, '/img/root/1272828931_2.jpg', '111111111111', 0),
+(844, '/img/root/00000127.jpg', '222222222222', 0);
 
 -- --------------------------------------------------------
 
@@ -6074,8 +6078,7 @@ CREATE TABLE IF NOT EXISTS `product_related` (
 --
 
 INSERT INTO `product_related` (`product_id`, `related_id`) VALUES
-(844, 845),
-(845, 844);
+(844, 845);
 
 -- --------------------------------------------------------
 
@@ -6099,9 +6102,9 @@ CREATE TABLE IF NOT EXISTS `product_video` (
 --
 
 INSERT INTO `product_video` (`product_id`, `video`, `image`, `name`, `text`, `url`, `order`) VALUES
+(845, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '111111', '111111 кцйкйцу', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0),
 (844, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '222222222', '222', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0),
-(844, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '11111111111', '11111111111111', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0),
-(845, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '111111', '111111 кцйкйцу', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0);
+(844, 'PjGkVCAo8Fw', '//i.ytimg.com/vi/PjGkVCAo8Fw/sddefault.jpg', '11111111111', '11111111111111', 'https://www.youtube.com/watch?v=PjGkVCAo8Fw', 0);
 
 -- --------------------------------------------------------
 
@@ -6114,7 +6117,7 @@ CREATE TABLE IF NOT EXISTS `product_waitlist` (
   `product_id` int(11) unsigned NOT NULL,
   `id_size` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'размер товара (ss12)',
   `id_color` int(11) unsigned NOT NULL DEFAULT '0',
-  `email` text,
+  `email` varchar(100) DEFAULT NULL,
   `date` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_product_waitlist_product1_idx` (`product_id`)
@@ -6128,7 +6131,7 @@ CREATE TABLE IF NOT EXISTS `product_waitlist` (
 
 CREATE TABLE IF NOT EXISTS `reviews` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
+  `name` text,
   `comment` text,
   `rating` int(1) unsigned NOT NULL DEFAULT '0',
   `is_price_correct` int(1) unsigned NOT NULL DEFAULT '0',
@@ -6137,7 +6140,7 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `visibility` int(1) unsigned NOT NULL DEFAULT '0',
   `order` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
 
 --
 -- Дамп данных таблицы `reviews`
@@ -6180,7 +6183,8 @@ INSERT INTO `reviews` (`id`, `name`, `comment`, `rating`, `is_price_correct`, `i
 (52, 'Елена', 'положительные впечатления, менеджер связалась сразу после оформления заказа, отправили оперативно, получила заказ на следующий день. заказывала пришивные стразы crystalline, качество вполне приемлемое. спасибо за подарок, очень приятно!', 5, 2, 2, 1442523600, 1, 0),
 (53, 'Захарченко Татьяна', 'Заказывали украшение на шею под стандартное платье. Это произведение искусства, очень красивое). Спасибо!', 5, 1, 1, 1443473284, 1, 0),
 (54, 'Анастасия', 'Заказываю не первый раз, очень довольна и качеством товаров, и сервисом. Менеджер всегда в тот же день перезванивает для уточнения заказа, посылку получаю уже на следующий день после оплаты. Рекомендую!', 5, 1, 1, 1443560400, 1, 0),
-(55, 'Смирнова Виктория Александровна', 'Спасибо, не ожидала!!! Очень довольна...', 5, 2, 2, 1444683600, 1, 0);
+(55, 'Смирнова Виктория Александровна', 'Спасибо, не ожидала!!! Очень довольна...', 5, 2, 2, 1444683600, 1, 0),
+(56, 'den', 'dfa sdfasd f 22222', 5, 1, 1, 1446415200, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -6190,7 +6194,7 @@ INSERT INTO `reviews` (`id`, `name`, `comment`, `rating`, `is_price_correct`, `i
 
 CREATE TABLE IF NOT EXISTS `reviews_answer` (
   `reviews_id` int(11) unsigned NOT NULL,
-  `name` varchar(100) DEFAULT NULL COMMENT 'имя менеджера который отвечает',
+  `name` text COMMENT 'имя менеджера который отвечает',
   `text` text,
   `date` int(10) unsigned NOT NULL DEFAULT '0',
   KEY `fk_reviews_answer_reviews1_idx` (`reviews_id`)
@@ -6234,7 +6238,8 @@ INSERT INTO `reviews_answer` (`reviews_id`, `name`, `text`, `date`) VALUES
 (51, '', 'Спасибо за ваш отзыв! Рады будем новому сотрудничеству!', 1442264400),
 (52, '', '', 1442523600),
 (54, '', 'Большое спасибо за заказ!\nВсегда рады! ', 1443646800),
-(55, '', 'Будем рады новому сотрудничеству!', 1444770000);
+(55, '', 'Будем рады новому сотрудничеству!', 1444770000),
+(56, '', 'dsa fasd fa sdfas cvx zvcx vc11111', 1449439200);
 
 -- --------------------------------------------------------
 
@@ -6995,7 +7000,7 @@ ALTER TABLE `category_slider`
 -- Ограничения внешнего ключа таблицы `filter_item`
 --
 ALTER TABLE `filter_item`
-  ADD CONSTRAINT `fkID_FILTER_ITEM` FOREIGN KEY (`id_filter`) REFERENCES `filter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fkID_FILTER_ITEM` FOREIGN KEY (`filter_id`) REFERENCES `filter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `manufacturer_description`

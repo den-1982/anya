@@ -5,48 +5,46 @@ class productModel extends CI_Model
 	{
 		$id = abs((int)$id);
 		$product = $this->db->query('SELECT *, 
-											CONCAT("/", p.url, "/", "p", p.id, "/") AS _url,
-											CONCAT("/img/products/", p.id, "/", p.id, ".jpg") AS image
-										FROM products p
-									WHERE p.visibility = 1 AND p.id = ' . $id)->row();
+											CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
+										FROM product p
+										LEFT JOIN product_description pd ON pd.product_id = p.id
+									WHERE p.visibility = 1 AND p.id = "'.$id.'"')->row();
 		
 		if ( ! $product) return array();
 		
 		# MANUFACTURER
-		$product->manufacturer = $this->db->query('SELECT * FROM manufacturer WHERE id = '.$product->manufacturer)->row();
+		$product->manufacturer = $this->db->query('SELECT * FROM manufacturer WHERE id = "'.$product->manufacturer_id.'"')->row();
 		
 		# IMAGES
-		$product->images= $this->db->query('SELECT * FROM product_images WHERE id_product = '.$product->id)->result();
+		$product->images= $this->db->query('SELECT * FROM product_images WHERE product_id = "'.$product->id.'"')->result();
 		foreach ($product->images as $image){
 			$image->mini = preg_replace('/(.*)(\/.+)$/', '$1/_cache_$2', $image->url);
 		}
 		
 		# RELATED сопутствующие товары
 		$product->related = $this->db->query('SELECT p.id, 
-													p.name, 
 													p.new, 
 													p.hit, 
 													p.url,
 													p.discount,
-													CONCAT("/", p.url, "/", "p", p.id, "/") AS _url,
-													CONCAT("/img/products/", p.id, "/", p.id, "_150_150.jpg") AS image
-											FROM product_related pr 
-												LEFT JOIN products p ON pr.child_product = p.id 
-											WHERE p.id <> '.$product->id.' AND pr.parent_product = '.$product->id)->result();
-											
-		
-		
+													pd.name,
+													CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
+											FROM product p 
+											LEFT JOIN product_description pd ON pd.product_id = p.id
+										WHERE p.id IN(
+											SELECT related_id FROM product_related WHERE product_id = "'.$product->id.'"
+										)')->result();
 		
 		# DISCOUNT CATEGORY (%) если в категории выставлена скидка, то добавляем в товары product->discount = category->discount
-		$category_discount = $this->db->query('SELECT discount FROM category WHERE id = '.$product->parent)->row()->discount;
+		$category_discount = $this->db->query('SELECT discount FROM category WHERE id = "'.$product->category_id.'"')->row();
+		$category_discount = isset($category_discount->discount) ? $category_discount->discount : 0;
 		
 		# DISCOUNT скидка для обычной цены
 		$product->discount = $category_discount*1 ?  $category_discount : $product->discount;
 		
-		
-		# PRICES (NEW)
+		# PRICES
 		$product->prices = $this->db->query('SELECT 
-													pp.id_filter_item,
+													pp.filter_item_id,
 													pp.cnt_opt,
 													pp.cnt_roz,
 													pp.opt,
@@ -56,71 +54,62 @@ class productModel extends CI_Model
 													fi.prefix,
 													fi.image
 												FROM product_prices pp 
-												LEFT JOIN filter_item fi ON pp.id_filter_item = fi.id
-											WHERE pp.id_product = '.$id)->result();
+												LEFT JOIN filter_item fi ON fi.id = pp.filter_item_id
+											WHERE pp.product_id = "'.$id.'"')->result();
 												
 		$arr = array();
 		foreach ($product->prices as $price){
 			# добавляем скидку для размера
 			$price->discount = $category_discount * 1 ? $category_discount : $price->discount;
-			$arr[$price->id_filter_item] = $price;
+			$arr[$price->filter_item_id] = $price;
 		}	
 		$product->prices = $arr;
 		unset($arr);
 		
 		# FILTERS (без ценообразующих фильтров)
-		/*
 		$product->filters = array();
-		# фильтры и значения фильтра
+		# фильтры и значения фильтра  НАДО ДОПИСАТЬ ???!!!!
+		/*
 		$filter_items = $this->db->query('SELECT f.id AS id_filter, 
 												f.name AS name_filter, 
 												fi.*
 											FROM filter_item fi
-												LEFT JOIN filter f ON f.id = fi.id_filter
-												LEFT JOIN product_filter_item pfi ON fi.id = pfi.id_filter_item
-											WHERE f.visibility = 1 AND f.pricing = 0 AND pfi.id_product = '.$product->id)->result();
+											LEFT JOIN filter f ON f.id = fi.id_filter
+											LEFT JOIN product_filter_item pfi ON fi.id = pfi.id_filter_item
+										WHERE f.visibility = 1 AND f.pricing = 0 AND pfi.product_id = "'.$product->id.'"')->result();
 		*/
 		
 		return $product;
 	}
 	
-	public function getProducts($parent = 0, $filter = array())
+	public function getProducts($category_id = 0, $filter = array())
 	{
+		$category_id = abs((int)$category_id);
 		$size = isset($filter['size']) ? $filter['size'] : 0;
-		$parent = abs((int)$parent);
-		
-		if ($size){
-			$products = $this->db->query('SELECT *, 
-												CONCAT("/", url, "/", "p", id, "/") AS _url,
-												CONCAT("/img/products/", id, "/", id, "_150_150.jpg") AS image
-											FROM products p 
-											LEFT JOIN product_prices pp ON pp.id_product = p.id 
-										WHERE p.visibility = 1 AND p.parent = '.$parent.' AND pp.id_filter_item = '.$size.'
-											ORDER BY p.order ASC')->result();
-		}else{
-			$products = $this->db->query('SELECT *, 
-												CONCAT("/", url, "/", "p", id, "/") AS _url,
-												CONCAT("/img/products/", id, "/", id, "_150_150.jpg") AS image
-											FROM products 
-										WHERE visibility = 1 AND parent = '.$parent.' ORDER BY `order` ASC')->result();
-		}
-		
-		return $products;
-	}
-	
-	# COLORS
-	public function getProductsByColor($id_filter_item = 0)
-	{
-		$id_filter_item = abs((int)$id_filter_item);
-		
-		$products = $this->db->query('SELECT p.*, 
-											CONCAT("/", p.url, "/", "p", p.id, "/") AS _url,
-											CONCAT("/img/products/", p.id, "/", p.id, "_150_150.jpg") AS image
-										FROM products p 
-										LEFT JOIN product_filter_item pfi ON pfi.id_product = p.id  
-									WHERE p.visibility = 1 AND pfi.id_filter_item = "'.$id_filter_item.'"
-										ORDER BY p.order ASC')->result();
 
+		if ( $size ){
+			$products = $this->db->query('SELECT p.*, 
+												pd.name,
+												pd.h1,
+												CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
+											FROM products p 
+											LEFT JOIN product_description pd ON pd.product_id = p.id
+											LEFT JOIN product_prices pp ON pp.product_id = p.id 
+										WHERE p.visibility = 1 
+											AND p.category_id = "'.$category_id.'" 
+											AND pp.filter_item_id = "'.$size.'"
+										GROUP BY p.id
+										ORDER BY p.order ASC')->result();
+		}else{
+			$products = $this->db->query('SELECT p.*,
+												pd.name,
+												pd.h1,
+												CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
+											FROM product p
+											LEFT JOIN product_description pd ON pd.product_id = p.id
+										WHERE p.visibility = 1 AND p.category_id = "'.$category_id.'" 
+											ORDER BY p.order ASC')->result();
+		}
 		
 		return $products;
 	}
@@ -128,19 +117,19 @@ class productModel extends CI_Model
 	# продукты категорий со скидками
 	public function getProductsDiscount()
 	{
-		$products = $this->db->query('SELECT p.id, 
-											p.name, 
-											p.new, 
-											p.hit, 
-											p.url, 
-											c.discount, 
-											CONCAT("/", p.url, "/", "p", p.id, "/") AS _url,
-											CONCAT("/img/products/", p.id, "/", p.id, "_150_150.jpg") AS image
-										FROM products p
-											LEFT JOIN category c ON c.id = p.parent
-									WHERE p.visibility = 1 AND c.discount <> 0 ORDER BY RAND()')->result();
-		
-		return $products;
+		return $this->db->query('SELECT p.id,
+										p.image,
+										p.new, 
+										p.hit, 
+										p.url, 
+										pd.name,
+										c.discount, 
+										CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
+									FROM product p
+									LEFT JOIN product_description pd ON pd.product_id = p.id
+									LEFT JOIN category c ON c.id = p.category_id
+								WHERE p.visibility = 1 AND c.discount <> 0 
+									ORDER BY RAND()')->result();
 	}
 	
 	# просмотренные продукты
@@ -156,28 +145,25 @@ class productModel extends CI_Model
 										p.hit, 
 										p.new, 
 										c.discount, 
-										CONCAT("/", p.url, "/", "p", p.id, "/") AS _url,
-										CONCAT("/img/products/", p.id, "/", p.id, "_150_150.jpg") AS image										
-									FROM products p
-										LEFT JOIN category c ON c.id = p.parent
-								WHERE p.visibility = 1 AND p.id IN('.$ids.') AND p.id <> '.$not.'
+										CONCAT("/", p.url, "/", "p", p.id, "/") AS _url									
+									FROM product p
+									LEFT JOIN category c ON c.id = p.category_id
+								WHERE p.visibility = 1 AND p.id IN('.$ids.') AND p.id <> "'.$not.'"
 									ORDER BY FIND_IN_SET(p.id, "'.$ids.'") DESC')->result();
 	}
 	
 	public function searchProducts($word = '') 
 	{
-		$word = trim(preg_replace('/\s+/', ' ', $word));
+		$word = clean($word, true, true);
 		
 		if (mb_strlen($word) < 3) return array();
 		
-		$word = mysql_real_escape_string($word);
-		
 		$products = $this->db->query('SELECT *, 
-											CONCAT("/", url, "/", "p", id, "/") AS _url,
-											CONCAT("/img/products/", id, "/", id, "_150_150.jpg") AS image
-										FROM products 
-									WHERE visibility = 1 AND name LIKE "%'.$word.'%"
-										ORDER BY `order` ASC')->result();
+											CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
+										FROM product p
+										LEFT JOIN product_description pd
+									WHERE p.visibility = 1 AND p.name LIKE "%'.$word.'%"
+										ORDER BY p.order ASC')->result();
 		
 		return $products;
 	}
@@ -185,32 +171,29 @@ class productModel extends CI_Model
 	# сообщить когда появится товар
 	public function towaitlist()
 	{
-		$id_product = isset($_POST['id_product']) ? abs((int)$_POST['id_product']) : 0;
-		$id_color 	= isset($_POST['id_color']) ? abs((int)$_POST['id_color']) : 0;
-		$id_size 	= isset($_POST['id_size']) ? abs((int)$_POST['id_size']) : 0;
-		$email 		= isset($_POST['email']) ? $_POST['email'] : '';
+		$id_product = isset($_POST['id_product'])	? abs((int)$_POST['id_product']) : 0;
+		$id_color 	= isset($_POST['id_color'])		? abs((int)$_POST['id_color']) : 0;
+		$id_size 	= isset($_POST['id_size'])		? abs((int)$_POST['id_size']) : 0;
+		$email 		= isset($_POST['email'])		? $_POST['email'] : '';
 		$date 		= time();
 
 		$email = preg_match("/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)$/", trim($email)) ? $email : '';
 		
-		if (!$email || !$id_product) return 0;
+		if ( !$email || !$id_product) return 0;
 
 		# чтоб не забили БД (защита от дебилов)
-		$cnt = $this->db->query('SELECT COUNT(*) AS cnt FROM waitlist')->row()->cnt;
-		if ($cnt > 100000){
-			log_message('error', 'Таблица waitlist переполнена: 100000 записей');
-		}
+		// $cnt = $this->db->query('SELECT COUNT(*) AS cnt FROM product_waitlist')->row()->cnt;
+		// if ($cnt > 100000){
+			// log_message('error', 'Таблица waitlist переполнена: 100000 записей');
+		// }
 		
 		# получить данные о товаре
 		$product = $this->productModel->getProduct($id_product);
 		
-		# проверка ???
-		if ( ! $product){
-			return 0;
-		}
+		if ( ! $product) return 0;
 		
 		# запись в БД 
-		$this->db->query('INSERT INTO waitlist (products_id, id_size, id_color, email, `date`) 
+		$this->db->query('INSERT INTO product_waitlist (products_id, id_size, id_color, email, `date`) 
 							VALUES(
 								"'.$id_product.'",
 								"'.$id_size.'",
@@ -249,17 +232,30 @@ class productModel extends CI_Model
 						<td style="border:1px solid #ccc;">'. (isset($product->prices[$id_size]) ? $product->prices[$id_size]->name .' '.$product->prices[$id_size]->prefix : '') .'</td>
 						<td style="border:1px solid #ccc;">'.$email.'</td>
 					</tr>
-				</table>';
+				</table>
+			</body>
+		</html>';
 
 		# отправить письмо админу
-		
+		/*
 		$this->email->clear();
 		$this->email->from('admin@crystalline.in.ua', strtoupper($_SERVER['SERVER_NAME']));
 		$this->email->to($manager_email);
 		$this->email->subject("Сообщить когда появится товар");
 		$this->email->message($msg);
 		$this->email->send();
+		*/
+		
+		$settings = $this->db->query('SELECT * FROM settings')->row();
+		$manager_email = isset($settings->email) ? $settings->email : ''; 
+		
+		$to			= $manager_email;
+		$tema		= 'Сообщить когда появится товар';	
+		$headers	= "From: ".strtoupper($_SERVER['SERVER_NAME'])." <admin@".strtolower($_SERVER['SERVER_NAME']).">\r\n";
+		$headers	.= "Content-type: text/html; charset=\"utf-8\"";
+		mail($to, $tema, $msg, $headers);
 		
 		return 0;
 	}
+	
 }
