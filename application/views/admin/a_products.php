@@ -435,6 +435,7 @@
 								<tr data-price="item">
 									<td>
 										<span data-sortable="handler" class="icon-reorder handler"></span>
+										<input data-sortable="order" type="hidden" name="product[prices][order][]" value="<?=$price->order?>">
 									</td>
 									<td class="right">
 										<select data-select="new" name="product[prices][filter_item_id][]">
@@ -663,7 +664,9 @@ $(function(){
 		create:function(){
 			var html = 
 			'<tr data-price="item" class="new-tr">'+
-				'<td><span class="icon-reorder handler" data-sortable="handler"></span></td>'+
+				'<td>'+
+					'<span class="icon-reorder handler" data-sortable="handler"></span></td>'+
+					'<input data-sortable="order" type="hidden" name="product[prices][order][]" value="">'+
 				'<td class="right">'+
 					'<select data-select="new" name="product[prices][filter_item_id][]">'+
 						'<option value="0" selected=""> - Выбрать - </option>';
@@ -703,9 +706,9 @@ $(function(){
 			
 			
 			$('[data-price="box"]').prepend(html);
+			html.trigger('sortable');
 			html.find('[data-select="new"]').selectmenu({width:'auto'});
 			html.find('[data-mask="price"]').mask("$?$$$$$$$$$$$",{ placeholder:"" });
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
 		},
 		init:function(sizes){
 			try{S.sizes = $.parseJSON(sizes)}catch(e){}
@@ -829,7 +832,6 @@ $(function(){
 				'</tr>');
 						
 			$('[data-relation="box"]').prepend(html);
-			setTimeout(function(){html.removeClass('new-tr')},20);
 		},
 
 		create:function(){
@@ -934,7 +936,6 @@ $(function(){
 			'</tr>');
 						
 			$('[data-images="box"]').prepend(html);
-			setTimeout(function(){html.removeClass('new-tr')},20);
 		},
 		init:function(){
 			$(document).on('click','[data-images="add"]', A.create)
@@ -981,7 +982,6 @@ $(function(){
 			'</tr>');
 						
 			$('[data-video="box"]').prepend(html);
-			setTimeout(function(){html.removeClass('new-tr')},20);
 		},
 		create:function(){
 			var confirm = 

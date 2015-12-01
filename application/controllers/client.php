@@ -149,9 +149,9 @@ class Client extends CI_Controller
 			$data['reviews'] = $this->reviewsModel->getReviews();
 		}
 		
-		$data['categories'] 		= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 		
 		$this->_view('reviews', $data);
 	}
@@ -231,7 +231,7 @@ class Client extends CI_Controller
 		
 		if ( ! $data['product']) {$this->_404();return;}
 		if ($data['product']->url != $url){ redirect($data['product']->_url, 'location', 301);return;}
-	
+
 		$this->_info($data['product']);
 
 		# вы смотрели этот продукт
@@ -246,42 +246,15 @@ class Client extends CI_Controller
 		# products discount (карусель)
 		$data['products_discount'] = $this->productModel->getProductsDiscount();
 		
-		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
 		
 		# крошки
-		$data['crumbs'] = $this->_crumbs($data['categories'], $data['product']->parent);
+		$data['crumbs'] = $this->_crumbs($data['categories'], $data['product']->category_id);
 		$data['crumbs'][] = array('name'=>$data['product']->name);
 		
 		$this->_view('product', $data);
-	}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// COLORS
-	public function Colors($color = '')
-	{
-		$data = &$this->data;
-		
-		$color 				= urldecode($color);
-		$data['products'] 	= array();
-		$data['crumbs'][] 	= array('name'=>'Палитра цветов', '_url'=>'/colors/');
-		
-		$this->_info('', 'Поиск по цвету');
-
-		if ($color){
-			# есть ли такой цвет
-			$_color = isset($data['filter_items_color'][$color]) ? $data['filter_items_color'][$color] : '';
-			if ( ! $_color){$this->_404(); return;} 
-			
-			$data['products'] = $this->productModel->getProductsByColor($_color->id);
-
-			$data['crumbs'][] = array('name'=>$_color->name, '_url'=>'');
-		}
-
-		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
-		
-		$this->_view('colors', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PAGE (надо удалить)
 	private function Pages($url = '')
@@ -302,82 +275,6 @@ class Client extends CI_Controller
 		
 		// $this->_view('pages', $data);
 	}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// NEWS
-	public function News($url = '')
-	{
-		$data = &$this->data;
-		
-		$data['type'] = 'news';
-		
-		$this->_info('', 'Новости интернет-иагазина crystalline.in.ua');
-		
-		$data['crumbs'] = array(
-			array(
-				'name'=>'новости',
-				'url'=>'/news/'
-			)
-		);
-		
-		if ($url){
-			$data['page'] = $this->pageModel->getNews($url);
-			if ( ! $data['page']){$this->_404();return;}
-			
-			$data['crumbs'][] = array(
-								'name'=>$data['page']->name,
-								'url'=>$data['page']->url
-							);
-						
-			$this->_info($data['page']);
-		}
-		
-		# products discount (карусель)
-		$data['products_discount'] = $this->productModel->getProductsDiscount();
-		
-		
-		$data['categories'] 		= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
-		
-		$this->_view('pages', $data);
-	}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ARTICLES
-	public function Articles($url = '')
-	{
-		$data = &$this->data;
-		
-		$data['type'] = 'articles';
-		
-		$this->_info('', 'Статьи интернет-иагазина crystalline.in.ua');
-		
-		$data['crumbs'] = array(
-			array(
-				'name'=>'статьи',
-				'url'=>'/articles/'
-			)
-		);
-		
-		if ($url){
-			$data['page'] = $this->pageModel->getArticles($url);
-			if ( ! $data['page']){$this->_404(); return;}
-			
-			$data['crumbs'][] = array(
-								'name'=>$data['page']->name,
-								'url'=>$data['page']->url
-							);
-							
-			$this->_info($data['page']);
-		}	
-		
-		# products discount (карусель)
-		$data['products_discount'] = $this->productModel->getProductsDiscount();
-		
-		
-		$data['categories'] 		= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
-		
-		$this->_view('pages', $data);
-	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// OPLATA
 	public function Oplata()
 	{
@@ -387,8 +284,8 @@ class Client extends CI_Controller
 		$this->_info($data['oplata']);
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 		
 		$this->_view('oplata', $data);
 	}
@@ -406,8 +303,8 @@ class Client extends CI_Controller
 		$this->_info('', 'Контактная информация');
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 
 		$this->_view('contacts', $data);
 	}
@@ -433,8 +330,8 @@ class Client extends CI_Controller
 		$this->_info($data['biznes']);
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 
 		$this->_view('business', $data);
 	}
@@ -447,8 +344,8 @@ class Client extends CI_Controller
 		$this->_info($data['home']);
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 
 		$this->_view('about', $data);
 	}
@@ -460,31 +357,10 @@ class Client extends CI_Controller
 		$this->_info('', 'Наши партнеры');
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 
 		$this->_view('partnerships', $data);
-	}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PRICE-LIST
-	public function getPrice()
-	{
-		$data = &$this->data;
-		
-		$price = $this->db->query('SELECT * FROM pricelist')->row();
-		
-		if (isset($price->pricelist)){		
-			header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
-			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-			header("Pragma: no-cache");
-			header("Content-Type: application/force-download");
-			header("Content-Type: application/octet-stream");
-			header("Content-Type: application/download");
-			header('Content-Disposition: attachment;filename=price.'.$price->mime);
-			echo $price->pricelist;
-			exit;
-		}
-		
-		exit;
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SEARCH
 	public function Search()
@@ -495,8 +371,8 @@ class Client extends CI_Controller
 		$data['search'] = isset($_GET['w']) ? $_GET['w'] : '';
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 		
 		$data['search_categories'] = $this->categoryModel->searchCategories($data['search']);
 		$data['search_products'] = $this->productModel->searchProducts($data['search']);
@@ -538,8 +414,8 @@ class Client extends CI_Controller
 		$data = &$this->data;
 		
 		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 		= $this->partnerModel->getPartners();
 		
 		$this->_view('404', $data);
 	}

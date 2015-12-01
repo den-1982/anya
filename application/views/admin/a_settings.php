@@ -450,7 +450,6 @@ $(function(){
 						'</tr>');
 						
 			$('[data-managers="box"]').prepend(html).trigger('sortupdate');
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
 			html.find('[data-mask="phone"]').mask("+3 8(0~9) 999-99-99",{ placeholder:"_" });
 		},
 		showBoxImage:function(e){
@@ -501,8 +500,6 @@ $(function(){
 			html = $(html);		
 			
 			$('[data-social="box"]').prepend(html);
-			
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
 			html.find('[data-select]').selectmenu({width:'auto'});
 		},
 		init:function(socials){
@@ -526,21 +523,21 @@ $(function(){
 ;$(function(){
 	var F = {
 		create:function(){
-			var html = $('<tr data-phone="item" class="new-tr">'+
-							'<td class="small">'+
-								'<span class="icon-reorder handler"  data-sortable="handler"></span>'+
-							'</td>'+
-							'<td>'+
-								'<input class="inf" data-mask="_phone" type="text" name="phone[]" value="">'+
-							'</td>'+
-							'<td class="small">'+
-								'<a class="link_del"  data-phone="delete" title="удалить телефон"></a>'+
-							'</td>'+
-						'</tr>');
+			var html = $(
+			'<tr data-phone="item" class="new-tr">'+
+				'<td class="small">'+
+					'<span class="icon-reorder handler"  data-sortable="handler"></span>'+
+				'</td>'+
+				'<td>'+
+					'<input class="inf" data-mask="_phone" type="text" name="phone[]" value="">'+
+				'</td>'+
+				'<td class="small">'+
+					'<a class="link_del"  data-phone="delete" title="удалить телефон"></a>'+
+				'</td>'+
+			'</tr>');
 						
 			$('[data-phone="box"]').prepend(html);
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
-			$('[data-mask="_phone"]').mask("+3 8(999) 999-99-99",{ placeholder:"_" });
+			html.find('[data-mask="_phone"]').mask("+3 8(999) 999-99-99",{ placeholder:"_" });
 		},
 		init:function(){
 			$(document).on('click', '[data-phone="add"]', F.create)
@@ -578,7 +575,6 @@ $(function(){
 		
 			$('[data-discount="box"]').prepend(html);
 			html.find('[data-mask="price"]').mask("$?$$$$$$$$$$$",{ placeholder:"" });
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
 		},
 		init:function(){
 			$(document).on('click','[data-discount="add"]', A.create)
@@ -610,7 +606,6 @@ $(function(){
 		
 			$('[data-sizeImage="items"]').prepend(html);
 			html.find('[data-mask="int"]').mask("9?999999999999",{ placeholder:""});
-			setTimeout(function(){html.removeClass('new-tr')},20);
 		},
 		init:function(){
 			$(document).on('click', '[data-sizeImage="add"]', A.create)

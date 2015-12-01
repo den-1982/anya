@@ -331,7 +331,6 @@ $(function(){
 			
 			
 			$('[data-filter-item="box"]').prepend(html).trigger('sortupdate');
-			setTimeout(function(){html.removeClass('new-tr')}, 20);
 		},
 		showBoxImage:function(e){
 			e.preventDefault();

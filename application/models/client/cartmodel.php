@@ -4,10 +4,11 @@ class cartModel extends CI_Model
 //////////////////////////////////////////////////////////// ADD TO CART
 	public function addCart()
 	{	
-		$id 			= isset($_POST['id']) ? abs((int)$_POST['id']) : 0;
-		$id_filter_item	= isset($_POST['size']) ? abs((int)$_POST['size']) : 0;
-		$type 			= isset($_POST['type']) ? abs((int)$_POST['type']) : 0;
-		$quantity 		= isset($_POST['quantity']) ? abs((int)$_POST['quantity']) : 1;
+		$id 			= isset($_POST['id'])		? abs((int)$_POST['id']) : 0;
+		//$id_filter_item	= isset($_POST['size'])		? abs((int)$_POST['size']) : 0;
+		$filter_item_id	= isset($_POST['size'])		? abs((int)$_POST['size']) : 0;
+		$type 			= isset($_POST['type'])		? abs((int)$_POST['type']) : 0;
+		$quantity 		= isset($_POST['quantity'])	? abs((int)$_POST['quantity']) : 1;
 	
 		$quantity = $quantity <= 0 ? 1 : $quantity;
 		
@@ -17,20 +18,27 @@ class cartModel extends CI_Model
 		if ( ! $product){return 1;}
 
 		# аня попросила внести категорию в заказ
-		$product->parent = $this->db->query('SELECT id, name, h1, url, CONCAT("/", url, "/", "c", id, "/") AS _url 
+		/*
+		$product->parent = $this->db->query('SELECT id, 
+													name, 
+													h1, 
+													url, 
+													CONCAT("/", url, "/", "c", id, "/") AS _url 
 													FROM category 
-												WHERE id = '.$product->parent)->row();
+												WHERE id = "'.$product->parent.'"')->row();
+		*/
+		$product->parent = $this->categoryModel->getCategory($product->parent);
 		
 		# если есть цена-размер
 		if ($product->prices){
 		
 			# если неверный размер(кто-то балуется)
-			if ( ! isset($product->prices[$id_filter_item])) return;
+			if ( ! isset($product->prices[$filter_item_id])) return;
 			
 			if ($type == 0){
-				$price = $product->prices[$id_filter_item]->roz;
+				$price = $product->prices[$filter_item_id]->roz;
 			}elseif($type == 1){
-				$price = $product->prices[$id_filter_item]->opt;
+				$price = $product->prices[$filter_item_id]->opt;
 			}else{
 				return;
 			}
@@ -45,7 +53,7 @@ class cartModel extends CI_Model
 		# опции
 		$options = array(
 			'type'=>$type,
-			'size'=>$id_filter_item 
+			'size'=>$filter_item_id 
 		);
 
 		$data = array(
@@ -54,12 +62,12 @@ class cartModel extends CI_Model
 			'manufacturer'	=> isset($product->manufacturer->name) ? $product->manufacturer->name : '&mdash;',
 			'qty'			=> $quantity,
 			'price'			=> $price,
-			'discount'		=> $product->discount*1 ? $product->discount : (isset($product->prices[$id_filter_item]) ? $product->prices[$id_filter_item]->discount : 0),
+			'discount'		=> $product->discount*1 ? $product->discount : (isset($product->prices[$filter_item_id]) ? $product->prices[$filter_item_id]->discount : 0),
 			'name'			=> $product->name,
 			'_url'			=> $product->_url,
 			'url'			=> $product->url,
 			'image'			=> '/img/products/'.$product->id.'/'.$product->id.'.jpg',
-			'prices'		=> isset($product->prices[$id_filter_item]) ? (array)$product->prices[$id_filter_item] : '',
+			'prices'		=> isset($product->prices[$filter_item_id]) ? (array)$product->prices[$filter_item_id] : '',
 			'options'		=> $options
 		);
 		
@@ -714,5 +722,3 @@ class cartModel extends CI_Model
 	}
 	
 }
-
-

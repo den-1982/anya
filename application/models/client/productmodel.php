@@ -13,21 +13,21 @@ class productModel extends CI_Model
 		if ( ! $product) return array();
 		
 		# MANUFACTURER
-		$product->manufacturer = $this->db->query('SELECT * FROM manufacturer WHERE id = "'.$product->manufacturer_id.'"')->row();
+		$product->manufacturer = $this->db->query('SELECT * 
+														FROM manufacturer m
+														LEFT JOIN manufacturer_description md ON md.manufacturer_id = m.id
+													WHERE m.id = "'.$product->manufacturer_id.'"')->row();
 		
 		# IMAGES
 		$product->images= $this->db->query('SELECT * FROM product_images WHERE product_id = "'.$product->id.'"')->result();
 		foreach ($product->images as $image){
-			$image->mini = preg_replace('/(.*)(\/.+)$/', '$1/_cache_$2', $image->url);
+			$image->cache = preg_replace('/(.*)(\/.+)$/', '$1/_cache_$2', $image->image);
 		}
 		
 		# RELATED сопутствующие товары
-		$product->related = $this->db->query('SELECT p.id, 
-													p.new, 
-													p.hit, 
-													p.url,
-													p.discount,
+		$product->related = $this->db->query('SELECT p.*,
 													pd.name,
+													pd.h1,
 													CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
 											FROM product p 
 											LEFT JOIN product_description pd ON pd.product_id = p.id
@@ -55,7 +55,8 @@ class productModel extends CI_Model
 													fi.image
 												FROM product_prices pp 
 												LEFT JOIN filter_item fi ON fi.id = pp.filter_item_id
-											WHERE pp.product_id = "'.$id.'"')->result();
+											WHERE pp.product_id = "'.$id.'"
+												ORDER BY pp.order ASC')->result();
 												
 		$arr = array();
 		foreach ($product->prices as $price){
@@ -117,12 +118,9 @@ class productModel extends CI_Model
 	# продукты категорий со скидками
 	public function getProductsDiscount()
 	{
-		return $this->db->query('SELECT p.id,
-										p.image,
-										p.new, 
-										p.hit, 
-										p.url, 
+		return $this->db->query('SELECT p.*, 
 										pd.name,
+										pd.h1,
 										c.discount, 
 										CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
 									FROM product p
@@ -140,13 +138,13 @@ class productModel extends CI_Model
 		$ids = $viewed && is_array($viewed) ? array_keys($viewed) : array(0);
 		$ids = implode($ids, ',');
 		
-		return $this->db->query('SELECT p.id, 
-										p.name, 
-										p.hit, 
-										p.new, 
+		return $this->db->query('SELECT p.*,
+										pd.name,
+										pd.h1,
 										c.discount, 
 										CONCAT("/", p.url, "/", "p", p.id, "/") AS _url									
 									FROM product p
+									LEFT JOIN product_description pd ON pd.product_id = p.id
 									LEFT JOIN category c ON c.id = p.category_id
 								WHERE p.visibility = 1 AND p.id IN('.$ids.') AND p.id <> "'.$not.'"
 									ORDER BY FIND_IN_SET(p.id, "'.$ids.'") DESC')->result();
@@ -158,10 +156,12 @@ class productModel extends CI_Model
 		
 		if (mb_strlen($word) < 3) return array();
 		
-		$products = $this->db->query('SELECT *, 
+		$products = $this->db->query('SELECT p.*,
+											pd.name,
+											pd.h1,
 											CONCAT("/", p.url, "/", "p", p.id, "/") AS _url
 										FROM product p
-										LEFT JOIN product_description pd
+										LEFT JOIN product_description pd ON pd.product_id = p.id
 									WHERE p.visibility = 1 AND p.name LIKE "%'.$word.'%"
 										ORDER BY p.order ASC')->result();
 		

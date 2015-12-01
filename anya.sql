@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Ноя 30 2015 г., 20:40
+-- Время создания: Дек 01 2015 г., 17:43
 -- Версия сервера: 5.5.23
 -- Версия PHP: 5.3.10
 
@@ -65,13 +65,13 @@ CREATE TABLE IF NOT EXISTS `category` (
 --
 
 INSERT INTO `category` (`id`, `parent`, `image`, `url`, `discount`, `course`, `visibility`, `order`) VALUES
-(128, 0, '/img/root/00000127.jpg', 'ssyilka-test-1', '2.00', '10.00', 1, 0),
-(130, 0, '', '1448470011', '0.00', '0.00', 1, 2),
-(131, 130, '', '1448471886', '0.00', '0.00', 1, 0),
-(132, 128, '', '1448471969', '0.00', '0.00', 1, 0),
-(133, 128, '', '1448472013', '0.00', '0.00', 1, 0),
-(134, 130, '', '1448472027', '0.00', '0.00', 1, 0),
-(135, 0, '', '1448546144', '0.00', '0.00', 1, 1);
+(128, 0, '/img/root/00000127.jpg', 'ssyilka-test-1', '0.00', '10.00', 1, 0),
+(130, 0, '/img/root/2.jpg', '1448470011', '0.00', '0.00', 1, 2),
+(131, 130, '/img/root/1272828931_2.jpg', '1448471886', '0.00', '0.00', 1, 0),
+(132, 128, '/img/root/zhivaya-priroda.jpg', '1448471969', '0.00', '0.00', 1, 0),
+(133, 128, '/img/root/5.jpg', '1448472013', '0.00', '0.00', 1, 0),
+(134, 130, '/img/root/00000127.jpg', '1448472027', '0.00', '0.00', 1, 0),
+(135, 0, '/img/root/1272828931_2.jpg', '1448546144', '0.00', '0.00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -96,12 +96,12 @@ CREATE TABLE IF NOT EXISTS `category_description` (
 --
 
 INSERT INTO `category_description` (`category_id`, `name`, `h1`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
+(135, 'Тест 2', '', '', '', '', '', ''),
 (130, 'Тест 3', '', '', '', '', '', ''),
 (132, '22222222222222', '', '', '', '', '', ''),
 (133, '33333333333', '', '', '', '', '', ''),
-(134, '44444444444', '', '', '', '', '', ''),
 (131, '1111111111', '', '', '', '', '', ''),
-(135, 'Тест 2', '', '', '', '', '', ''),
+(134, '44444444444', '', '', '', '', '', ''),
 (128, 'Тест 1', 'H1 Тест 1 р1', 'Title Тест 1', 'Description Тест 1', 'Keywords Тест 1', '<p>мфвыфафывафыва</p>', 'СПАМ Тест 1');
 
 -- --------------------------------------------------------
@@ -5806,20 +5806,20 @@ CREATE TABLE IF NOT EXISTS `page` (
 INSERT INTO `page` (`id`, `parent`, `image`, `url`, `visibility`, `order`) VALUES
 (88, 100, '', 'astra-2014', 1, 8),
 (89, 100, '', 'turnir-garmoniya-2014', 1, 9),
-(91, 0, '', 'programma-loyalnosti', 1, 5),
+(91, 112, '/img/root/1272828931_2.jpg', 'programma-loyalnosti', 1, 5),
 (92, 91, '', 'kak-otlichit-originalnyiy-strazyi-swarovski-ot-poddelki', 1, 6),
 (93, 109, '', 'rol-bijuterii-i-aksessuarov-v-sozdanie-konkursnogo-kostyuma', 1, 12),
 (94, 109, '', 'novyie-postupleniya---hrustalnyie-businyi-tm-crystalline', 1, 13),
 (95, 109, '', 'novyie-postupleniya--steklyarusnyie-puchki-crystalline', 1, 14),
 (98, 100, '', 'httpcrystallineinuaarticles1415627183', 1, 10),
-(100, 0, '', 'httpcrystallineinuanews1418752713', 1, 3),
+(100, 113, '/img/root/2.jpg', 'httpcrystallineinuanews1418752713', 1, 3),
 (102, 91, '', 'httpcrystallineinuanews1421064875', 1, 3),
 (107, 91, '', 'httpcrystallineinuaarticles1429892599', 1, 4),
-(109, 0, '', 'otsledit-vashu-posyilku-stalo-esche-legche-novaya-usluga-ot-crystallineinua', 1, 4),
+(109, 113, '/img/root/zhivaya-priroda.jpg', 'otsledit-vashu-posyilku-stalo-esche-legche-novaya-usluga-ot-crystallineinua', 1, 4),
 (110, 91, '', 'httpcrystallineinuaarticleshttpcrystallineinuaarticles1430908902', 0, 5),
-(112, 0, '/img/root/00000127.jpg', 'url', 1, 0),
-(113, 0, '', '1448753479', 1, 1),
-(114, 0, '', '1448753667', 1, 2);
+(112, 0, '/img/root/00000127.jpg', 'news', 1, 0),
+(113, 0, '', 'articles', 1, 1),
+(114, 112, '/img/root/00000127.jpg', '1448753667', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -5844,9 +5844,6 @@ CREATE TABLE IF NOT EXISTS `page_description` (
 --
 
 INSERT INTO `page_description` (`page_id`, `name`, `h1`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
-(91, 'ыва п', '', '', '', '', '', ''),
-(100, 'ваы п ывап', '', '', '', '', '', ''),
-(109, 'авп рвапр', '', '', '', '', '', ''),
 (102, 'выап ыв ап ывап', '', '', '', '', '', ''),
 (107, '324уцкйуц', '', '', '', '', '', ''),
 (110, 'вы апыв ап', '', '', '', '', '', ''),
@@ -5857,9 +5854,12 @@ INSERT INTO `page_description` (`page_id`, `name`, `h1`, `title`, `metadesc`, `m
 (93, 'авпр авправп р', '', '', '', '', '', ''),
 (94, 'апврв апрпа', '', '', '', '', '', ''),
 (95, 'а пвр вапрпва р', '', '', '', '', '', ''),
-(113, 'тест 2', '', '', '', '', '', ''),
-(112, 'тест 1', 'H1:', 'Title:', 'Description', 'Keywords', '<p>&nbsp;счмячм ямчячмс</p>', 'СПАМ'),
-(114, 'тест 3', '', '', '', '', '', '');
+(114, 'новость 1', 'выфафыва выа фыв афыва', 'ыва фыва фыв а', 'ыфвафыв аыфв афыв афыв аыф', 'в афыв афыв афыв', '<p>ы вфавфыавфывафыв аыавфы</p>', 'афыва ывфафывафы вафыва'),
+(91, 'новость 2', 'ывафвыфавы авфываф', 'ы вафывафыв а', 'ыфвафы вафывафыв', 'афыафыва', '', 'фывафыва фывафы в'),
+(100, 'статья', 'афы афы ва', 'ывафафы в', 'афыв афыв афывафыва', 'вафы вафы вафы в', '', 'ы ва фывафы'),
+(109, 'стсатья 2', 'вы а ыфвафываыфв', 'аыфвафы вафыв', 'афывафвы а', 'фывафываф ыва', '', 'ыфвафы вафыв'),
+(112, 'Новости', 'H1:', 'Title:', 'Description', 'Keywords', '<p>&nbsp;счмячм ямчячмс</p>', 'СПАМ'),
+(113, 'Статьи', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -5882,8 +5882,8 @@ CREATE TABLE IF NOT EXISTS `page_slider` (
 --
 
 INSERT INTO `page_slider` (`page_id`, `image`, `h1`, `text`, `link`, `order`) VALUES
-(113, '/img/root/00000127.jpg', '', '', 'ыа фы', 0),
-(112, '/img/root/2.jpg', '', '', '111', 0);
+(112, '/img/root/2.jpg', '', '', '111', 0),
+(113, '/img/root/00000127.jpg', '', '', 'ыа фы', 0);
 
 -- --------------------------------------------------------
 
@@ -5898,7 +5898,15 @@ CREATE TABLE IF NOT EXISTS `partner` (
   `visibility` int(1) unsigned NOT NULL DEFAULT '1',
   `order` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Дамп данных таблицы `partner`
+--
+
+INSERT INTO `partner` (`id`, `url`, `image`, `visibility`, `order`) VALUES
+(1, 'partner-1', '/img/root/1272828931_2.jpg', 1, 0),
+(2, 'partner-2', '/img/root/00000127.jpg', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -5917,6 +5925,14 @@ CREATE TABLE IF NOT EXISTS `partner_description` (
   `spam` text,
   KEY `fk_partner_description_partner1_idx` (`partner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `partner_description`
+--
+
+INSERT INTO `partner_description` (`partner_id`, `h1`, `name`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
+(1, 'Партнер 1', 'Партнер 1', 'Партнер 1', 'Партнер 1', 'Партнер 1', '', 'Партнер 1'),
+(2, 'Партнер 2', 'Партнер 2', 'Партнер 2', 'Партнер 2', 'Партнер 2', '<p>Партнер 2</p>', '');
 
 -- --------------------------------------------------------
 
@@ -5941,7 +5957,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `order` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `xParent` (`category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=846 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=847 ;
 
 --
 -- Дамп данных таблицы `product`
@@ -5949,7 +5965,8 @@ CREATE TABLE IF NOT EXISTS `product` (
 
 INSERT INTO `product` (`id`, `category_id`, `manufacturer_id`, `image`, `url`, `code`, `price`, `price_usa`, `discount`, `end_discount`, `new`, `hit`, `visibility`, `order`) VALUES
 (844, 128, 10, '/img/root/2.jpg', 'chyasm-yasmsyachm-yamsch', NULL, '1110.00', '111.00', '22.00', 1450389600, 0, 0, 1, 0),
-(845, 128, 10, '/img/root/5.jpg', 'ssyilka-123-avyifa-fyiv-ayifva', NULL, '0.00', '0.00', '0.00', 0, 0, 0, 1, 1);
+(845, 128, 10, '/img/root/5.jpg', 'ssyilka-123-avyifa-fyiv-ayifva', NULL, '0.00', '0.00', '0.00', 0, 0, 0, 1, 1),
+(846, 128, 0, '/img/root/00000127.jpg', 'dfsgsdf-g-sdfgfsd', NULL, '0.00', '0.00', '0.00', 1449698400, 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -5975,6 +5992,7 @@ CREATE TABLE IF NOT EXISTS `product_description` (
 
 INSERT INTO `product_description` (`product_id`, `name`, `h1`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
 (845, 'Тест 2 213', 'H1: 123', 'Title: 123', 'Description: 123', 'Keywords: 123', '<p>мвм ясмчям ячм ячм ячсм ясм 123 ывф фывафы ваыфва фывафыва</p>', 'СПАМ: 123'),
+(846, 'gdfsgsdfg', 'dfsg', 'sdfg', 'dsfg', 'sdfg', '', 'sdfg'),
 (844, 'тест 1', 'ячсм', 'ячсм', 'ячсм', 'ячсм', '<p>мсчя мямчямчс мяч</p>', 'ячсм');
 
 -- --------------------------------------------------------
@@ -6000,12 +6018,19 @@ INSERT INTO `product_filter_item` (`product_id`, `filter_item_id`) VALUES
 (845, 119),
 (845, 110),
 (845, 111),
+(846, 60),
+(846, 64),
+(846, 69),
 (844, 113),
 (844, 114),
 (844, 115),
 (844, 117),
 (844, 118),
-(844, 119);
+(844, 119),
+(844, 11),
+(844, 1),
+(844, 2),
+(844, 10);
 
 -- --------------------------------------------------------
 
@@ -6047,6 +6072,7 @@ CREATE TABLE IF NOT EXISTS `product_prices` (
   `usa_opt` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT 'цена в $ - опт ',
   `usa_roz` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT 'цена в $ - роз',
   `discount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT 'скидка %',
+  `order` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_id`,`filter_item_id`),
   KEY `fk_product_prices_product1_idx` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -6055,9 +6081,16 @@ CREATE TABLE IF NOT EXISTS `product_prices` (
 -- Дамп данных таблицы `product_prices`
 --
 
-INSERT INTO `product_prices` (`product_id`, `filter_item_id`, `cnt_opt`, `cnt_roz`, `opt`, `roz`, `usa_opt`, `usa_roz`, `discount`) VALUES
-(845, 110, '23шт', '2шт', '330.00', '230.00', '33.00', '23.00', '2.00'),
-(845, 111, '11шт', '1шт', '123.00', '22.00', '11.00', '1.00', '1.00');
+INSERT INTO `product_prices` (`product_id`, `filter_item_id`, `cnt_opt`, `cnt_roz`, `opt`, `roz`, `usa_opt`, `usa_roz`, `discount`, `order`) VALUES
+(844, 1, '100', '10', '120.00', '12.00', '12.00', '1.20', '0.00', 1),
+(844, 2, '10', '1', '150.00', '15.00', '15.00', '1.50', '0.00', 2),
+(844, 10, '400', '40', '400.00', '40.00', '40.00', '4.00', '4.00', 3),
+(844, 11, '100', '10', '100.00', '10.00', '10.00', '1.00', '0.00', 0),
+(845, 110, '23шт', '2шт', '330.00', '230.00', '33.00', '23.00', '2.00', 0),
+(845, 111, '11шт', '1шт', '123.00', '22.00', '11.00', '1.00', '1.00', 0),
+(846, 60, '435', '345', '3450.00', '40.00', '345.00', '4.00', '3.00', 0),
+(846, 64, '345', '435', '3450.00', '50.00', '345.00', '5.00', '2.00', 1),
+(846, 69, '43', '34', '3450.00', '40.00', '345.00', '4.00', '1.00', 2);
 
 -- --------------------------------------------------------
 
@@ -6261,7 +6294,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
-('519ccd838d70111e86971885b8c960a3', '127.0.0.1', 'Mozilla/5.0 (Windows NT 5.1; rv:42.0) Gecko/20100101 Firefox/42.0', 1448356681, 'a:2:{s:9:"user_data";s:0:"";s:5:"admin";b:1;}');
+('519ccd838d70111e86971885b8c960a3', '127.0.0.1', 'Mozilla/5.0 (Windows NT 5.1; rv:42.0) Gecko/20100101 Firefox/42.0', 1448356681, 'a:3:{s:9:"user_data";s:0:"";s:5:"admin";b:1;s:6:"viewed";a:2:{i:845;s:0:"";i:844;s:0:"";}}');
 
 -- --------------------------------------------------------
 
@@ -6365,8 +6398,8 @@ CREATE TABLE IF NOT EXISTS `system_page_description` (
 --
 
 INSERT INTO `system_page_description` (`system_page_id`, `h1`, `name`, `title`, `metadesc`, `metakey`, `text`, `spam`) VALUES
-(1, 'Главная страница', 'Главная страница', 'Главная страница', '', '', '', ''),
-(3, '', '', '', '', '', '', '');
+(3, '', '', '', '', '', '', ''),
+(1, 'Главная страница', 'Главная страница', 'Главная страница', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -6383,6 +6416,15 @@ CREATE TABLE IF NOT EXISTS `system_page_slider` (
   `order` int(11) unsigned NOT NULL DEFAULT '0',
   KEY `fk_system_page_slider_system_page1_idx` (`system_page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `system_page_slider`
+--
+
+INSERT INTO `system_page_slider` (`system_page_id`, `image`, `h1`, `text`, `link`, `order`) VALUES
+(1, '/img/root/00000127.jpg', 'ываф', 'ывапывап', '', 0),
+(1, '/img/root/1272828931_2.jpg', 'ыфва', 'ывапыв ап', '', 0),
+(1, '/img/root/zhivaya-priroda.jpg', 'ыфва', 'фывавапваып', '', 0);
 
 -- --------------------------------------------------------
 

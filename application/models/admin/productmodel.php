@@ -64,7 +64,7 @@ class productModel extends CI_Model
 		unset($_filter_items);
 		
 		# PRICES
-		$product->prices = $this->db->query('SELECT * FROM product_prices WHERE product_id = "'.$product->id.'"')->result();
+		$product->prices = $this->db->query('SELECT * FROM product_prices WHERE product_id = "'.$product->id.'" ORDER BY `order` ASC')->result();
 		
 		
 		return $product;
@@ -166,9 +166,11 @@ class productModel extends CI_Model
 			$p['opt'] = !$p['opt'] ? $p['usa_opt'] * $course : $p['opt'];
 			$p['roz'] = !$p['roz'] ? $p['usa_roz'] * $course : $p['roz'];
 			
+			$p['order'] = isset($_POST['product']['prices']['order'][$k]) ? abs((int)$_POST['product']['prices']['order'][$k]) : 0;
+			
 			if ( ! $p['filter_item_id']) continue;
 
-			$this->db->query('INSERT INTO product_prices (product_id, filter_item_id, cnt_opt, cnt_roz, opt, roz, usa_opt, usa_roz, discount) 
+			$this->db->query('INSERT INTO product_prices (product_id, filter_item_id, cnt_opt, cnt_roz, opt, roz, usa_opt, usa_roz, discount, `order`) 
 								VALUES (
 									"'.$id.'", 
 									"'.$p['filter_item_id'].'", 
@@ -178,7 +180,8 @@ class productModel extends CI_Model
 									"'.$p['roz'].'", 
 									"'.$p['usa_opt'].'", 
 									"'.$p['usa_roz'].'", 
-									"'.$p['discount'].'"
+									"'.$p['discount'].'",
+									"'.$p['order'].'"
 								)');
 		}
 		
@@ -331,9 +334,11 @@ class productModel extends CI_Model
 			$p['opt'] = !$p['opt'] ? $p['usa_opt'] * $course : $p['opt'];
 			$p['roz'] = !$p['roz'] ? $p['usa_roz'] * $course : $p['roz'];
 			
+			$p['order'] = isset($_POST['product']['prices']['order'][$k]) ? abs((int)$_POST['product']['prices']['order'][$k]) : 0;
+			
 			if ( ! $p['filter_item_id']) continue;
 
-			$this->db->query('INSERT INTO product_prices (product_id, filter_item_id, cnt_opt, cnt_roz, opt, roz, usa_opt, usa_roz, discount) 
+			$this->db->query('INSERT INTO product_prices (product_id, filter_item_id, cnt_opt, cnt_roz, opt, roz, usa_opt, usa_roz, discount, `order`) 
 								VALUES (
 									"'.$id.'", 
 									"'.$p['filter_item_id'].'", 
@@ -343,7 +348,8 @@ class productModel extends CI_Model
 									"'.$p['roz'].'", 
 									"'.$p['usa_opt'].'", 
 									"'.$p['usa_roz'].'", 
-									"'.$p['discount'].'"
+									"'.$p['discount'].'",
+									"'.$p['order'].'"
 								)');
 		}
 		

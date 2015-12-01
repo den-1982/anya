@@ -342,7 +342,6 @@ $(function(){
 			'</tr>');
 						
 			$('[data-slider="box"]').prepend(html);
-			setTimeout(function(){html.removeClass('new-tr')},20);
 		},
 		init:function(){
 			$(document).on('click','[data-slider="add"]', A.create)

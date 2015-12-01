@@ -34,10 +34,10 @@
 
 			<?php if($product->images):?>
 			<ul class="pp-images">
-				<?php foreach($product->images as $k=>$v):?>
+				<?php foreach($product->images as $k):?>
 				<li>
-					<a data-lightbox="roadtrip" class="images" href="<?=htmlspecialchars($v->url)?>" target="_blank" title="<?=htmlspecialchars($product->name)?>">
-						<img src="<?=htmlspecialchars($v->mini)?>" alt="<?=htmlspecialchars($product->name)?>">
+					<a data-lightbox="roadtrip" class="images" href="<?=htmlspecialchars($k->image)?>" target="_blank" title="<?=htmlspecialchars($product->name)?>">
+						<img src="<?=htmlspecialchars($k->cache)?>" alt="<?=htmlspecialchars($product->name)?>">
 					</a>
 				</li>
 				<?php endforeach;?>
@@ -60,15 +60,12 @@
 						<select data-styler="" data-product-size="" name="size">
 							<option value="0" selected>Выбрать размер</option>
 							<?php foreach($product->prices as $k):?>
-							<option value="<?=$k->id_filter_item?>">
+							<option value="<?=$k->filter_item_id?>">
 								<?=$k->name?>: <?=$k->prefix?> (<?=$k->cnt_opt?>/<?=$k->cnt_roz?>  шт.)
 							</option>
 							<?php endforeach;?>
 						</select>
 					</div>
-
-					<a style="margin:0 0 0 10px;" class="btn btn-white" data-bind="get-size-map" data-parent="<?=$product->parent?>" href="javascript:void(0)">карта размеров</a>
-					<!--<a style="margin:0 0 0 10px;" class="btn btn-white" data-bind="get-price" href="/getprice">прайс лист</a>-->
 				</div>
 
 				<div class="pole" data-attention="">
@@ -188,20 +185,18 @@
 				</a>
 			</div>
 		<?php endif;?>
-		<!-- END IF -->
 			
 			<!-- Если есть производитель -->
-			<?php if($product->manufacturer):?>
+			<?php if ($product->manufacturer):?>
 			<div class="pole right">
 				<div class="pp-manufacturer">
-					<img style="max-height:40px;" src="/img/manufacturer/<?=$product->manufacturer->id?>/<?=$product->manufacturer->id?>.jpg" alt="производитель">
+					<img style="max-height:40px;" src="<?=$product->manufacturer->image?>" alt="производитель">
 					<br>
 					<?=$product->manufacturer->name?>
 				</div>
 			</div>
 			<?php endif;?>
-			<!-- END -->
-			
+		
 		</div>
 	</div><!-- END ROW -->
 	
@@ -217,28 +212,26 @@
 	</div>
 	
 	
-	<!-- PRODUCTS RELATED-->
+	<!-- PRODUCTS RELATED -->
 	<?php if ($product->related):?>
 	<div class="row">
 		<div class="col-1">
 			<h3 class="attetion blue"><span>СОПУТСТВУЮЩИЕ ТОВАРЫ</span></h3>
-			
 			<div class="owl-carousel" data-owlCarusel="auto">
-			<?php foreach ($product->related as $k=>$v):?>
+			<?php foreach ($product->related as $k):?>
 				<div class="item">
-					<a class="goods<?=$v->hit ? ' hit' : ($v->new ? ' new' : '') ;?>" href="<?=htmlspecialchars($v->_url)?>" title="<?=htmlspecialchars($v->name)?>">
+					<a class="goods<?=$k->hit ? ' hit' : ($k->new ? ' new' : '') ;?>" href="<?=htmlspecialchars($k->_url)?>" title="<?=htmlspecialchars($k->name)?>">
 						<span class="goods-image">
-							<?php if ($v->discount*1):?>
-							<i title="скидка на <?=htmlspecialchars($v->name)?> <?=$v->discount*1?> %"> &minus; <?=$v->discount*1?> %</i>
+							<?php if ($k->discount*1):?>
+							<i title="скидка на <?=htmlspecialchars($k->name)?> <?=$k->discount*1?> %"> &minus; <?=$k->discount*1?> %</i>
 							<?php endif;?>
-							<img class="lazyOwl" data-src="<?=htmlspecialchars($v->image)?>" alt="<?=htmlspecialchars($v->name)?>">
+							<img class="lazyOwl" data-src="<?=htmlspecialchars($k->image)?>" alt="<?=htmlspecialchars($k->name)?>">
 						</span>
-						<span class="goods-name"><?=$v->name?></span>
+						<span class="goods-name"><?=$k->name?></span>
 					</a>
 				</div>
 			<?php endforeach;?>
 			</div>
-			
 		</div>
 	</div>
 	<?php endif;?>
@@ -390,7 +383,7 @@ $(function(){
 			A.sizes = {};
 			try {
 				$.each($.parseJSON(data), function(){
-					A.sizes[this.id_filter_item] = this;
+					A.sizes[this.filter_item_id] = this;
 				});
 			}catch(e){}
 
@@ -429,53 +422,6 @@ $(function(){
 		<?=$product->id?>,
 		<?=json_encode(isset($user->discount) ? $user->discount * 1 : 0)?>
 	);	
-});
-</script>
-
-<script> // SIZE MAP окно с размерами (SS4, SS30)
-$(document).on('click', '[data-bind="get-size-map"]', function(e){
-	e.preventDefault();
-
-	var D = $().dialog({
-		width:'600px',
-		height:'auto',
-		title:'Карта размеров',
-		drag:true
-	}).dialog('load');
-	
-	$.post('',{getSizeMap:'', id_category: $(this).attr('data-parent')}, function(data){
-		var html = '<table class="table nt-2">'+
-						'<thead>'+
-							'<tr>'+
-								'<td class="center">Код размера</td>'+
-								'<td class="center">Размер мм.</td>'+
-								'<td class="center">Количество шт. в уп. (опт)</td>'+
-								'<td class="center">Количество шт. в уп. (розница)</td>'+
-							'</tr>'+
-						'</thead>'+
-						'<tbody>';
-			$.each(data, function(){
-					html += '<tr>'+
-								'<td class="center">'+
-									''+this.name+
-								'</td>'+
-								'<td class="center">'+
-									''+this.prefix+
-								'</td>'+
-								'<td class="center">'+
-									''+this.cnt_opt+
-								'</td>'+
-								'<td class="center">'+
-									''+this.cnt_roz+
-								'</td>'+
-							'</tr>';
-			});
-				html += '</tbody>'+
-					'</table>';
-		
-		if ( ! D.data('dialog')) return;
-		D.dialog('content', $(html)).dialog('endLoad').dialog('position');
-	}, 'json');
 });
 </script>
 
@@ -578,16 +524,3 @@ $(document).on('click', '[data-bind="get-size-map"]', function(e){
 	});
 });
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
