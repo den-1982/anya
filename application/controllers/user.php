@@ -182,8 +182,7 @@ class User extends CI_Controller {
 
 		# добавление USER
 		if (isset($_POST['add_user'])){
-			$data['error'] = $this->userModel->addUser();
-			if ( ! $data['error'] ){
+			if ( ! $data['error'] = $this->userModel->addUser() ){
 				redirect('/user');
 				exit;
 			}
