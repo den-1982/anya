@@ -5,7 +5,6 @@ class cartModel extends CI_Model
 	public function addCart()
 	{	
 		$id 			= isset($_POST['id'])		? abs((int)$_POST['id']) : 0;
-		//$id_filter_item	= isset($_POST['size'])		? abs((int)$_POST['size']) : 0;
 		$filter_item_id	= isset($_POST['size'])		? abs((int)$_POST['size']) : 0;
 		$type 			= isset($_POST['type'])		? abs((int)$_POST['type']) : 0;
 		$quantity 		= isset($_POST['quantity'])	? abs((int)$_POST['quantity']) : 1;
@@ -18,20 +17,10 @@ class cartModel extends CI_Model
 		if ( ! $product){return 1;}
 
 		# аня попросила внести категорию в заказ
-		/*
-		$product->parent = $this->db->query('SELECT id, 
-													name, 
-													h1, 
-													url, 
-													CONCAT("/", url, "/", "c", id, "/") AS _url 
-													FROM category 
-												WHERE id = "'.$product->parent.'"')->row();
-		*/
 		$product->parent = $this->categoryModel->getCategory($product->parent);
 		
 		# если есть цена-размер
 		if ($product->prices){
-		
 			# если неверный размер(кто-то балуется)
 			if ( ! isset($product->prices[$filter_item_id])) return;
 			
@@ -42,7 +31,6 @@ class cartModel extends CI_Model
 			}else{
 				return;
 			}
-			
 		}else{
 			$price = $product->price;
 		}
@@ -57,18 +45,21 @@ class cartModel extends CI_Model
 		);
 
 		$data = array(
-			'id'			=> $product->id,
-			'parent'		=> $product->parent,
-			'manufacturer'	=> isset($product->manufacturer->name) ? $product->manufacturer->name : '&mdash;',
-			'qty'			=> $quantity,
-			'price'			=> $price,
-			'discount'		=> $product->discount*1 ? $product->discount : (isset($product->prices[$filter_item_id]) ? $product->prices[$filter_item_id]->discount : 0),
-			'name'			=> $product->name,
-			'_url'			=> $product->_url,
-			'url'			=> $product->url,
-			'image'			=> '/img/products/'.$product->id.'/'.$product->id.'.jpg',
-			'prices'		=> isset($product->prices[$filter_item_id]) ? (array)$product->prices[$filter_item_id] : '',
-			'options'		=> $options
+			'id'				=> $product->id,
+			'qty'				=> $quantity,
+			'price'				=> $price,
+			'options'			=> $options,
+			
+			'discount'			=> $product->discount*1 ? $product->discount : (isset($product->prices[$filter_item_id]) ? $product->prices[$filter_item_id]->discount : 0),
+			'prices'			=> isset($product->prices[$filter_item_id]) ? (array)$product->prices[$filter_item_id] : '',
+			
+			'parent'			=> $product->parent,
+			'manufacturer'		=> isset($product->manufacturer->name) ? $product->manufacturer->name : '&mdash;',
+			'manufacturer_id'	=> $product->manufacturer_id,
+			'name'				=> $product->name,
+			'image'				=> $product->image,
+			'url'				=> $product->url,
+			'_url'				=> $product->_url
 		);
 		
 		$this->cart->insert($data);
@@ -99,10 +90,6 @@ class cartModel extends CI_Model
 //////////////////////////////////////////////////////////// CHECKOUT
 	public function checkout() # оформление заказа
 	{
-		// echo '<pre>';
-		// print_r($_POST);
-		// exit;
-		
 		$cart = $this->cart->contents();
 
 		# если корзина пуста - выход
@@ -496,7 +483,7 @@ class cartModel extends CI_Model
 					<div class="ci-box">
 						<div class="pp-block-image">
 							<a href="'. htmlspecialchars($i['_url']) .'">
-								<img src="'. $i['image'] .'" alt="">
+								<img src="'.htmlspecialchars($i['image']) .'" alt="'.htmlspecialchars($i['name']).'">
 							</a>
 						</div>
 						<div class="pp-block-price">
@@ -699,7 +686,7 @@ class cartModel extends CI_Model
 									<a class="gd gd-delete" href="/cart?del='.$k.'>" data-cart-delete="'.$k.'">Удалить</a>
 								</div>
 								<div class="cbt-item-left">
-									<img src="/img/products/'.$v['id'].'/'.$v['id'].'_150_150.jpg" alt="">
+									<img src="'.htmlspecialchars($v['image']).'" alt="'.htmlspecialchars($v['name']).'">
 								</div>
 							</div>
 						</div>';

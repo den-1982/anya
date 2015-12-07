@@ -43,13 +43,7 @@ $route['default_controller']				= "client";
 $route['(:any)/p(:num)']					= 'client/product/$1/$2';
 $route['(:any)/c(:num)']					= 'client/category/$1/$2';
 
-$route['news']								= 'client/news';
-$route['news/(:any)']						= 'client/news/$1';
-$route['articles']							= 'client/articles';
-$route['articles/(:any)']					= 'client/articles/$1';
-
-$route['colors']							= 'client/colors';
-$route['colors/(:any)']						= 'client/colors/$1';
+$route['(:any)/a(:num)']					= 'client/page/$1/$2';
 
 $route['oplata-i-dostavka']					= 'client/oplata';
 $route['biznes-predlojenie']				= 'client/business';

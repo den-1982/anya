@@ -37,11 +37,172 @@
  * @param	string	server path to font
  * @return	string
  */
+ 
+ /*
+ * MY VARIANT (DEN)
+ */
 if ( ! function_exists('create_captcha'))
 {
 	function create_captcha($data = '', $img_path = '', $img_url = '', $font_path = '')
 	{
-		$defaults = array('word' => '', 'img_path' => '', 'img_url' => '', 'img_width' => '150', 'img_height' => '30', 'font_path' => '', 'expiration' => 3600);
+		$defaults = array(
+			'word' => '', 
+			'img_path' => '', 
+			'img_url' => '', 
+			'img_width' => '150', 
+			'img_height' => '30', 
+			'font_path' => '', 
+			'expiration' => 3600
+		);
+
+		foreach ($defaults as $key => $val)
+		{
+			if ( ! is_array($data))
+			{
+				if ( ! isset($$key) OR $$key == '')
+				{
+					$$key = $val;
+				}
+			}
+			else
+			{
+				$$key = ( ! isset($data[$key])) ? $val : $data[$key];
+			}
+		}
+
+		if ( ! extension_loaded('gd'))
+		{
+			return FALSE;
+		}
+
+		// -----------------------------------
+		// Do we have a "word" yet?
+		// -----------------------------------
+
+	   if ($word == '')
+	   {
+			$pool = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
+
+			$str = '';
+			for ($i = 0; $i < 6; $i++)
+			{
+				$str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
+			}
+
+			$word = $str;
+	   }
+
+		// -----------------------------------
+		// Determine angle and position
+		// -----------------------------------
+
+		$length	= strlen($word);
+		$angle	= ($length >= 6) ? rand(-($length-6), ($length-6)) : 0;
+		$x_axis	= rand(6, (360/$length)-16);
+		$y_axis = ($angle >= 0 ) ? rand($img_height, $img_width) : rand(6, $img_height);
+		
+		// -----------------------------------
+		// Create image
+		// -----------------------------------
+
+		// PHP.net recommends imagecreatetruecolor(), but it isn't always available
+		if (function_exists('imagecreatetruecolor'))
+		{
+			$im = imagecreatetruecolor($img_width, $img_height);
+		}
+		else
+		{
+			$im = imagecreate($img_width, $img_height);
+		}
+
+		// -----------------------------------
+		//  Assign colors
+		// -----------------------------------
+
+		$bg_color		= imagecolorallocate ($im, 200, 200, 200);
+		$text_color		= imagecolorallocate ($im, 0, 0, 0);
+
+		// ------------------- прозрачный фон
+		imagecolortransparent($im, $bg_color);
+		ImageFill($im, 0, 0, $bg_color);
+		
+		// -----------------------------------
+		//  Create the rectangle
+		// -----------------------------------
+
+		ImageFilledRectangle($im, 0, 0, $img_width, $img_height, $bg_color);
+
+		// -----------------------------------
+		//  Write the text
+		// -----------------------------------
+
+		$use_font = ($font_path != '' AND file_exists($font_path) AND function_exists('imagettftext')) ? TRUE : FALSE;
+
+		if ($use_font == FALSE)
+		{
+			$font_size = 5;
+			$x = 30;
+			$y = 0;
+		}
+		else
+		{
+			$font_size	= 16;
+			$x = 30;
+			$y = $font_size+2;
+		}
+
+		for ($i = 0; $i < strlen($word); $i++)
+		{
+			if ($use_font == FALSE)
+			{
+				$y = rand(0 , $img_height/2);
+				imagestring($im, $font_size, $x, $y, substr($word, $i, 1), $text_color);
+				$x += ($font_size*2);
+			}
+			else
+			{
+				$y = rand($img_height/2, $img_height-3);
+				imagettftext($im, $font_size, $angle, $x, $y, $text_color, $font_path, substr($word, $i, 1));
+				$x += $font_size;
+			}
+		}
+
+		ob_start();
+		ImagePNG($im, null, 9);
+		$ob =  ob_get_contents();
+		ob_end_clean();
+		
+		$base64 = base64_encode($ob);
+
+		$img = '<img src="data:png;base64,'.$base64.'" alt="captcha" />';
+		
+		ImageDestroy($im);
+		
+		return array(
+			'word' => $word, 
+			'image' => $img
+		);
+	}
+}
+
+
+
+/*
+*	VARIANT - 2
+*/
+if ( ! function_exists('create_captcha_2'))
+{
+	function create_captcha_2($data = '', $img_path = '', $img_url = '', $font_path = '')
+	{
+		$defaults = array(
+			'word' => '', 
+			'img_path' => '', 
+			'img_url' => '', 
+			'img_width' => '150', 
+			'img_height' => '30', 
+			'font_path' => '', 
+			'expiration' => 3600
+		);
 
 		foreach ($defaults as $key => $val)
 		{
@@ -123,7 +284,7 @@ if ( ! function_exists('create_captcha'))
 		// Determine angle and position
 		// -----------------------------------
 
-		$length	= strlen($word);//6
+		$length	= strlen($word);
 		$angle	= ($length >= 6) ? rand(-($length-6), ($length-6)) : 0;
 		$x_axis	= rand(6, (360/$length)-16);
 		$y_axis = ($angle >= 0 ) ? rand($img_height, $img_width) : rand(6, $img_height);
@@ -240,15 +401,14 @@ if ( ! function_exists('create_captcha'))
 
 		//ImageJPEG($im, $img_path.$img_name, 100);
 		ImagePNG($im, $img_path.$img_name, 9);
-
+		
 		$img = "<img style=\"vertical-align:bottom;\" src=\"$img_url$img_name\" width=\"$img_width\" height=\"$img_height\" style=\"border:0;\" alt=\" \" />";
-
+		
 		ImageDestroy($im);
-
+		
 		return array('word' => $word, 'time' => $now, 'image' => $img);
 	}
 }
-
 // ------------------------------------------------------------------------
 
 /* End of file captcha_helper.php */

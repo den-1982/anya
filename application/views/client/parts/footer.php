@@ -17,11 +17,8 @@
 				</div>
 			</div>
 
-			<div class="cbt-body" data-cart-body="bottom">
-				
-				<?=$cart['html_bottom']?>
-				
-			</div>
+			<div class="cbt-body" data-cart-body="bottom"><?=$cart['html_bottom']?></div>
+			
 			<script>
 			$(function(){
 				$('[data-cart-bt="owlCarusel"]').owlCarousel({singleItem:true});

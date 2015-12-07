@@ -257,23 +257,29 @@ class Client extends CI_Controller
 		$this->_view('product', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PAGE (надо удалить)
-	private function Pages($url = '')
+	public function Page($url = '', $id = 0)
 	{
-		// $data = &$this->data;
+		$data = &$this->data;
 		
-		// $data['page'] = $this->pageModel->getPage($url);
+		$data['page'] = $this->pageModel->getPage($url);
+		if ( ! $data['page']) {$this->_404();return;}
+		if ($data['page']->url != $url){ redirect($data['page']->_url, 'location', 301);return;}
+	
 		
-		// # если нет такого
-		// if( ! $data['page']){$this->_404();return;}	
+		# если нет такого
+		if( ! $data['page']){$this->_404();return;}	
 		
-		// # мета тэги
-		// $this->_info($data['page']);
+		# мета тэги
+		$this->_info($data['page']);
 		
-		// $this->data['categories'] 		= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		// $this->data['pages'] 			= $this->pageModel->getPages();
-		// $this->data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
 		
-		// $this->_view('pages', $data);
+		# крошки
+		$data['crumbs'] = $this->_crumbs($this->data['pages'], $data['page']->id);
+		
+		$this->_view('page', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// OPLATA
 	public function Oplata()
@@ -360,7 +366,7 @@ class Client extends CI_Controller
 		$data['pages'] 			= $this->pageModel->sortPages($this->pageModel->getPages());
 		$data['partners'] 		= $this->partnerModel->getPartners();
 
-		$this->_view('partnerships', $data);
+		$this->_view('partner', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SEARCH
 	public function Search()

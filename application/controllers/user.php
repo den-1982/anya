@@ -12,9 +12,7 @@ class User extends CI_Controller {
 		'spam'=>'',
 		
 		'error'=>array(),
-	
-		'crumbs'=>array(),
-		'products_discount'=>array()
+		'crumbs'=>array()
 	);
 						 
 	public function __construct()
@@ -98,7 +96,7 @@ class User extends CI_Controller {
 		return array_reverse($crumbs);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// INDEX	
-	public function index()
+	public function Index()
 	{
 		$data = &$this->data;
 
@@ -131,22 +129,23 @@ class User extends CI_Controller {
 			array('id'=>0, 'name'=>'Личный кабинет', '_url'=>'')
 		);
 		
-		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
-		$data['cities'] 		= $this->novaposhtaModel->getCitiesNovaPoshta();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
+		
+		$data['cities'] 	= $this->novaposhtaModel->getCitiesNovaPoshta();
 		
 		$this->_view('user', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// LOGIN
-	public function login()
+	public function Login()
 	{
 		$data = &$this->data;
 		
 		# Аутификация USER
 		if (isset($_POST['auth'])){
-			$phone = isset($_POST['phone']) ? $_POST['phone'] : '';
-			$password = isset($_POST['password']) ? $_POST['password'] : '';
+			$phone		= isset($_POST['phone'])	? $_POST['phone'] : '';
+			$password	= isset($_POST['password']) ? $_POST['password'] : '';
 			echo $this->userModel->authUser($phone, $password);
 			exit;
 		}
@@ -162,7 +161,7 @@ class User extends CI_Controller {
 		}
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// LOGOUT
-	public function logout()
+	public function Logout()
 	{
 		$data = &$this->data;
 		$this->userModel->logoutUser();
@@ -170,7 +169,7 @@ class User extends CI_Controller {
 		return;
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ADD USER	
-	public function add()
+	public function Add()
 	{
 		$data = &$this->data;
 		
@@ -192,9 +191,10 @@ class User extends CI_Controller {
 		
 		$this->_info('', 'Регистрация');
 		
-		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
+		
 		$data['cities'] 		= $this->novaposhtaModel->getCitiesNovaPoshta();
 		
 		# captcha
@@ -203,10 +203,7 @@ class User extends CI_Controller {
 			array(
 				'img_width'=>120,
 				'img_height'=>35,
-				'img_path' => './captcha/',
-				'img_url' => '/captcha/',
-				'font_path' => '/css/fonts/arial.ttf',
-				'expiration'=>60*60
+				'font_path' => '/css/fonts/arial.ttf'
 			)
 		);
 		$this->session->set_userdata('captcha', $data['captcha']);
@@ -220,7 +217,7 @@ class User extends CI_Controller {
 		$this->_view('user_add', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// EDIT USER (NEW)
-	public function edit()
+	public function Edit()
 	{
 		$data = &$this->data;
 		
@@ -242,9 +239,10 @@ class User extends CI_Controller {
 		
 		$this->_info('', 'Редактирование данных');
 		
-		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
+		
 		$data['cities'] 		= $this->novaposhtaModel->getCitiesNovaPoshta();
 		$data['warenList']		= $this->novaposhtaModel->getWarenListNovaPoshta($data['user']->city);
 
@@ -258,7 +256,7 @@ class User extends CI_Controller {
 		$this->_view('user_edit', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// EDIT PASSWORD
-	public function password()
+	public function Password()
 	{
 		$data = &$this->data;
 		
@@ -280,9 +278,9 @@ class User extends CI_Controller {
 		
 		$this->_info('', 'Смена пароля');
 		
-		$data['categories'] 	= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$data['pages'] 			= $this->pageModel->getPages();
-		$data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
 		
 		# крошки
 		$data['crumbs'] = array(
@@ -294,7 +292,7 @@ class User extends CI_Controller {
 		$this->_view('user_edit_pass', $data);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// RECOVER PASSWORD
-	public function recover()
+	public function Recover()
 	{
 		$data = &$this->data;
 		
@@ -321,9 +319,9 @@ class User extends CI_Controller {
 		header("HTTP/1.0 404 Not Found");
 		$data = &$this->data;
 		
-		$this->data['categories'] 		= $this->categoryModel->sortCategories($this->categoryModel->getCategories());
-		$this->data['pages'] 			= $this->pageModel->getPages();
-		$this->data['partnerships'] 	= $this->partnershipModel->getPartnerships();
+		$data['categories'] = $this->categoryModel->sortCategories($this->categoryModel->getCategories());
+		$data['pages'] 		= $this->pageModel->sortPages($this->pageModel->getPages());
+		$data['partners'] 	= $this->partnerModel->getPartners();
 		
 		$this->_view('404', $data);
 	}
